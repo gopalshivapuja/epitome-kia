@@ -10,9 +10,7 @@ type RouteParams = {
 
 // Validation schema for lead updates
 const updateLeadSchema = z.object({
-  status: z.enum(['new', 'contacted', 'qualified', 'converted', 'lost']).optional(),
   notes: z.string().max(1000).optional(),
-  assignedTo: z.string().uuid().optional(),
   fullName: z.string().min(2).max(100).optional(),
   email: z.string().email().optional().nullable(),
   phone: z.string().optional().nullable(),
@@ -105,7 +103,6 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
 
     return successResponse({
       id: updatedLead.id,
-      status: updatedLead.status,
       fullName: updatedLead.fullName,
       email: updatedLead.email,
       phone: updatedLead.phone,

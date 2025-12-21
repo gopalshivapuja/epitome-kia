@@ -1,9 +1,8 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { db } from '@/lib/db'
+import { prisma } from '@/lib/db'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 import { Calendar, User, ArrowLeft, Share2, Facebook, Twitter, Linkedin, Clock } from 'lucide-react'
 
 type Props = {
@@ -11,7 +10,7 @@ type Props = {
 }
 
 async function getBlogPost(slug: string) {
-  const post = await db.blogPost.findFirst({
+  const post = await prisma.blogPost.findFirst({
     where: {
       slug,
       isPublished: true,
@@ -22,7 +21,7 @@ async function getBlogPost(slug: string) {
 }
 
 async function getRelatedPosts(currentSlug: string) {
-  const posts = await db.blogPost.findMany({
+  const posts = await prisma.blogPost.findMany({
     where: {
       slug: { not: currentSlug },
       isPublished: true,
@@ -54,8 +53,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   return {
-    title: post.seoTitle || `${post.title} | Epitome Kia Blog`,
-    description: post.seoDescription || post.summary || undefined,
+    title: `${post.title} | Epitome Kia Blog`,
+    description: post.summary || undefined,
   }
 }
 
@@ -125,15 +124,6 @@ export default async function BlogPostPage({ params }: Props) {
             </p>
           )}
 
-          {post.tags && post.tags.length > 0 && (
-            <div className="flex flex-wrap gap-2 mt-6">
-              {post.tags.map((tag) => (
-                <Badge key={tag} variant="secondary" className="bg-white/10 text-white hover:bg-white/20">
-                  {tag}
-                </Badge>
-              ))}
-            </div>
-          )}
         </div>
       </div>
 

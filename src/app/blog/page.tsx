@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { db } from '@/lib/db'
+import { prisma } from '@/lib/db'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Calendar, User, ArrowRight, BookOpen } from 'lucide-react'
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 }
 
 async function getBlogPosts() {
-  const posts = await db.blogPost.findMany({
+  const posts = await prisma.blogPost.findMany({
     where: {
       isPublished: true,
       deletedAt: null,
@@ -26,7 +26,6 @@ async function getBlogPosts() {
       summary: true,
       authorName: true,
       publishedAt: true,
-      tags: true,
     },
   })
   return posts

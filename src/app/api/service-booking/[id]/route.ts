@@ -10,25 +10,11 @@ type RouteParams = {
 
 // Validation schema for service booking status updates
 const updateServiceBookingSchema = z.object({
-  status: z.enum(['pending', 'scheduled', 'completed', 'cancelled']).optional(),
+  status: z.enum(['requested', 'confirmed', 'in_progress', 'completed', 'cancelled']).optional(),
   serviceDate: z.string().datetime().optional(),
   serviceTime: z.string().optional(),
-  serviceType: z.enum([
-    'regular_service',
-    'repair',
-    'inspection',
-    'oil_change',
-    'tire_service',
-    'battery',
-    'ac_service',
-    'body_work',
-    'other',
-  ]).optional(),
+  serviceType: z.string().optional(),
   notes: z.string().max(1000).optional(),
-  estimatedCost: z.number().min(0).optional(),
-  actualCost: z.number().min(0).optional(),
-  vehicleRegistration: z.string().optional(),
-  vehicleMileage: z.number().int().min(0).optional(),
 })
 
 /**
@@ -51,7 +37,6 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
         dealerLocation: true,
         carModel: true,
         variant: true,
-        pickupRequest: true,
       },
     })
 
@@ -91,21 +76,13 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
       return errorResponse('Service booking not found', 404)
     }
 
-    // Prepare update data
-    const updateData: Record<string, unknown> = {
-      ...data,
-      updatedAt: new Date(),
-    }
-
-    // If completing, set completedAt
-    if (data.status === 'completed') {
-      updateData.completedAt = new Date()
-    }
-
-    // If cancelling, set cancelledAt
-    if (data.status === 'cancelled') {
-      updateData.cancelledAt = new Date()
-    }
+    // Prepare update data - only include fields that exist in schema
+    const updateData: Record<string, unknown> = {}
+    if (data.status) updateData.status = data.status
+    if (data.serviceDate) updateData.serviceDate = new Date(data.serviceDate)
+    if (data.serviceTime !== undefined) updateData.serviceTime = data.serviceTime
+    if (data.serviceType) updateData.serviceType = data.serviceType
+    if (data.notes !== undefined) updateData.notes = data.notes
 
     // Update the service booking
     const updatedBooking = await prisma.serviceBooking.update({
@@ -134,8 +111,6 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
       serviceDate: updatedBooking.serviceDate,
       serviceTime: updatedBooking.serviceTime,
       serviceType: updatedBooking.serviceType,
-      completedAt: updatedBooking.completedAt,
-      cancelledAt: updatedBooking.cancelledAt,
       customer: updatedBooking.customerLead,
       location: updatedBooking.dealerLocation,
       updatedAt: updatedBooking.updatedAt,

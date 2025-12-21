@@ -11,9 +11,6 @@ const createBlogPostSchema = z.object({
   summary: z.string().max(500).optional(),
   content: z.string(),
   authorName: z.string().max(100).optional(),
-  seoTitle: z.string().max(70).optional(),
-  seoDescription: z.string().max(160).optional(),
-  tags: z.array(z.string()).optional(),
   isPublished: z.boolean().default(false),
 })
 
@@ -42,10 +39,10 @@ export async function GET(request: NextRequest) {
       where.isPublished = true
     }
 
-    // Filter by tag
-    if (tag) {
-      where.tags = { has: tag }
-    }
+    // Filter by tag (disabled - tags field not in schema)
+    // if (tag) {
+    //   where.tags = { has: tag }
+    // }
 
     // Search by title or summary
     if (search) {
@@ -67,7 +64,6 @@ export async function GET(request: NextRequest) {
           slug: true,
           summary: true,
           authorName: true,
-          tags: true,
           isPublished: true,
           publishedAt: true,
           createdAt: true,
@@ -126,9 +122,6 @@ export async function POST(request: NextRequest) {
         summary: data.summary || null,
         content: data.content,
         authorName: data.authorName || session.user.name || 'Admin',
-        seoTitle: data.seoTitle || null,
-        seoDescription: data.seoDescription || null,
-        tags: data.tags || [],
         isPublished: data.isPublished,
         publishedAt: data.isPublished ? new Date() : null,
       },

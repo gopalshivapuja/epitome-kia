@@ -15,9 +15,6 @@ const updateBlogPostSchema = z.object({
   summary: z.string().max(500).optional().nullable(),
   content: z.string().optional(),
   authorName: z.string().max(100).optional(),
-  seoTitle: z.string().max(70).optional().nullable(),
-  seoDescription: z.string().max(160).optional().nullable(),
-  tags: z.array(z.string()).optional(),
   isPublished: z.boolean().optional(),
 })
 
