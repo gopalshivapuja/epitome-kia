@@ -6,6 +6,9 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { EMICalculator } from '@/components/features/emi-calculator'
 import { getModels } from '@/lib/data'
+
+// Force dynamic rendering - no static generation at build time
+export const dynamic = 'force-dynamic'
 import { formatPrice } from '@/lib/utils'
 
 export const metadata: Metadata = {

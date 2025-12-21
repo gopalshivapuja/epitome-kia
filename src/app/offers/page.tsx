@@ -3,6 +3,9 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { Tag, Calendar, ArrowRight, Car } from 'lucide-react'
 import { getOffers } from '@/lib/data'
+
+// Force dynamic rendering - no static generation at build time
+export const dynamic = 'force-dynamic'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'

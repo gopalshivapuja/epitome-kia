@@ -2,6 +2,9 @@ import { Suspense } from 'react'
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+
+// Force dynamic rendering - no static generation at build time
+export const dynamic = 'force-dynamic'
 import { ArrowLeft, Car, Calendar, Wrench, Calculator, Tag, ChevronRight } from 'lucide-react'
 import { getModelBySlug, getModels } from '@/lib/data'
 import { EMICalculator } from '@/components/features/emi-calculator'

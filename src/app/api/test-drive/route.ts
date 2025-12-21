@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/db'
 import { successResponse, handleApiError } from '@/lib/api-utils'
 import { testDriveSchema } from '@/lib/validations'
+import { sendTestDriveConfirmation, notifySalesTeam } from '@/lib/email'
 
 export async function POST(request: NextRequest) {
   try {
@@ -67,6 +68,34 @@ export async function POST(request: NextRequest) {
         },
       },
     })
+
+    // Send confirmation email to customer (async, don't block response)
+    if (customerLead.email) {
+      sendTestDriveConfirmation({
+        customerName: customerLead.fullName,
+        customerEmail: customerLead.email,
+        customerPhone: customerLead.phone || '',
+        modelName: testDrive.carModel?.name || 'Kia Vehicle',
+        variantName: testDrive.variant?.name,
+        preferredDate: new Date(data.preferredDate).toLocaleDateString('en-IN', {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        }),
+        preferredTime: data.preferredTime || 'Any time',
+      }).catch(console.error)
+
+      // Notify sales team
+      notifySalesTeam({
+        customerName: customerLead.fullName,
+        customerEmail: customerLead.email,
+        customerPhone: customerLead.phone || undefined,
+        subject: `Test Drive - ${testDrive.carModel?.name || 'Vehicle'}`,
+        message: `New test drive request for ${testDrive.carModel?.name || 'a vehicle'} on ${new Date(data.preferredDate).toLocaleDateString()}`,
+        source: 'Test Drive Form',
+      }).catch(console.error)
+    }
 
     return successResponse(
       {

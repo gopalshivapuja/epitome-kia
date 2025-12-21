@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/db'
 import { successResponse, handleApiError } from '@/lib/api-utils'
 import { serviceBookingSchema } from '@/lib/validations'
+import { sendServiceBookingConfirmation, notifyServiceTeam } from '@/lib/email'
 
 export async function POST(request: NextRequest) {
   try {
@@ -60,6 +61,32 @@ export async function POST(request: NextRequest) {
         },
       },
     })
+
+    // Send email notifications (async, don't block response)
+    const emailData = {
+      customerName: customerLead.fullName,
+      customerEmail: customerLead.email || '',
+      customerPhone: customerLead.phone || '',
+      serviceType: data.serviceType,
+      vehicleModel: serviceBooking.carModel?.name || 'Vehicle',
+      preferredDate: new Date(data.serviceDate).toLocaleDateString('en-IN', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      }),
+      preferredTime: data.serviceTime || 'Any time',
+    }
+
+    if (customerLead.email) {
+      // Send confirmation to customer
+      sendServiceBookingConfirmation(emailData).catch(console.error)
+    }
+
+    // Notify service team
+    if (customerLead.email || customerLead.phone) {
+      notifyServiceTeam(emailData).catch(console.error)
+    }
 
     return successResponse(
       {
