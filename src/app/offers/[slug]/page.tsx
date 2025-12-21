@@ -15,14 +15,8 @@ interface Props {
   params: { slug: string }
 }
 
-export async function generateStaticParams() {
-  try {
-    const offers = await getOffers()
-    return offers.map((offer) => ({ slug: offer.slug }))
-  } catch {
-    return []
-  }
-}
+// Note: generateStaticParams removed - using dynamic rendering instead
+// This avoids build-time database dependency
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   try {

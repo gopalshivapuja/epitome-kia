@@ -1,5 +1,8 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/db'
+
+// Force dynamic rendering for this API route
+export const dynamic = 'force-dynamic'
 import {
   successResponse,
   handleApiError,
