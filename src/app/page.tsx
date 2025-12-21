@@ -1,31 +1,12 @@
+import { Suspense } from 'react'
 import Link from 'next/link'
-import { ArrowRight, Car, Wrench, Calculator, Calendar } from 'lucide-react'
+import { ArrowRight, Car, Wrench, Calculator, Calendar, Tag } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-
-const featuredModels = [
-  {
-    name: 'Kia Seltos',
-    tagline: 'The Bold SUV',
-    price: 'Starting ₹10.90 Lakh*',
-    image: '/images/seltos.jpg',
-    href: '/models/seltos',
-  },
-  {
-    name: 'Kia Sonet',
-    tagline: 'The Wild Compact SUV',
-    price: 'Starting ₹7.99 Lakh*',
-    image: '/images/sonet.jpg',
-    href: '/models/sonet',
-  },
-  {
-    name: 'Kia Carens',
-    tagline: 'The Stylish Family Mover',
-    price: 'Starting ₹10.52 Lakh*',
-    image: '/images/carens.jpg',
-    href: '/models/carens',
-  },
-]
+import { Badge } from '@/components/ui/badge'
+import { Skeleton } from '@/components/ui/skeleton'
+import { getFeaturedModels } from '@/lib/data'
+import { formatPrice } from '@/lib/utils'
 
 const features = [
   {
@@ -58,6 +39,79 @@ const features = [
   },
 ]
 
+async function FeaturedModels() {
+  const models = await getFeaturedModels(3)
+
+  return (
+    <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+      {models.map((model) => (
+        <Card key={model.id} className="group overflow-hidden transition-shadow hover:shadow-lg">
+          <div className="relative aspect-video bg-muted">
+            <div className="flex h-full items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">
+              <Car className="h-20 w-20 text-gray-400 transition-transform group-hover:scale-110" />
+            </div>
+            {model.hasActiveOffers && (
+              <Badge variant="kia" className="absolute left-3 top-3">
+                <Tag className="mr-1 h-3 w-3" />
+                Offer
+              </Badge>
+            )}
+            <Badge variant="secondary" className="absolute right-3 top-3">
+              {model.modelYear}
+            </Badge>
+          </div>
+          <CardHeader>
+            <CardTitle className="group-hover:text-kia-red">{model.name}</CardTitle>
+            <CardDescription className="line-clamp-1">
+              {model.description || 'Premium Kia vehicle'}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {model.startingPrice ? (
+              <p className="text-lg font-semibold text-kia-red">
+                Starting {formatPrice(model.startingPrice)}*
+              </p>
+            ) : (
+              <p className="text-lg font-semibold text-muted-foreground">Price on request</p>
+            )}
+            <div className="mt-4 flex gap-2">
+              <Button variant="kia" size="sm" asChild>
+                <Link href={`/models/${model.slug}`}>View Details</Link>
+              </Button>
+              <Button variant="outline" size="sm" asChild>
+                <Link href={`/test-drive?model=${model.slug}`}>Test Drive</Link>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  )
+}
+
+function FeaturedModelsSkeleton() {
+  return (
+    <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+      {Array.from({ length: 3 }).map((_, i) => (
+        <Card key={i} className="overflow-hidden">
+          <Skeleton className="aspect-video" />
+          <CardHeader>
+            <Skeleton className="h-6 w-3/4" />
+            <Skeleton className="mt-2 h-4 w-full" />
+          </CardHeader>
+          <CardContent>
+            <Skeleton className="h-6 w-1/2" />
+            <div className="mt-4 flex gap-2">
+              <Skeleton className="h-9 flex-1" />
+              <Skeleton className="h-9 flex-1" />
+            </div>
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  )
+}
+
 export default function HomePage() {
   return (
     <div className="flex flex-col">
@@ -79,7 +133,12 @@ export default function HomePage() {
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
-              <Button variant="outline" size="xl" className="border-white text-white hover:bg-white hover:text-kia-black" asChild>
+              <Button
+                variant="outline"
+                size="xl"
+                className="border-white text-white hover:bg-white hover:text-kia-black"
+                asChild
+              >
                 <Link href="/test-drive">Book Test Drive</Link>
               </Button>
             </div>
@@ -98,32 +157,10 @@ export default function HomePage() {
               Explore our most popular Kia vehicles
             </p>
           </div>
-          <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {featuredModels.map((model) => (
-              <Card key={model.name} className="group overflow-hidden transition-shadow hover:shadow-lg">
-                <div className="aspect-video bg-muted">
-                  {/* Placeholder for model image */}
-                  <div className="flex h-full items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">
-                    <Car className="h-20 w-20 text-gray-400" />
-                  </div>
-                </div>
-                <CardHeader>
-                  <CardTitle className="group-hover:text-kia-red">{model.name}</CardTitle>
-                  <CardDescription>{model.tagline}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-lg font-semibold text-kia-red">{model.price}</p>
-                  <div className="mt-4 flex gap-2">
-                    <Button variant="kia" size="sm" asChild>
-                      <Link href={model.href}>View Details</Link>
-                    </Button>
-                    <Button variant="outline" size="sm" asChild>
-                      <Link href="/test-drive">Test Drive</Link>
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+          <div className="mt-12">
+            <Suspense fallback={<FeaturedModelsSkeleton />}>
+              <FeaturedModels />
+            </Suspense>
           </div>
           <div className="mt-12 text-center">
             <Button variant="outline" size="lg" asChild>
@@ -180,13 +217,23 @@ export default function HomePage() {
             Our team is ready to help you find your perfect vehicle.
           </p>
           <div className="mt-10 flex flex-col justify-center gap-4 sm:flex-row">
-            <Button size="xl" variant="secondary" className="bg-white text-kia-red hover:bg-gray-100" asChild>
+            <Button
+              size="xl"
+              variant="secondary"
+              className="bg-white text-kia-red hover:bg-gray-100"
+              asChild
+            >
               <Link href="/test-drive">
                 Book Test Drive
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
-            <Button size="xl" variant="outline" className="border-white text-white hover:bg-white hover:text-kia-red" asChild>
+            <Button
+              size="xl"
+              variant="outline"
+              className="border-white text-white hover:bg-white hover:text-kia-red"
+              asChild
+            >
               <Link href="/contact">Contact Us</Link>
             </Button>
           </div>
