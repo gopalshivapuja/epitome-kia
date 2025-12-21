@@ -16,6 +16,8 @@ model CarModel {
   slug        String    @unique
   modelYear   Int       @map("model_year")
   description String?
+  kiaIndiaUrl String?   @map("kia_india_url")
+  lastSyncedAt DateTime? @map("last_synced_at") @db.Timestamptz
   isActive    Boolean   @default(true) @map("is_active")
   createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz
   updatedAt   DateTime  @updatedAt @map("updated_at") @db.Timestamptz
@@ -37,6 +39,7 @@ model Variant {
   slug       String    @unique
   trimLevel  String?   @map("trim_level")
   basePrice  Decimal?  @map("base_price") @db.Decimal(12, 2)
+  sourceUrl  String?   @map("source_url")
   isActive   Boolean   @default(true) @map("is_active")
   createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamptz
   updatedAt  DateTime  @updatedAt @map("updated_at") @db.Timestamptz

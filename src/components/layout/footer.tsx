@@ -1,153 +1,107 @@
 import Link from 'next/link'
-import { Phone, Mail, MapPin, Facebook, Instagram, Twitter, Youtube } from 'lucide-react'
-
-const footerLinks = {
-  models: [
-    { name: 'Seltos', href: '/models/seltos' },
-    { name: 'Sonet', href: '/models/sonet' },
-    { name: 'Carens', href: '/models/carens' },
-    { name: 'EV6', href: '/models/ev6' },
-    { name: 'Carnival', href: '/models/carnival' },
-  ],
-  services: [
-    { name: 'Book a Service', href: '/service' },
-    { name: 'Pickup & Drop', href: '/service#pickup' },
-    { name: 'Genuine Parts', href: '/parts' },
-    { name: 'Warranty', href: '/warranty' },
-    { name: 'Roadside Assistance', href: '/roadside-assistance' },
-  ],
-  company: [
-    { name: 'About Us', href: '/about' },
-    { name: 'Locations', href: '/locations' },
-    { name: 'Careers', href: '/careers' },
-    { name: 'News & Events', href: '/blog' },
-    { name: 'Contact Us', href: '/contact' },
-  ],
-  legal: [
-    { name: 'Privacy Policy', href: '/privacy' },
-    { name: 'Terms of Service', href: '/terms' },
-    { name: 'Cookie Policy', href: '/cookies' },
-  ],
-}
-
-const socialLinks = [
-  { name: 'Facebook', href: '#', icon: Facebook },
-  { name: 'Instagram', href: '#', icon: Instagram },
-  { name: 'Twitter', href: '#', icon: Twitter },
-  { name: 'YouTube', href: '#', icon: Youtube },
-]
+import Image from 'next/image'
+import { Facebook, Instagram, Youtube, Linkedin, Twitter, Phone, Mail, MapPin } from 'lucide-react'
+import { COMPANY_INFO, LOCATIONS, SOCIAL_LINKS, QUICK_LINKS } from '@/lib/company-data'
 
 export function Footer() {
   return (
-    <footer className="border-t bg-kia-black text-white">
-      <div className="container py-12 md:py-16">
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-5">
-          {/* Brand column */}
-          <div className="lg:col-span-1">
-            <Link href="/" className="inline-block">
-              <div className="flex h-12 w-24 items-center justify-center rounded bg-kia-red">
-                <span className="text-2xl font-bold tracking-wider text-white">KIA</span>
-              </div>
+    <footer className="bg-black text-white">
+      {/* Main Footer */}
+      <div className="container py-16">
+        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
+          {/* Brand */}
+          <div className="space-y-6">
+            <Link href="/" className="block">
+              <Image
+                src={COMPANY_INFO.logo}
+                alt={COMPANY_INFO.brand}
+                width={180}
+                height={60}
+                className="h-12 w-auto"
+              />
             </Link>
-            <p className="mt-4 text-sm text-gray-400">
-              Epitome Kia - Your trusted Kia dealership for new cars, service, and genuine parts.
+            <p className="text-sm text-gray-400 leading-relaxed">
+              {COMPANY_INFO.description}
             </p>
-            <div className="mt-6 space-y-3 text-sm">
-              <a href="tel:+911234567890" className="flex items-center gap-2 text-gray-400 hover:text-white">
-                <Phone className="h-4 w-4" />
-                <span>+91 123 456 7890</span>
+            {/* Social Icons */}
+            <div className="flex gap-4">
+              <a href={SOCIAL_LINKS.facebook} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
+                <Facebook className="h-5 w-5" />
               </a>
-              <a href="mailto:info@epitomekia.com" className="flex items-center gap-2 text-gray-400 hover:text-white">
-                <Mail className="h-4 w-4" />
-                <span>info@epitomekia.com</span>
+              <a href={SOCIAL_LINKS.instagram} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
+                <Instagram className="h-5 w-5" />
               </a>
-              <div className="flex items-start gap-2 text-gray-400">
-                <MapPin className="mt-0.5 h-4 w-4 flex-shrink-0" />
-                <span>123 Auto Plaza, Main Road, City - 400001</span>
-              </div>
+              <a href={SOCIAL_LINKS.youtube} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
+                <Youtube className="h-5 w-5" />
+              </a>
+              <a href={SOCIAL_LINKS.linkedin} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
+                <Linkedin className="h-5 w-5" />
+              </a>
+              <a href={SOCIAL_LINKS.twitter} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
+                <Twitter className="h-5 w-5" />
+              </a>
             </div>
+          </div>
+
+          {/* Quick Links */}
+          <div>
+            <h3 className="text-sm font-semibold uppercase tracking-wider mb-6">Quick Links</h3>
+            <ul className="space-y-3">
+              {QUICK_LINKS.map((link) => (
+                <li key={link.href}>
+                  <Link href={link.href} className="text-gray-400 hover:text-white transition-colors text-sm">
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
 
           {/* Models */}
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider">Models</h3>
-            <ul className="mt-4 space-y-2">
-              {footerLinks.models.map((link) => (
-                <li key={link.name}>
-                  <Link href={link.href} className="text-sm text-gray-400 hover:text-white">
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
+            <h3 className="text-sm font-semibold uppercase tracking-wider mb-6">Models</h3>
+            <ul className="space-y-3">
+              <li><Link href="/models/seltos" className="text-gray-400 hover:text-white transition-colors text-sm">Kia Seltos</Link></li>
+              <li><Link href="/models/sonet" className="text-gray-400 hover:text-white transition-colors text-sm">Kia Sonet</Link></li>
+              <li><Link href="/models/carens" className="text-gray-400 hover:text-white transition-colors text-sm">Kia Carens</Link></li>
+              <li><Link href="/models/ev6" className="text-gray-400 hover:text-white transition-colors text-sm">Kia EV6</Link></li>
             </ul>
           </div>
 
-          {/* Services */}
+          {/* Contact */}
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider">Services</h3>
-            <ul className="mt-4 space-y-2">
-              {footerLinks.services.map((link) => (
-                <li key={link.name}>
-                  <Link href={link.href} className="text-sm text-gray-400 hover:text-white">
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Company */}
-          <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider">Company</h3>
-            <ul className="mt-4 space-y-2">
-              {footerLinks.company.map((link) => (
-                <li key={link.name}>
-                  <Link href={link.href} className="text-sm text-gray-400 hover:text-white">
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Newsletter & Social */}
-          <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider">Stay Connected</h3>
-            <p className="mt-4 text-sm text-gray-400">
-              Follow us for latest updates, offers, and news.
-            </p>
-            <div className="mt-4 flex gap-4">
-              {socialLinks.map((social) => (
-                <a
-                  key={social.name}
-                  href={social.href}
-                  className="text-gray-400 hover:text-white"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <span className="sr-only">{social.name}</span>
-                  <social.icon className="h-5 w-5" />
+            <h3 className="text-sm font-semibold uppercase tracking-wider mb-6">Corporate Office</h3>
+            <div className="space-y-4 text-sm">
+              <div className="flex items-start gap-3">
+                <MapPin className="h-5 w-5 text-kia-red shrink-0 mt-0.5" />
+                <span className="text-gray-400">{LOCATIONS[0].address}</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <Phone className="h-5 w-5 text-kia-red shrink-0" />
+                <a href={`tel:${LOCATIONS[0].salesPhone[0]}`} className="text-gray-400 hover:text-white transition-colors">
+                  {LOCATIONS[0].salesPhone[0]}
                 </a>
-              ))}
+              </div>
+              <div className="flex items-center gap-3">
+                <Mail className="h-5 w-5 text-kia-red shrink-0" />
+                <a href={`mailto:${LOCATIONS[0].email}`} className="text-gray-400 hover:text-white transition-colors">
+                  {LOCATIONS[0].email}
+                </a>
+              </div>
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Bottom bar */}
-        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-gray-800 pt-8 md:flex-row">
-          <p className="text-sm text-gray-400">
-            &copy; {new Date().getFullYear()} Epitome Kia. All rights reserved.
+      {/* Bottom Bar */}
+      <div className="border-t border-gray-800">
+        <div className="container py-6 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-xs text-gray-500">
+            {COMPANY_INFO.copyright}
           </p>
-          <div className="flex gap-6">
-            {footerLinks.legal.map((link) => (
-              <Link
-                key={link.name}
-                href={link.href}
-                className="text-sm text-gray-400 hover:text-white"
-              >
-                {link.name}
-              </Link>
-            ))}
+          <div className="flex gap-6 text-xs text-gray-500">
+            <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
+            <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
           </div>
         </div>
       </div>

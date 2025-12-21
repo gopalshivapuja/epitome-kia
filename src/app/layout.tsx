@@ -1,32 +1,18 @@
 import type { Metadata } from 'next'
+import { Inter, Outfit } from 'next/font/google'
 import './globals.css'
-import { Header, Footer } from '@/components/layout'
+import { cn } from '@/lib/utils'
+import { GlassHeader } from '@/components/layout/GlassHeader'
+import { WhatsAppButton } from '@/components/features/WhatsAppButton'
+import { Footer } from '@/components/layout/footer'
 import { GoogleAnalytics } from '@/components/analytics/google-analytics'
 
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
+const outfit = Outfit({ subsets: ['latin'], variable: '--font-outfit' })
+
 export const metadata: Metadata = {
-  title: {
-    default: 'Epitome Kia | Authorized Kia Dealer',
-    template: '%s | Epitome Kia',
-  },
-  description:
-    'Epitome Kia - Your trusted authorized Kia dealership. Explore new Kia models, book test drives, schedule service appointments, and discover exclusive offers.',
-  keywords: [
-    'Kia',
-    'Kia dealer',
-    'Kia cars',
-    'Seltos',
-    'Sonet',
-    'Carens',
-    'EV6',
-    'test drive',
-    'car service',
-  ],
-  authors: [{ name: 'Epitome Kia' }],
-  openGraph: {
-    type: 'website',
-    locale: 'en_IN',
-    siteName: 'Epitome Kia',
-  },
+  title: 'Epitome Kia | Best Kia Dealer in Bangalore',
+  description: 'Experience the new standard of automotive excellence at Epitome Kia. Book test drives, explore offers, and service your Kia.',
 }
 
 export default function RootLayout({
@@ -35,13 +21,12 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className="min-h-screen bg-background font-sans antialiased">
-        <GoogleAnalytics />
-        <div className="relative flex min-h-screen flex-col">
-          <Header />
+    <html lang="en" className="scroll-smooth">
+      <body className={cn(inter.variable, outfit.variable, 'font-sans antialiased')}>
+        <div className="flex min-h-screen flex-col">
+          <GlassHeader />
+          <WhatsAppButton />
           <main className="flex-1">{children}</main>
-          <Footer />
         </div>
       </body>
     </html>

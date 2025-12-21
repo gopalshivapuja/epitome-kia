@@ -17,30 +17,19 @@ const config: Config = {
     },
     extend: {
       colors: {
-        // Kia Brand Colors
-        kia: {
-          red: '#BB162B',
-          'red-dark': '#8B1120',
-          black: '#05141F',
-          gray: {
-            50: '#F8F9FA',
-            100: '#F1F3F5',
-            200: '#E9ECEF',
-            300: '#DEE2E6',
-            400: '#CED4DA',
-            500: '#ADB5BD',
-            600: '#6C757D',
-            700: '#495057',
-            800: '#343A40',
-            900: '#212529',
-          },
-        },
-        // shadcn/ui compatible colors
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
+        kia: {
+          red: '#BB162B', // Official Kia Red
+          'red-dark': '#8B1120',
+          black: '#05141F', // Midnight Black
+          graphite: '#444444',
+          silver: '#E5E5E5',
+          white: '#FFFFFF',
+        },
         primary: {
           DEFAULT: 'hsl(var(--primary))',
           foreground: 'hsl(var(--primary-foreground))',
@@ -76,26 +65,8 @@ const config: Config = {
         sm: 'calc(var(--radius) - 4px)',
       },
       fontFamily: {
-        sans: [
-          'system-ui',
-          '-apple-system',
-          'BlinkMacSystemFont',
-          'Segoe UI',
-          'Roboto',
-          'Helvetica Neue',
-          'Arial',
-          'sans-serif',
-        ],
-        heading: [
-          'system-ui',
-          '-apple-system',
-          'BlinkMacSystemFont',
-          'Segoe UI',
-          'Roboto',
-          'Helvetica Neue',
-          'Arial',
-          'sans-serif',
-        ],
+        sans: ['var(--font-inter)', 'sans-serif'],
+        heading: ['var(--font-outfit)', 'sans-serif'],
       },
       keyframes: {
         'accordion-down': {
@@ -106,11 +77,25 @@ const config: Config = {
           from: { height: 'var(--radix-accordion-content-height)' },
           to: { height: '0' },
         },
+        'fade-in-up': {
+          '0%': { opacity: '0', transform: 'translateY(20px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        'reveal': {
+          '0%': { clipPath: 'inset(0 100% 0 0)' },
+          '100%': { clipPath: 'inset(0 0 0 0)' },
+        }
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
+        'fade-in-up': 'fade-in-up 0.8s ease-out forwards',
+        'reveal': 'reveal 1.2s cubic-bezier(0.77, 0, 0.175, 1) forwards',
       },
+      backgroundImage: {
+        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+        'hero-gradient': 'linear-gradient(to bottom, rgba(5,20,31,0.3), rgba(5,20,31,0.8))',
+      }
     },
   },
   plugins: [require('tailwindcss-animate')],

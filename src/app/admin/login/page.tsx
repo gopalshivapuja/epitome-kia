@@ -4,11 +4,13 @@ import { Suspense, useState } from 'react'
 import { signIn } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Loader2, Lock, Mail, AlertCircle } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { COMPANY_INFO } from '@/lib/company-data'
 
 function LoginForm() {
   const router = useRouter()
@@ -48,24 +50,24 @@ function LoginForm() {
   }
 
   return (
-    <Card>
+    <Card className="bg-zinc-900 border-zinc-800">
       <CardHeader className="text-center">
-        <CardTitle>Sign In</CardTitle>
-        <CardDescription>
+        <CardTitle className="text-white">Dealer Login</CardTitle>
+        <CardDescription className="text-gray-400">
           Enter your credentials to access the admin dashboard
         </CardDescription>
       </CardHeader>
       <CardContent>
         {(error || loginError) && (
-          <div className="mb-4 flex items-center gap-2 rounded-lg bg-destructive/10 p-3 text-sm text-destructive">
+          <div className="mb-4 flex items-center gap-2 rounded-lg bg-red-500/10 p-3 text-sm text-red-400 border border-red-500/20">
             <AlertCircle className="h-4 w-4" />
             {loginError || 'Authentication failed. Please try again.'}
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <Label htmlFor="email" className="flex items-center gap-2">
+          <div className="space-y-2">
+            <Label htmlFor="email" className="flex items-center gap-2 text-gray-300">
               <Mail className="h-4 w-4" />
               Email
             </Label>
@@ -74,15 +76,16 @@ function LoginForm() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="admin@epitomekia.com"
+              placeholder="admin@epitomekia.in"
               required
               autoComplete="email"
               disabled={loading}
+              className="bg-zinc-800 border-zinc-700 text-white placeholder:text-gray-500"
             />
           </div>
 
-          <div>
-            <Label htmlFor="password" className="flex items-center gap-2">
+          <div className="space-y-2">
+            <Label htmlFor="password" className="flex items-center gap-2 text-gray-300">
               <Lock className="h-4 w-4" />
               Password
             </Label>
@@ -95,13 +98,13 @@ function LoginForm() {
               required
               autoComplete="current-password"
               disabled={loading}
+              className="bg-zinc-800 border-zinc-700 text-white placeholder:text-gray-500"
             />
           </div>
 
           <Button
             type="submit"
-            variant="kia"
-            className="w-full"
+            className="w-full bg-kia-red hover:bg-kia-red-dark text-white"
             disabled={loading}
           >
             {loading ? (
@@ -121,16 +124,16 @@ function LoginForm() {
 
 function LoginFormFallback() {
   return (
-    <Card>
+    <Card className="bg-zinc-900 border-zinc-800">
       <CardHeader className="text-center">
-        <CardTitle>Sign In</CardTitle>
-        <CardDescription>
-          Enter your credentials to access the admin dashboard
+        <CardTitle className="text-white">Dealer Login</CardTitle>
+        <CardDescription className="text-gray-400">
+          Loading...
         </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="flex justify-center py-8">
-          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+          <Loader2 className="h-8 w-8 animate-spin text-kia-red" />
         </div>
       </CardContent>
     </Card>
@@ -139,24 +142,28 @@ function LoginFormFallback() {
 
 export default function AdminLoginPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100 px-4">
+    <div className="flex min-h-screen items-center justify-center bg-black px-4">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="mb-8 text-center">
           <Link href="/" className="inline-block">
-            <h1 className="text-2xl font-bold text-kia-black">
-              Epitome <span className="text-kia-red">Kia</span>
-            </h1>
+            <Image
+              src={COMPANY_INFO.logo}
+              alt={COMPANY_INFO.brand}
+              width={180}
+              height={60}
+              className="h-14 w-auto mx-auto"
+            />
           </Link>
-          <p className="mt-2 text-sm text-muted-foreground">Admin Portal</p>
+          <p className="mt-4 text-sm text-gray-500 uppercase tracking-widest">Dealer Portal</p>
         </div>
 
         <Suspense fallback={<LoginFormFallback />}>
           <LoginForm />
         </Suspense>
 
-        <p className="mt-6 text-center text-sm text-muted-foreground">
-          <Link href="/" className="hover:text-foreground">
+        <p className="mt-6 text-center text-sm text-gray-500">
+          <Link href="/" className="hover:text-white transition-colors">
             &larr; Back to website
           </Link>
         </p>
