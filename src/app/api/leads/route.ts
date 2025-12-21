@@ -1,10 +1,28 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/db'
-import { successResponse, handleApiError } from '@/lib/api-utils'
+import { successResponse, errorResponse, handleApiError } from '@/lib/api-utils'
 import { leadSchema } from '@/lib/validations'
+import { rateLimit, getClientIp, rateLimitConfigs } from '@/lib/rate-limit'
 
 export async function POST(request: NextRequest) {
   try {
+    // Rate limiting for lead submissions
+    const ip = getClientIp(request)
+    const rateLimitResult = rateLimit(`leads:${ip}`, rateLimitConfigs.leadForm)
+    
+    if (!rateLimitResult.success) {
+      return errorResponse(
+        'Too many requests. Please try again later.',
+        429,
+        {
+          'Retry-After': String(Math.ceil((rateLimitResult.resetAt - Date.now()) / 1000)),
+          'X-RateLimit-Limit': '5',
+          'X-RateLimit-Remaining': '0',
+          'X-RateLimit-Reset': String(rateLimitResult.resetAt),
+        }
+      )
+    }
+
     const body = await request.json()
 
     // Validate input

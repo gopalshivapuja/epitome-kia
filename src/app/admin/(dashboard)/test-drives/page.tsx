@@ -13,18 +13,16 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { Button } from '@/components/ui/button'
 import {
   Car,
   Calendar,
   Clock,
-  User,
   Phone,
-  Mail,
   CheckCircle,
   XCircle,
   AlertCircle,
 } from 'lucide-react'
+import { TestDriveStatusActions } from '@/components/admin/actions'
 
 async function getTestDrives() {
   try {
@@ -157,18 +155,7 @@ async function TestDrivesTable() {
               <Badge className={getStatusColor(td.status)}>{td.status}</Badge>
             </TableCell>
             <TableCell className="text-right">
-              <div className="flex justify-end gap-1">
-                {td.status === 'pending' && (
-                  <>
-                    <Button variant="ghost" size="sm" className="text-green-600">
-                      <CheckCircle className="h-4 w-4" />
-                    </Button>
-                    <Button variant="ghost" size="sm" className="text-red-600">
-                      <XCircle className="h-4 w-4" />
-                    </Button>
-                  </>
-                )}
-              </div>
+              <TestDriveStatusActions id={td.id} currentStatus={td.status} />
             </TableCell>
           </TableRow>
         ))}

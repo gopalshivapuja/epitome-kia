@@ -15,9 +15,19 @@ export function successResponse<T>(data: T, status = 200): NextResponse<ApiRespo
 export function errorResponse(
   message: string,
   status = 400,
-  errors?: Record<string, string[]>
+  headersOrErrors?: Record<string, string> | Record<string, string[]>
 ): NextResponse<ApiResponse<never>> {
-  return NextResponse.json({ success: false, error: message, errors }, { status })
+  // Check if it's headers (all values are strings) or errors (values are string arrays)
+  const isHeaders = headersOrErrors && 
+    Object.values(headersOrErrors).every(v => typeof v === 'string')
+  
+  const errors = isHeaders ? undefined : headersOrErrors as Record<string, string[]>
+  const headers = isHeaders ? headersOrErrors as Record<string, string> : undefined
+
+  return NextResponse.json(
+    { success: false, error: message, errors }, 
+    { status, headers }
+  )
 }
 
 export function handleApiError(error: unknown): NextResponse<ApiResponse<never>> {

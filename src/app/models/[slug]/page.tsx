@@ -1,11 +1,12 @@
 import { Suspense } from 'react'
 import { Metadata } from 'next'
 import Link from 'next/link'
+import Image from 'next/image'
 import { notFound } from 'next/navigation'
 
 // Force dynamic rendering - no static generation at build time
 export const dynamic = 'force-dynamic'
-import { ArrowLeft, Car, Calendar, Wrench, Calculator, Tag, ChevronRight } from 'lucide-react'
+import { ArrowLeft, Calendar, Wrench, Calculator, Tag, ChevronRight } from 'lucide-react'
 import { getModelBySlug, getModels } from '@/lib/data'
 import { EMICalculator } from '@/components/features/emi-calculator'
 import { formatPrice } from '@/lib/utils'
@@ -80,9 +81,13 @@ async function ModelDetail({ slug }: { slug: string }) {
         <div className="mb-10 grid gap-8 lg:grid-cols-2">
           {/* Image */}
           <div className="relative aspect-video overflow-hidden rounded-lg bg-gradient-to-br from-gray-100 to-gray-200 lg:aspect-[4/3]">
-            <div className="flex h-full items-center justify-center">
-              <Car className="h-32 w-32 text-gray-400" />
-            </div>
+            <Image
+              src={`/models/${model.slug}.png`}
+              alt={model.name}
+              fill
+              className="object-contain p-4"
+              priority
+            />
             {model.offers.length > 0 && (
               <Badge variant="kia" className="absolute left-4 top-4 text-sm">
                 <Tag className="mr-1 h-4 w-4" />

@@ -107,7 +107,7 @@ export async function sendTestDriveConfirmation(data: TestDriveEmailData) {
 
               <p>Our team will contact you shortly to confirm the appointment. Please bring a valid driving license.</p>
 
-              <p>If you need to reschedule, please contact us at: <strong>+91 XXXXX XXXXX</strong></p>
+              <p>If you need to reschedule, please contact us at: <strong>080-4736-3737</strong></p>
             </div>
             <div class="footer">
               <p>Epitome Kia | Your Premium Kia Dealer</p>

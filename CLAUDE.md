@@ -1,175 +1,121 @@
-# CLAUDE.md - AI Assistant Guide for Epitome Kia
+# CLAUDE.md
 
-## Project Overview
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-Epitome Kia is a dealership website for a Kia car dealership. The site aims to drive vehicle discovery, lead capture, test drive scheduling, and service bookings while aligning with Kia brand standards.
+## Build and Development Commands
 
-**Current Status**: Early development stage - PRD and database schema defined, implementation pending.
+```bash
+# Development
+npm run dev              # Start dev server at http://localhost:3000
+npm run build            # Production build
+npm run lint             # ESLint
+npm run type-check       # TypeScript type checking
 
-## Repository Structure
+# Database (Prisma)
+npm run db:generate      # Generate Prisma client
+npm run db:push          # Push schema changes (dev)
+npm run db:migrate       # Create and apply migrations
+npm run db:seed          # Seed with sample data
+npm run db:studio        # Open Prisma Studio GUI
+npm run db:reset         # Reset database (dev only)
+
+# Full setup from scratch
+npm run setup            # install + prisma generate + db push + seed
+
+# Pre-deployment verification
+npm run deploy:check     # lint + type-check + build
+```
+
+## Architecture Overview
+
+**Stack**: Next.js 14 (App Router) + Prisma ORM + PostgreSQL + NextAuth.js v5 + Tailwind CSS + shadcn/ui
+
+### Route Structure
 
 ```
-epitome-kia/
-├── README.md           # Project description
-├── PRD.md              # Product Requirements Document (detailed feature specs)
-├── CLAUDE.md           # This file - AI assistant guidelines
-└── db/
-    └── schema.sql      # PostgreSQL database schema
+src/app/
+├── (public)/            # Public pages (models, offers, test-drive, service, emi-calculator)
+├── admin/               # Protected admin routes
+│   ├── login/           # Admin login (public)
+│   └── (dashboard)/     # Dashboard pages (leads, offers, test-drives, service-bookings)
+└── api/                 # API routes
+    ├── models/          # GET /api/models, GET /api/models/[slug]
+    ├── leads/           # POST /api/leads, GET/PATCH/DELETE /api/leads/[id]
+    ├── test-drive/      # POST /api/test-drive, PATCH/DELETE /api/test-drive/[id]
+    ├── service-booking/ # POST /api/service-booking, PATCH/DELETE /api/service-booking/[id]
+    ├── offers/          # GET/POST /api/offers, PATCH/DELETE /api/offers/[id]
+    ├── blog-posts/      # GET/POST /api/blog-posts, PATCH/DELETE /api/blog-posts/[id]
+    ├── pages/           # GET/POST /api/pages, PATCH/DELETE /api/pages/[id]
+    ├── emi/             # POST /api/emi
+    ├── admin/sync/      # POST - sync data from Kia India
+    ├── health/          # GET - health check endpoint
+    └── auth/[...nextauth]/
 ```
 
-## Key Documentation
+### Key Files
 
-### PRD.md
-The Product Requirements Document contains:
-- Goals and non-goals
-- User personas (car buyers, service customers, dealership staff)
-- User journeys (model discovery, offers, financing, service booking, chatbot)
-- KPIs and success metrics
-- Feature requirements for 8 major modules
-- Content strategy and compliance requirements
+- `src/lib/db.ts` - Prisma client singleton
+- `src/lib/auth.ts` - NextAuth.js v5 config with credentials provider and type augmentation
+- `src/lib/validations.ts` - Zod schemas for all form inputs
+- `src/lib/api-utils.ts` - API response helpers (`successResponse`, `errorResponse`, `handleApiError`)
+- `src/middleware.ts` - Auth protection for `/admin/*` routes with security headers (CSP, X-Frame-Options, etc.)
+- `prisma/schema.prisma` - Database schema (source of truth)
+- `prisma/seed.ts` - Seed data for development
 
-### db/schema.sql
-PostgreSQL schema defining core entities:
+### Authentication
 
-**Vehicle Catalog**
-- `car_models` - Kia vehicle models with year, slug, active status
-- `variants` - Model variants/trims with pricing
-- `specifications` - Key-value specs per variant
+NextAuth.js v5 (beta) with credentials provider. Admin users stored in `AdminUser` table with bcrypt-hashed passwords. JWT session strategy (24h expiry). Roles: `admin`, `sales_manager`, `service_advisor`, `staff`. Only `admin` role can access `/admin/settings`.
 
-**Offers & Content**
-- `offers` - Promotions linked to models or variants
-- `pages` - CMS pages with SEO fields
-- `blog_posts` - Blog content with publish workflow
-- `faqs` - FAQs linked to pages
+### API Response Pattern
 
-**Dealer Operations**
-- `dealer_locations` - Physical dealership locations with geo data
+All API routes use consistent response helpers from `src/lib/api-utils.ts`:
+```typescript
+successResponse(data, status?)     // { success: true, data }
+errorResponse(message, status?)    // { success: false, error }
+handleApiError(error)              // Handles ZodError, Error, and unknown
+```
 
-**Customer Interactions**
-- `customer_leads` - Lead capture (requires email or phone)
-- `test_drive_requests` - Test drive scheduling
-- `service_bookings` - Service appointments
-- `pickup_requests` - Vehicle pickup scheduling
+### Component Organization
 
-**Chat System**
-- `chat_sessions` - Chatbot conversations
-- `chat_messages` - Individual messages (customer/agent/assistant)
-
-**AI Content Management**
-- `ai_content_drafts` - AI-generated content drafts
-- `ai_content_reviews` - Editorial review workflow
+- `src/components/ui/` - shadcn/ui base components
+- `src/components/layout/` - Header variants, Footer, FullscreenSection
+- `src/components/forms/` - Form components with React Hook Form + Zod
+- `src/components/admin/` - Admin dashboard components
+- `src/components/features/` - Feature-specific components (CookieConsent, etc.)
 
 ## Database Conventions
 
-When working with the database schema:
+- **Primary Keys**: UUID with `@default(uuid())` and `@db.Uuid`
+- **Soft Deletes**: All tables have `deletedAt` field - always filter with `deletedAt: null`
+- **Audit Fields**: `createdAt`, `updatedAt` on all tables
+- **Naming**: Prisma uses camelCase, DB tables use snake_case via `@@map()`
+- **Timestamps**: Use `@db.Timestamptz` for timezone-aware timestamps
 
-1. **Primary Keys**: Use UUID v4 (`uuid_generate_v4()`)
-2. **Soft Deletes**: All tables have `deleted_at TIMESTAMPTZ` for soft deletion
-3. **Audit Fields**: Always include `created_at` and `updated_at` with `DEFAULT NOW()`
-4. **Slugs**: URL-friendly identifiers with unique constraints
-5. **Status Enums**: Use CHECK constraints for status fields (e.g., `'pending'`, `'scheduled'`, `'completed'`, `'cancelled'`)
-6. **Active Flags**: Use `is_active BOOLEAN NOT NULL DEFAULT TRUE` for toggleable records
-7. **Indexes**: Create indexes on foreign keys, status fields, and frequently queried columns
+### Core Models
 
-## Development Guidelines
-
-### When Adding New Features
-
-1. **Check PRD.md first** - Features should align with documented requirements
-2. **Follow existing patterns** - Match the established database conventions
-3. **Consider all personas** - New car buyers, service customers, and dealership staff
-4. **Mobile-first** - Core Web Vitals and mobile performance are KPIs
-
-### When Modifying Database Schema
-
-1. Add soft delete support (`deleted_at TIMESTAMPTZ`)
-2. Include audit timestamps (`created_at`, `updated_at`)
-3. Use UUID primary keys
-4. Add appropriate indexes
-5. Use CHECK constraints for enumerated values
-6. Document relationships in comments
-
-### Code Style Expectations (for future implementation)
-
-- Follow Kia brand guidelines for UI components
-- Implement proper form validation with CAPTCHA
-- Use HTTPS everywhere
-- Handle data privacy (GDPR/CCPA compliance)
-- Explicit consent for marketing communications
+- `CarModel` → `Variant` → `Specification` (hierarchical vehicle data)
+- `CustomerLead` → links to `TestDriveRequest`, `ServiceBooking`, `PickupRequest`
+- `Offer` → optional links to `CarModel` or `Variant`
+- `Page`, `BlogPost`, `FAQ` (content management)
+- `AdminUser` (authentication)
 
 ## Key Business Rules
 
-1. **Lead Capture**: Customer leads must have either email OR phone (enforced by DB constraint)
-2. **Offers**: Must be linked to either a car model OR variant (not neither)
-3. **Publishing**: Pages and blog posts require `published_at` when `is_published = TRUE`
-4. **Date Ranges**: Offer `end_at` must be >= `start_at` when specified
-5. **Model Years**: Must be >= 1980 (constraint on car_models)
-6. **Prices**: Must be >= 0 when specified
+1. **Lead Capture**: `CustomerLead` requires either email OR phone (Zod refinement in validations.ts)
+2. **Offers**: Can be linked to either a `CarModel` or `Variant` (both optional)
+3. **Publishing**: Pages/BlogPosts require `publishedAt` when `isPublished = true`
+4. **Status Values**: `pending`, `scheduled`, `completed`, `cancelled` for requests
+5. **Date Validation**: Test drives and service bookings require dates today or in the future
 
-## Integration Points
-
-The system is designed to integrate with:
-- Kia national content feeds (models, specs, images)
-- Dealership CRM/DMS systems
-- Inventory management systems (data source, not replacement)
-- Analytics (GA4, CRM tracking, call tracking)
-
-## Common Tasks
-
-### Adding a New Car Model
-1. Insert into `car_models` with unique slug
-2. Add variants to `variants` table
-3. Add specifications for each variant
-4. Optionally create offers
-
-### Creating a Lead Flow
-1. Insert customer into `customer_leads`
-2. Create related request (test_drive_requests, service_bookings, or pickup_requests)
-3. Update status as workflow progresses
-
-### Managing AI Content
-1. Create draft in `ai_content_drafts` with status 'draft'
-2. Move to 'in_review' when ready
-3. Add review in `ai_content_reviews`
-4. Update draft status to 'approved' or 'rejected'
-
-## Entity Relationships
+## Environment Variables
 
 ```
-CarModel (1) ──→ (many) Variant
-Variant (1) ──→ (many) Specification
-CarModel (1) ──→ (many) Offer (optional)
-Variant (1) ──→ (many) Offer (optional)
-Page (1) ──→ (many) FAQ
-DealerLocation (1) ──→ (many) ServiceBooking
-CustomerLead (1) ──→ (many) TestDriveRequest
-CustomerLead (1) ──→ (many) ServiceBooking
-CustomerLead (1) ──→ (many) PickupRequest
-ChatSession (1) ──→ (many) ChatMessage
-AIContentDraft (1) ──→ (many) AIContentReview
+DATABASE_URL=postgresql://...
+NEXTAUTH_SECRET=<32-char-base64>
+NEXTAUTH_URL=https://your-domain.com
+RESEND_API_KEY=re_...  # Email notifications
 ```
 
-## Security Considerations
+## Kia Brand Colors (Tailwind)
 
-- Secure form submissions
-- CAPTCHA for spam reduction
-- Data retention limits per privacy laws
-- Cookie consent management
-- Explicit marketing opt-in/opt-out
-
-## Phase Roadmap
-
-**Phase 1** (Current scope):
-- Model catalog
-- Offers management
-- Test drive scheduling
-- Service booking
-- EMI tools
-- Chatbot
-- Admin workflows
-- Analytics
-
-**Phase 2** (Future):
-- AI blog and content automation
-- Deeper personalization
-- Advanced CRM integrations
+Use `kia-*` color utilities: `kia-red` (#BB162B), `kia-red-dark` (#8B1120), `kia-black` (#05141F), `kia-graphite`, `kia-silver`

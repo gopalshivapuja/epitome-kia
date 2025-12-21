@@ -107,8 +107,8 @@ export default function ServicePage() {
       try {
         const res = await fetch('/api/models')
         const data = await res.json()
-        if (data.data) {
-          setModels(data.data)
+        if (data.data?.models) {
+          setModels(data.data.models)
         }
       } catch (error) {
         console.error('Failed to fetch models:', error)

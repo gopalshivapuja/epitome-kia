@@ -18,13 +18,12 @@ import {
   Tag,
   Calendar,
   Plus,
-  Edit,
-  Trash2,
   Eye,
   EyeOff,
   Car,
 } from 'lucide-react'
 import Link from 'next/link'
+import { OfferActions } from '@/components/admin/actions'
 
 async function getOffers() {
   try {
@@ -174,19 +173,7 @@ async function OffersTable() {
                 <Badge className={status.color}>{status.label}</Badge>
               </TableCell>
               <TableCell className="text-right">
-                <div className="flex justify-end gap-1">
-                  <Link href={`/offers/${offer.slug}`} target="_blank">
-                    <Button variant="ghost" size="sm">
-                      <Eye className="h-4 w-4" />
-                    </Button>
-                  </Link>
-                  <Button variant="ghost" size="sm">
-                    <Edit className="h-4 w-4" />
-                  </Button>
-                  <Button variant="ghost" size="sm" className="text-red-600">
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
+                <OfferActions id={offer.id} slug={offer.slug} />
               </TableCell>
             </TableRow>
           )

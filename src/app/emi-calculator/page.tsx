@@ -104,7 +104,7 @@ export default function EMICalculatorPage() {
                   <Phone className="h-5 w-5 text-kia-red" />
                   <div>
                     <p className="text-xs text-muted-foreground">Call us at</p>
-                    <p className="font-semibold">1800-XXX-XXXX</p>
+                    <p className="font-semibold">080-4736-3737</p>
                   </div>
                 </div>
                 <Button variant="outline" className="w-full" asChild>

@@ -6,6 +6,7 @@ import { GlassHeader } from '@/components/layout/GlassHeader'
 import { WhatsAppButton } from '@/components/features/WhatsAppButton'
 import { Footer } from '@/components/layout/footer'
 import { GoogleAnalytics } from '@/components/analytics/google-analytics'
+import { CookieConsent } from '@/components/features/CookieConsent'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 const outfit = Outfit({ subsets: ['latin'], variable: '--font-outfit' })
@@ -23,11 +24,13 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <body className={cn(inter.variable, outfit.variable, 'font-sans antialiased')}>
+        <GoogleAnalytics />
         <div className="flex min-h-screen flex-col">
           <GlassHeader />
           <WhatsAppButton />
           <main className="flex-1">{children}</main>
         </div>
+        <CookieConsent />
       </body>
     </html>
   )

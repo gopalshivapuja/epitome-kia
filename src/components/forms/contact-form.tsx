@@ -17,11 +17,10 @@ export function ContactForm() {
 
         const formData = new FormData(e.currentTarget)
         const data = {
-            name: formData.get('name'),
+            fullName: formData.get('fullName'),
             email: formData.get('email'),
             phone: formData.get('phone'),
-            subject: formData.get('subject'),
-            message: formData.get('message'),
+            notes: formData.get('message'),
         }
 
         try {
@@ -31,7 +30,6 @@ export function ContactForm() {
                 body: JSON.stringify({
                     ...data,
                     source: 'contact_form',
-                    type: 'inquiry',
                 }),
             })
             if (res.ok) {
@@ -62,8 +60,8 @@ export function ContactForm() {
         <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
-                    <Label htmlFor="name">Full Name</Label>
-                    <Input id="name" name="name" placeholder="John Doe" required />
+                    <Label htmlFor="fullName">Full Name</Label>
+                    <Input id="fullName" name="fullName" placeholder="John Doe" required />
                 </div>
                 <div className="space-y-2">
                     <Label htmlFor="phone">Phone Number</Label>

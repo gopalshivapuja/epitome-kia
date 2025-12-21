@@ -102,11 +102,11 @@ function TestDriveForm() {
       try {
         const res = await fetch('/api/models')
         const data = await res.json()
-        if (data.data) {
-          setModels(data.data)
+        if (data.data?.models) {
+          setModels(data.data.models)
           // Set preselected model if provided
           if (preselectedModel) {
-            const model = data.data.find((m: Model) => m.slug === preselectedModel)
+            const model = data.data.models.find((m: Model) => m.slug === preselectedModel)
             if (model) {
               setFormData((prev) => ({ ...prev, carModelId: model.id }))
             }
@@ -516,7 +516,7 @@ function TestDriveForm() {
               </CardHeader>
               <CardContent className="space-y-3 text-sm text-muted-foreground">
                 <p>Call us for immediate assistance:</p>
-                <p className="font-semibold text-foreground">1800-XXX-XXXX</p>
+                <p className="font-semibold text-foreground">080-4736-3737</p>
                 <p className="text-xs">Mon-Sat: 9:00 AM - 6:00 PM</p>
               </CardContent>
             </Card>

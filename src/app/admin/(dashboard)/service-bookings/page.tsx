@@ -13,7 +13,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { Button } from '@/components/ui/button'
 import {
   Wrench,
   Calendar,
@@ -25,6 +24,7 @@ import {
   AlertCircle,
   MapPin,
 } from 'lucide-react'
+import { ServiceBookingStatusActions } from '@/components/admin/actions'
 
 async function getServiceBookings() {
   try {
@@ -185,18 +185,7 @@ async function ServiceBookingsTable() {
               </Badge>
             </TableCell>
             <TableCell className="text-right">
-              <div className="flex justify-end gap-1">
-                {booking.status === 'pending' && (
-                  <>
-                    <Button variant="ghost" size="sm" className="text-green-600">
-                      <CheckCircle className="h-4 w-4" />
-                    </Button>
-                    <Button variant="ghost" size="sm" className="text-red-600">
-                      <XCircle className="h-4 w-4" />
-                    </Button>
-                  </>
-                )}
-              </div>
+              <ServiceBookingStatusActions id={booking.id} currentStatus={booking.status} />
             </TableCell>
           </TableRow>
         ))}

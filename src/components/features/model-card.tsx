@@ -1,5 +1,6 @@
 import Link from 'next/link'
-import { Car, Tag } from 'lucide-react'
+import Image from 'next/image'
+import { Tag } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -21,11 +22,14 @@ interface ModelCardProps {
 export function ModelCard({ model }: ModelCardProps) {
   return (
     <Card className="group overflow-hidden transition-all hover:shadow-lg">
-      {/* Image placeholder */}
+      {/* Model Image */}
       <div className="relative aspect-video bg-gradient-to-br from-gray-100 to-gray-200">
-        <div className="flex h-full items-center justify-center">
-          <Car className="h-20 w-20 text-gray-400 transition-transform group-hover:scale-110" />
-        </div>
+        <Image
+          src={`/models/${model.slug}.png`}
+          alt={model.name}
+          fill
+          className="object-contain p-4 transition-transform group-hover:scale-105"
+        />
         {model.hasActiveOffers && (
           <Badge variant="kia" className="absolute left-3 top-3">
             <Tag className="mr-1 h-3 w-3" />

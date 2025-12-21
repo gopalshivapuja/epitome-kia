@@ -20,11 +20,10 @@ import {
   Phone,
   Calendar,
   Eye,
-  MoreHorizontal,
-  Download,
   Filter,
 } from 'lucide-react'
 import Link from 'next/link'
+import { ExportLeadsButton } from '@/components/admin/actions'
 
 async function getLeads() {
   try {
@@ -241,10 +240,7 @@ export default function LeadsPage() {
             <Filter className="h-4 w-4 mr-2" />
             Filter
           </Button>
-          <Button variant="outline" size="sm">
-            <Download className="h-4 w-4 mr-2" />
-            Export CSV
-          </Button>
+          <ExportLeadsButton />
         </div>
       </div>
 

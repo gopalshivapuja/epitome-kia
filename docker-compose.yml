@@ -18,5 +18,22 @@ services:
       timeout: 5s
       retries: 5
 
+  app:
+    build: .
+    container_name: epitome-kia-app
+    ports:
+      - "3005:3005"
+    environment:
+      DATABASE_URL: postgresql://user:password@db:5432/epitome_kia_local
+      NEXTAUTH_SECRET: dev-secret-key-change-in-production
+      NEXTAUTH_URL: http://localhost:3005
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+    depends_on:
+      db:
+        condition: service_healthy
+
 volumes:
   postgres_data:

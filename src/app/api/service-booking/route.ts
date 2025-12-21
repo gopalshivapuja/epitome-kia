@@ -1,11 +1,24 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/db'
-import { successResponse, handleApiError } from '@/lib/api-utils'
+import { successResponse, errorResponse, handleApiError } from '@/lib/api-utils'
 import { serviceBookingSchema } from '@/lib/validations'
 import { sendServiceBookingConfirmation, notifyServiceTeam } from '@/lib/email'
+import { rateLimit, getClientIp, rateLimitConfigs } from '@/lib/rate-limit'
 
 export async function POST(request: NextRequest) {
   try {
+    // Rate limiting for service booking submissions
+    const ip = getClientIp(request)
+    const rateLimitResult = rateLimit(`service-booking:${ip}`, rateLimitConfigs.leadForm)
+    
+    if (!rateLimitResult.success) {
+      return errorResponse(
+        'Too many requests. Please try again later.',
+        429,
+        { 'Retry-After': String(Math.ceil((rateLimitResult.resetAt - Date.now()) / 1000)) }
+      )
+    }
+
     const body = await request.json()
 
     // Validate input

@@ -34,21 +34,21 @@ async function main() {
   await prisma.adminUser.createMany({
     data: [
       {
-        email: 'admin@epitomekia.com',
+        email: 'admin@epitomekia.in',
         passwordHash: adminPassword,
         fullName: 'Admin User',
         role: 'admin',
         isActive: true,
       },
       {
-        email: 'sales@epitomekia.com',
+        email: 'sales@epitomekia.in',
         passwordHash: staffPassword,
         fullName: 'Sales Manager',
         role: 'sales_manager',
         isActive: true,
       },
       {
-        email: 'service@epitomekia.com',
+        email: 'service@epitomekia.in',
         passwordHash: staffPassword,
         fullName: 'Service Advisor',
         role: 'service_advisor',
@@ -57,50 +57,99 @@ async function main() {
     ],
   })
 
-  console.log('Creating dealer locations...')
+  console.log('Creating dealer locations (Bangalore)...')
 
-  // Create dealer locations
-  const mainShowroom = await prisma.dealerLocation.create({
+  // Create dealer locations - matching company-data.ts
+  const yelahanka = await prisma.dealerLocation.create({
     data: {
-      name: 'Epitome Kia - Main Showroom',
-      slug: 'main-showroom',
-      addressLine1: '123 Auto Plaza',
-      addressLine2: 'Near City Center',
-      city: 'Mumbai',
-      state: 'Maharashtra',
-      postalCode: '400001',
+      name: 'Epitome Kia - Yelahanka',
+      slug: 'yelahanka',
+      addressLine1: '#99, New Airport Road',
+      addressLine2: 'Yelahanka',
+      city: 'Bangalore',
+      state: 'Karnataka',
+      postalCode: '560064',
       country: 'IN',
-      phone: '+91 22 1234 5678',
-      email: 'sales@epitomekia.com',
-      latitude: 19.076,
-      longitude: 72.8777,
-      hours: 'Mon-Sat: 9AM-8PM, Sun: 10AM-6PM',
+      phone: '+91 78299 33669',
+      email: 'ccm.ylk@epitomekia.in',
+      latitude: 13.0989064,
+      longitude: 77.5975807,
+      hours: 'Mon-Sat: 9AM-7PM, Sun: 10AM-5PM',
       isActive: true,
     },
   })
 
-  const serviceCenter = await prisma.dealerLocation.create({
+  const whitefield = await prisma.dealerLocation.create({
     data: {
-      name: 'Epitome Kia - Service Center',
-      slug: 'service-center',
-      addressLine1: '456 Industrial Area',
-      addressLine2: 'Phase 2',
-      city: 'Mumbai',
-      state: 'Maharashtra',
-      postalCode: '400002',
+      name: 'Epitome Kia - Whitefield',
+      slug: 'whitefield',
+      addressLine1: 'Whitefield Main Road',
+      addressLine2: 'Whitefield',
+      city: 'Bangalore',
+      state: 'Karnataka',
+      postalCode: '560066',
       country: 'IN',
-      phone: '+91 22 1234 5679',
-      email: 'service@epitomekia.com',
-      latitude: 19.086,
-      longitude: 72.8877,
-      hours: 'Mon-Sat: 8AM-7PM',
+      phone: '+91 63662 43243',
+      email: 'ccm@epitomekia.in',
+      hours: 'Mon-Sat: 9AM-7PM, Sun: 10AM-5PM',
       isActive: true,
     },
   })
 
-  console.log('Creating car models...')
+  const avalahalli = await prisma.dealerLocation.create({
+    data: {
+      name: 'Epitome Kia - Avalahalli',
+      slug: 'avalahalli',
+      addressLine1: 'Avalahalli Main Road',
+      addressLine2: 'Avalahalli',
+      city: 'Bangalore',
+      state: 'Karnataka',
+      postalCode: '560060',
+      country: 'IN',
+      phone: '+91 70223 17666',
+      email: 'ccm@epitomekia.in',
+      hours: 'Mon-Sat: 9AM-7PM, Sun: 10AM-5PM',
+      isActive: true,
+    },
+  })
 
-  // Create Kia Seltos
+  const kolar = await prisma.dealerLocation.create({
+    data: {
+      name: 'Epitome Kia - Kolar',
+      slug: 'kolar',
+      addressLine1: 'KGF Road',
+      addressLine2: 'Kolar',
+      city: 'Kolar',
+      state: 'Karnataka',
+      postalCode: '563101',
+      country: 'IN',
+      phone: '+91 89519 03224',
+      email: 'ccm@epitomekia.in',
+      hours: 'Mon-Sat: 9AM-7PM, Sun: 10AM-5PM',
+      isActive: true,
+    },
+  })
+
+  const varthur = await prisma.dealerLocation.create({
+    data: {
+      name: 'Epitome Kia - Varthur',
+      slug: 'varthur',
+      addressLine1: 'Varthur Main Road',
+      addressLine2: 'Varthur',
+      city: 'Bangalore',
+      state: 'Karnataka',
+      postalCode: '560087',
+      country: 'IN',
+      phone: '+91 98442 40044',
+      email: 'ccm@epitomekia.in',
+      hours: 'Mon-Sat: 9AM-7PM, Sun: 10AM-5PM',
+      isActive: true,
+    },
+  })
+
+  console.log('Creating car models (all 9 Kia India models)...')
+
+  // ============= 1. KIA SELTOS =============
   const seltos = await prisma.carModel.create({
     data: {
       name: 'Kia Seltos',
@@ -112,7 +161,6 @@ async function main() {
     },
   })
 
-  // Seltos Variants
   const seltosHTE = await prisma.variant.create({
     data: {
       carModelId: seltos.id,
@@ -157,30 +205,29 @@ async function main() {
     },
   })
 
-  // Seltos Specifications
-  const seltosSpecs = [
-    { variantId: seltosHTE.id, specKey: 'engine', specValue: '1.5L Smartstream Petrol', unit: null },
-    { variantId: seltosHTE.id, specKey: 'power', specValue: '115', unit: 'PS' },
-    { variantId: seltosHTE.id, specKey: 'torque', specValue: '144', unit: 'Nm' },
-    { variantId: seltosHTE.id, specKey: 'transmission', specValue: '6-Speed Manual', unit: null },
-    { variantId: seltosHTE.id, specKey: 'fuel_type', specValue: 'Petrol', unit: null },
-    { variantId: seltosHTE.id, specKey: 'mileage', specValue: '16.8', unit: 'kmpl' },
-    { variantId: seltosHTE.id, specKey: 'seating_capacity', specValue: '5', unit: 'persons' },
-    { variantId: seltosHTE.id, specKey: 'boot_space', specValue: '433', unit: 'L' },
-    { variantId: seltosGTX.id, specKey: 'engine', specValue: '1.5L Turbo Petrol', unit: null },
-    { variantId: seltosGTX.id, specKey: 'power', specValue: '160', unit: 'PS' },
-    { variantId: seltosGTX.id, specKey: 'torque', specValue: '253', unit: 'Nm' },
-    { variantId: seltosGTX.id, specKey: 'transmission', specValue: '7-Speed DCT', unit: null },
-    { variantId: seltosGTX.id, specKey: 'fuel_type', specValue: 'Petrol', unit: null },
-    { variantId: seltosGTX.id, specKey: 'mileage', specValue: '16.5', unit: 'kmpl' },
-    { variantId: seltosGTX.id, specKey: 'seating_capacity', specValue: '5', unit: 'persons' },
-    { variantId: seltosGTX.id, specKey: 'sunroof', specValue: 'Panoramic', unit: null },
-    { variantId: seltosGTX.id, specKey: 'display', specValue: '10.25 inch Touchscreen', unit: null },
-  ]
+  await prisma.specification.createMany({
+    data: [
+      { variantId: seltosHTE.id, specKey: 'engine', specValue: '1.5L Smartstream Petrol', unit: null },
+      { variantId: seltosHTE.id, specKey: 'power', specValue: '115', unit: 'PS' },
+      { variantId: seltosHTE.id, specKey: 'torque', specValue: '144', unit: 'Nm' },
+      { variantId: seltosHTE.id, specKey: 'transmission', specValue: '6-Speed Manual', unit: null },
+      { variantId: seltosHTE.id, specKey: 'fuel_type', specValue: 'Petrol', unit: null },
+      { variantId: seltosHTE.id, specKey: 'mileage', specValue: '16.8', unit: 'kmpl' },
+      { variantId: seltosHTE.id, specKey: 'seating_capacity', specValue: '5', unit: 'persons' },
+      { variantId: seltosHTE.id, specKey: 'boot_space', specValue: '433', unit: 'L' },
+      { variantId: seltosGTX.id, specKey: 'engine', specValue: '1.5L Turbo Petrol', unit: null },
+      { variantId: seltosGTX.id, specKey: 'power', specValue: '160', unit: 'PS' },
+      { variantId: seltosGTX.id, specKey: 'torque', specValue: '253', unit: 'Nm' },
+      { variantId: seltosGTX.id, specKey: 'transmission', specValue: '7-Speed DCT', unit: null },
+      { variantId: seltosGTX.id, specKey: 'fuel_type', specValue: 'Petrol', unit: null },
+      { variantId: seltosGTX.id, specKey: 'mileage', specValue: '16.5', unit: 'kmpl' },
+      { variantId: seltosGTX.id, specKey: 'seating_capacity', specValue: '5', unit: 'persons' },
+      { variantId: seltosGTX.id, specKey: 'sunroof', specValue: 'Panoramic', unit: null },
+      { variantId: seltosGTX.id, specKey: 'display', specValue: '10.25 inch Touchscreen', unit: null },
+    ],
+  })
 
-  await prisma.specification.createMany({ data: seltosSpecs })
-
-  // Create Kia Sonet
+  // ============= 2. KIA SONET =============
   const sonet = await prisma.carModel.create({
     data: {
       name: 'Kia Sonet',
@@ -192,7 +239,6 @@ async function main() {
     },
   })
 
-  // Sonet Variants
   const sonetHTE = await prisma.variant.create({
     data: {
       carModelId: sonet.id,
@@ -237,25 +283,24 @@ async function main() {
     },
   })
 
-  // Sonet Specifications
-  const sonetSpecs = [
-    { variantId: sonetHTE.id, specKey: 'engine', specValue: '1.2L Smartstream Petrol', unit: null },
-    { variantId: sonetHTE.id, specKey: 'power', specValue: '83', unit: 'PS' },
-    { variantId: sonetHTE.id, specKey: 'torque', specValue: '115', unit: 'Nm' },
-    { variantId: sonetHTE.id, specKey: 'transmission', specValue: '5-Speed Manual', unit: null },
-    { variantId: sonetHTE.id, specKey: 'fuel_type', specValue: 'Petrol', unit: null },
-    { variantId: sonetHTE.id, specKey: 'mileage', specValue: '18.4', unit: 'kmpl' },
-    { variantId: sonetGTX.id, specKey: 'engine', specValue: '1.0L Turbo GDi Petrol', unit: null },
-    { variantId: sonetGTX.id, specKey: 'power', specValue: '120', unit: 'PS' },
-    { variantId: sonetGTX.id, specKey: 'torque', specValue: '172', unit: 'Nm' },
-    { variantId: sonetGTX.id, specKey: 'transmission', specValue: '7-Speed DCT', unit: null },
-    { variantId: sonetGTX.id, specKey: 'fuel_type', specValue: 'Petrol', unit: null },
-    { variantId: sonetGTX.id, specKey: 'mileage', specValue: '18.2', unit: 'kmpl' },
-  ]
+  await prisma.specification.createMany({
+    data: [
+      { variantId: sonetHTE.id, specKey: 'engine', specValue: '1.2L Smartstream Petrol', unit: null },
+      { variantId: sonetHTE.id, specKey: 'power', specValue: '83', unit: 'PS' },
+      { variantId: sonetHTE.id, specKey: 'torque', specValue: '115', unit: 'Nm' },
+      { variantId: sonetHTE.id, specKey: 'transmission', specValue: '5-Speed Manual', unit: null },
+      { variantId: sonetHTE.id, specKey: 'fuel_type', specValue: 'Petrol', unit: null },
+      { variantId: sonetHTE.id, specKey: 'mileage', specValue: '18.4', unit: 'kmpl' },
+      { variantId: sonetGTX.id, specKey: 'engine', specValue: '1.0L Turbo GDi Petrol', unit: null },
+      { variantId: sonetGTX.id, specKey: 'power', specValue: '120', unit: 'PS' },
+      { variantId: sonetGTX.id, specKey: 'torque', specValue: '172', unit: 'Nm' },
+      { variantId: sonetGTX.id, specKey: 'transmission', specValue: '7-Speed DCT', unit: null },
+      { variantId: sonetGTX.id, specKey: 'fuel_type', specValue: 'Petrol', unit: null },
+      { variantId: sonetGTX.id, specKey: 'mileage', specValue: '18.2', unit: 'kmpl' },
+    ],
+  })
 
-  await prisma.specification.createMany({ data: sonetSpecs })
-
-  // Create Kia Carens
+  // ============= 3. KIA CARENS =============
   const carens = await prisma.carModel.create({
     data: {
       name: 'Kia Carens',
@@ -267,7 +312,6 @@ async function main() {
     },
   })
 
-  // Carens Variants
   const carensPremium = await prisma.variant.create({
     data: {
       carModelId: carens.id,
@@ -312,24 +356,70 @@ async function main() {
     },
   })
 
-  // Carens Specifications
-  const carensSpecs = [
-    { variantId: carensPremium.id, specKey: 'engine', specValue: '1.5L Smartstream Petrol', unit: null },
-    { variantId: carensPremium.id, specKey: 'power', specValue: '115', unit: 'PS' },
-    { variantId: carensPremium.id, specKey: 'torque', specValue: '144', unit: 'Nm' },
-    { variantId: carensPremium.id, specKey: 'transmission', specValue: '6-Speed Manual', unit: null },
-    { variantId: carensPremium.id, specKey: 'seating_capacity', specValue: '6', unit: 'persons' },
-    { variantId: carensLuxuryPlus.id, specKey: 'engine', specValue: '1.5L Turbo Petrol', unit: null },
-    { variantId: carensLuxuryPlus.id, specKey: 'power', specValue: '160', unit: 'PS' },
-    { variantId: carensLuxuryPlus.id, specKey: 'torque', specValue: '253', unit: 'Nm' },
-    { variantId: carensLuxuryPlus.id, specKey: 'transmission', specValue: '7-Speed DCT', unit: null },
-    { variantId: carensLuxuryPlus.id, specKey: 'seating_capacity', specValue: '7', unit: 'persons' },
-    { variantId: carensLuxuryPlus.id, specKey: 'sunroof', specValue: 'Single Pane', unit: null },
-  ]
+  await prisma.specification.createMany({
+    data: [
+      { variantId: carensPremium.id, specKey: 'engine', specValue: '1.5L Smartstream Petrol', unit: null },
+      { variantId: carensPremium.id, specKey: 'power', specValue: '115', unit: 'PS' },
+      { variantId: carensPremium.id, specKey: 'torque', specValue: '144', unit: 'Nm' },
+      { variantId: carensPremium.id, specKey: 'transmission', specValue: '6-Speed Manual', unit: null },
+      { variantId: carensPremium.id, specKey: 'seating_capacity', specValue: '6', unit: 'persons' },
+      { variantId: carensLuxuryPlus.id, specKey: 'engine', specValue: '1.5L Turbo Petrol', unit: null },
+      { variantId: carensLuxuryPlus.id, specKey: 'power', specValue: '160', unit: 'PS' },
+      { variantId: carensLuxuryPlus.id, specKey: 'torque', specValue: '253', unit: 'Nm' },
+      { variantId: carensLuxuryPlus.id, specKey: 'transmission', specValue: '7-Speed DCT', unit: null },
+      { variantId: carensLuxuryPlus.id, specKey: 'seating_capacity', specValue: '7', unit: 'persons' },
+      { variantId: carensLuxuryPlus.id, specKey: 'sunroof', specValue: 'Single Pane', unit: null },
+    ],
+  })
 
-  await prisma.specification.createMany({ data: carensSpecs })
+  // ============= 4. KIA CARNIVAL =============
+  const carnival = await prisma.carModel.create({
+    data: {
+      name: 'Kia Carnival',
+      slug: 'carnival',
+      modelYear: 2024,
+      description:
+        'The Kia Carnival is the ultimate luxury MPV that redefines premium travel. With its grand proportions, opulent interiors, and powerful performance, the Carnival offers a first-class experience for discerning buyers.',
+      isActive: true,
+    },
+  })
 
-  // Create Kia EV6
+  const carnivalLimousine = await prisma.variant.create({
+    data: {
+      carModelId: carnival.id,
+      name: 'Limousine',
+      slug: 'carnival-limousine',
+      trimLevel: 'Base',
+      basePrice: 6390000,
+      isActive: true,
+    },
+  })
+
+  const carnivalLimousinePlus = await prisma.variant.create({
+    data: {
+      carModelId: carnival.id,
+      name: 'Limousine Plus',
+      slug: 'carnival-limousine-plus',
+      trimLevel: 'Top',
+      basePrice: 6490000,
+      isActive: true,
+    },
+  })
+
+  await prisma.specification.createMany({
+    data: [
+      { variantId: carnivalLimousine.id, specKey: 'engine', specValue: '2.2L CRDi Diesel', unit: null },
+      { variantId: carnivalLimousine.id, specKey: 'power', specValue: '200', unit: 'PS' },
+      { variantId: carnivalLimousine.id, specKey: 'torque', specValue: '440', unit: 'Nm' },
+      { variantId: carnivalLimousine.id, specKey: 'transmission', specValue: '8-Speed AT', unit: null },
+      { variantId: carnivalLimousine.id, specKey: 'fuel_type', specValue: 'Diesel', unit: null },
+      { variantId: carnivalLimousine.id, specKey: 'seating_capacity', specValue: '7', unit: 'persons' },
+      { variantId: carnivalLimousine.id, specKey: 'sunroof', specValue: 'Dual Sunroof', unit: null },
+      { variantId: carnivalLimousine.id, specKey: 'display', specValue: '12.3 inch Dual Screens', unit: null },
+    ],
+  })
+
+  // ============= 5. KIA EV6 =============
   const ev6 = await prisma.carModel.create({
     data: {
       name: 'Kia EV6',
@@ -341,7 +431,6 @@ async function main() {
     },
   })
 
-  // EV6 Variants
   const ev6GT = await prisma.variant.create({
     data: {
       carModelId: ev6.id,
@@ -353,19 +442,156 @@ async function main() {
     },
   })
 
-  // EV6 Specifications
-  const ev6Specs = [
-    { variantId: ev6GT.id, specKey: 'motor', specValue: 'Dual Motor AWD', unit: null },
-    { variantId: ev6GT.id, specKey: 'power', specValue: '325', unit: 'PS' },
-    { variantId: ev6GT.id, specKey: 'torque', specValue: '605', unit: 'Nm' },
-    { variantId: ev6GT.id, specKey: 'battery', specValue: '77.4', unit: 'kWh' },
-    { variantId: ev6GT.id, specKey: 'range', specValue: '528', unit: 'km' },
-    { variantId: ev6GT.id, specKey: 'charging_time', specValue: '18 min (10-80%)', unit: null },
-    { variantId: ev6GT.id, specKey: '0_to_100', specValue: '5.2', unit: 'seconds' },
-    { variantId: ev6GT.id, specKey: 'drive_type', specValue: 'All Wheel Drive', unit: null },
-  ]
+  await prisma.specification.createMany({
+    data: [
+      { variantId: ev6GT.id, specKey: 'motor', specValue: 'Dual Motor AWD', unit: null },
+      { variantId: ev6GT.id, specKey: 'power', specValue: '325', unit: 'PS' },
+      { variantId: ev6GT.id, specKey: 'torque', specValue: '605', unit: 'Nm' },
+      { variantId: ev6GT.id, specKey: 'battery', specValue: '77.4', unit: 'kWh' },
+      { variantId: ev6GT.id, specKey: 'range', specValue: '528', unit: 'km' },
+      { variantId: ev6GT.id, specKey: 'charging_time', specValue: '18 min (10-80%)', unit: null },
+      { variantId: ev6GT.id, specKey: '0_to_100', specValue: '5.2', unit: 'seconds' },
+      { variantId: ev6GT.id, specKey: 'drive_type', specValue: 'All Wheel Drive', unit: null },
+    ],
+  })
 
-  await prisma.specification.createMany({ data: ev6Specs })
+  // ============= 6. KIA EV9 =============
+  const ev9 = await prisma.carModel.create({
+    data: {
+      name: 'Kia EV9',
+      slug: 'ev9',
+      modelYear: 2024,
+      description:
+        'The Kia EV9 is a revolutionary all-electric flagship SUV. With its futuristic design, three-row seating, and advanced technology, the EV9 sets a new benchmark for electric luxury vehicles.',
+      isActive: true,
+    },
+  })
+
+  const ev9GTLine = await prisma.variant.create({
+    data: {
+      carModelId: ev9.id,
+      name: 'GT Line AWD',
+      slug: 'ev9-gt-line-awd',
+      trimLevel: 'Premium',
+      basePrice: 13000000,
+      isActive: true,
+    },
+  })
+
+  await prisma.specification.createMany({
+    data: [
+      { variantId: ev9GTLine.id, specKey: 'motor', specValue: 'Dual Motor AWD', unit: null },
+      { variantId: ev9GTLine.id, specKey: 'power', specValue: '384', unit: 'PS' },
+      { variantId: ev9GTLine.id, specKey: 'torque', specValue: '700', unit: 'Nm' },
+      { variantId: ev9GTLine.id, specKey: 'battery', specValue: '99.8', unit: 'kWh' },
+      { variantId: ev9GTLine.id, specKey: 'range', specValue: '541', unit: 'km' },
+      { variantId: ev9GTLine.id, specKey: 'charging_time', specValue: '24 min (10-80%)', unit: null },
+      { variantId: ev9GTLine.id, specKey: 'seating_capacity', specValue: '6', unit: 'persons' },
+      { variantId: ev9GTLine.id, specKey: 'drive_type', specValue: 'All Wheel Drive', unit: null },
+    ],
+  })
+
+  // ============= 7. KIA SYROS =============
+  const syros = await prisma.carModel.create({
+    data: {
+      name: 'Kia Syros',
+      slug: 'syros',
+      modelYear: 2025,
+      description:
+        'The Kia Syros is a bold and compact SUV that brings progressive design to the urban landscape. Featuring cutting-edge technology and a versatile interior, the Syros is designed for the modern explorer.',
+      isActive: true,
+    },
+  })
+
+  const syrosHTK = await prisma.variant.create({
+    data: {
+      carModelId: syros.id,
+      name: 'HTK',
+      slug: 'syros-htk',
+      trimLevel: 'Base',
+      basePrice: null, // Coming soon
+      isActive: true,
+    },
+  })
+
+  const syrosHTX = await prisma.variant.create({
+    data: {
+      carModelId: syros.id,
+      name: 'HTX+',
+      slug: 'syros-htx-plus',
+      trimLevel: 'Top',
+      basePrice: null, // Coming soon
+      isActive: true,
+    },
+  })
+
+  await prisma.specification.createMany({
+    data: [
+      { variantId: syrosHTK.id, specKey: 'engine', specValue: '1.0L Turbo GDi Petrol', unit: null },
+      { variantId: syrosHTK.id, specKey: 'transmission', specValue: '6-Speed Manual / 7-Speed DCT', unit: null },
+      { variantId: syrosHTK.id, specKey: 'seating_capacity', specValue: '5', unit: 'persons' },
+    ],
+  })
+
+  // ============= 8. KIA CLAVIS =============
+  const clavis = await prisma.carModel.create({
+    data: {
+      name: 'Kia Clavis',
+      slug: 'clavis',
+      modelYear: 2025,
+      description:
+        'The Kia Clavis is a new urban SUV designed for city dwellers. With its compact dimensions and smart features, the Clavis offers the perfect blend of practicality and style.',
+      isActive: true,
+    },
+  })
+
+  const clavisHTK = await prisma.variant.create({
+    data: {
+      carModelId: clavis.id,
+      name: 'HTK',
+      slug: 'clavis-htk',
+      trimLevel: 'Base',
+      basePrice: null, // Coming soon
+      isActive: true,
+    },
+  })
+
+  await prisma.specification.createMany({
+    data: [
+      { variantId: clavisHTK.id, specKey: 'engine', specValue: '1.2L Petrol / 1.5L Diesel', unit: null },
+      { variantId: clavisHTK.id, specKey: 'seating_capacity', specValue: '5', unit: 'persons' },
+    ],
+  })
+
+  // ============= 9. KIA CLAVIS EV =============
+  const clavisEV = await prisma.carModel.create({
+    data: {
+      name: 'Kia Clavis EV',
+      slug: 'clavis-ev',
+      modelYear: 2025,
+      description:
+        'The Kia Clavis EV brings electric urban freedom. As the electric variant of the Clavis, it offers zero-emission driving with all the practicality of its ICE counterpart.',
+      isActive: true,
+    },
+  })
+
+  const clavisEVBase = await prisma.variant.create({
+    data: {
+      carModelId: clavisEV.id,
+      name: 'Standard',
+      slug: 'clavis-ev-standard',
+      trimLevel: 'Base',
+      basePrice: null, // Coming soon
+      isActive: true,
+    },
+  })
+
+  await prisma.specification.createMany({
+    data: [
+      { variantId: clavisEVBase.id, specKey: 'motor', specValue: 'Single Motor FWD', unit: null },
+      { variantId: clavisEVBase.id, specKey: 'seating_capacity', specValue: '5', unit: 'persons' },
+    ],
+  })
 
   console.log('Creating offers...')
 
@@ -411,6 +637,26 @@ async function main() {
         slug: 'ev6-green-mobility-offer',
         description:
           'Switch to electric with exclusive benefits! Free home charger installation, 8 years battery warranty, and complimentary first year insurance.',
+        startAt: now,
+        endAt: nextMonth,
+        isActive: true,
+      },
+      {
+        carModelId: carnival.id,
+        title: 'Carnival Luxury Experience',
+        slug: 'carnival-luxury-experience',
+        description:
+          'Experience luxury like never before! Get ₹2 lakh exchange bonus, 5 years comprehensive warranty, and premium accessories kit.',
+        startAt: now,
+        endAt: nextMonth,
+        isActive: true,
+      },
+      {
+        carModelId: ev9.id,
+        title: 'EV9 Launch Celebration',
+        slug: 'ev9-launch-celebration',
+        description:
+          'Be among the first to own the flagship EV9! Exclusive benefits include priority delivery, complimentary home charger, and VIP service package.',
         startAt: now,
         endAt: nextMonth,
         isActive: true,
@@ -533,10 +779,22 @@ async function main() {
         isPublished: true,
         publishedAt: now,
       },
+      {
+        title: 'Introducing the All-New Kia EV9: A New Era of Electric SUVs',
+        slug: 'kia-ev9-introduction',
+        summary:
+          'Meet the Kia EV9 - the flagship electric SUV that redefines luxury and sustainability.',
+        content:
+          'The Kia EV9 represents the pinnacle of electric vehicle engineering...',
+        authorName: 'Epitome Kia Team',
+        isPublished: true,
+        publishedAt: now,
+      },
     ],
   })
 
   console.log('Seeding completed successfully!')
+  console.log('Created: 9 car models, 5 dealer locations, 7 offers, 2 pages, 4 FAQs, 4 blog posts')
 }
 
 main()

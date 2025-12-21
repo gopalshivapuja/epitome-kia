@@ -2,733 +2,252 @@
 
 ## Overview
 
-This document outlines the step-by-step implementation plan for building the Epitome Kia dealership website. Each phase has clear deliverables and checkpoints for review before proceeding.
+This document outlines the implementation plan aligned with the PRD phases, structured for **weekly shipping** after the initial Railway deployment.
 
 ---
 
-## Phase 1: Project Foundation ✅ COMPLETED
+## Current Status: Phase 1 Complete
 
-**Goal**: Set up the development environment, project structure, and core infrastructure.
-
-### Tasks
-
-| # | Task | Description | Status |
-|---|------|-------------|--------|
-| 1.1 | Initialize Next.js project | Create Next.js 14 app with TypeScript, App Router | ✅ |
-| 1.2 | Configure Tailwind CSS | Set up Tailwind with Kia brand color palette | ✅ |
-| 1.3 | Install shadcn/ui | Add component library and configure theme | ✅ |
-| 1.4 | Set up Prisma | Initialize Prisma, create schema from existing SQL | ✅ |
-| 1.5 | Configure ESLint & Prettier | Code quality and formatting rules | ✅ |
-| 1.6 | Create folder structure | Organize src/ with app, components, lib, types | ✅ |
-| 1.7 | Environment configuration | Create .env.example with required variables | ✅ |
-| 1.8 | Add base layout | Header, footer, navigation components | ✅ |
-
-### Deliverables
-
-- [x] Working Next.js application at `http://localhost:3000`
-- [x] Prisma schema matching `db/schema.sql`
-- [x] Base layout with header/footer
-- [x] Configured linting and formatting
-
-### Checkpoint 1 Review ✅ PASSED
-
-```
-All verification criteria passed:
-- [x] `npm run dev` starts without errors
-- [x] `npm run lint` passes
-- [x] `npm run build` completes successfully
-- [x] `npx prisma validate` succeeds
-- [x] Base layout renders correctly
-```
+| PRD Phase | Status | Description |
+|-----------|--------|-------------|
+| **Phase 1: Foundation** | ✅ **COMPLETE** | Core website, lead capture, admin dashboard |
+| Phase 2: AI & Engagement | 🔜 Next | Chatbot, 360° viewer, content sync |
+| Phase 3: Self-Service & DMS | ⏳ Planned | Customer portal, DMS integration |
+| Phase 4: Commerce & Insurance | ⏳ Planned | Accessories store, insurance |
+| Phase 5: Advanced Experience | ⏳ Future | Mobile app, AR features |
 
 ---
 
-## Phase 2: Database & API Layer ✅ COMPLETED
+## Phase 1: Foundation ✅ COMPLETED
 
-**Goal**: Establish database connectivity and create the API foundation.
+**Goal**: Essential dealership website with lead capture and admin dashboard.
 
-### Tasks
+### Completed Features
 
-| # | Task | Description | Status |
-|---|------|-------------|--------|
-| 2.1 | Database connection | Configure PostgreSQL connection via Prisma | ✅ |
-| 2.2 | Generate Prisma client | Run migrations, generate typed client | ✅ |
-| 2.3 | Create API utilities | Database helpers, error handling, validation | ✅ |
-| 2.4 | Seed data script | Sample car models, variants, offers for development | ✅ |
-| 2.5 | API route: GET /api/models | List car models with filtering | ✅ |
-| 2.6 | API route: GET /api/models/[slug] | Get single model with variants/specs | ✅ |
-| 2.7 | API route: GET /api/offers | List active offers | ✅ |
-| 2.8 | API route: POST /api/leads | Create customer lead | ✅ |
+| Feature | Status | Location |
+|---------|--------|----------|
+| Model catalog with specs, pricing | ✅ | `/models`, `/models/[slug]` |
+| Test drive scheduling | ✅ | `/test-drive`, `/api/test-drive` |
+| Service booking | ✅ | `/service`, `/api/service-booking` |
+| EMI calculator | ✅ | `/emi-calculator`, embedded on models |
+| Contact forms and lead capture | ✅ | `/contact`, `/api/leads` |
+| WhatsApp integration (click-to-chat) | ✅ | Floating button in layout |
+| Basic admin dashboard | ✅ | `/admin/(dashboard)/*` |
+| Google Analytics integration | ✅ | Layout component |
+| Mobile-responsive design | ✅ | All pages |
+| SEO optimization | ✅ | Meta tags, semantic HTML |
+| Social media links | ✅ | Footer component |
+| Google Maps dealer locator | ✅ | Contact page, all 5 locations |
+| Privacy policy & Terms | ✅ | `/privacy`, `/terms` |
+| Cookie consent banner | ✅ | CookieConsent component |
+| Security headers | ✅ | Middleware (CSP, X-Frame-Options) |
+| Rate limiting | ✅ | API routes |
+| Authentication (Admin) | ✅ | NextAuth.js v5 |
 
-### Additional Endpoints Created
+### Database & API Layer
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| /api/test-drive | GET, POST | Test drive request management |
-| /api/service-booking | GET, POST | Service booking management |
-| /api/emi | POST | EMI calculation with amortization schedule |
-
-### Deliverables
-
-- [x] Database connected and migrations applied
-- [x] Seed data with 4 Kia models, variants, specs, offers
-- [x] Working API endpoints for models, offers, leads
-- [x] API error handling and Zod validation
-
-### Checkpoint 2 Review ✅ PASSED
-
-```
-All verification criteria passed:
-- [x] `npx prisma generate` succeeds
-- [x] Seed script creates sample data
-- [x] API routes return expected JSON responses
-- [x] npm run build completes successfully
-- [x] npm run type-check passes
-```
-
----
-
-## Phase 3: Public Pages — Model Catalog ✅ COMPLETED
-
-**Goal**: Build the customer-facing model browsing experience.
-
-### Tasks
-
-| # | Task | Description | Status |
-|---|------|-------------|--------|
-| 3.1 | Homepage | Hero section, featured models, CTAs | ✅ |
-| 3.2 | Model catalog page | Grid/list view, filters (type, price, fuel) | ✅ |
-| 3.3 | Model detail page | Gallery, specs, variants, pricing | ✅ |
-| 3.4 | Image optimization | Next.js Image component, placeholders | ✅ |
-| 3.5 | Model comparison (basic) | Side-by-side spec comparison | ⏳ Deferred |
-| 3.6 | Responsive design | Mobile-first, tablet, desktop breakpoints | ✅ |
-| 3.7 | Loading states | Skeletons, suspense boundaries | ✅ |
-
-### Components Created
-
-| Component | Path | Description |
-|-----------|------|-------------|
-| ModelCard | src/components/features/model-card.tsx | Reusable model display card |
-| Skeleton | src/components/ui/skeleton.tsx | Loading state component |
-| Badge | src/components/ui/badge.tsx | Label/tag component |
-| Tabs | src/components/ui/tabs.tsx | Tabbed content component |
-
-### Data Layer
-
-| Function | Path | Description |
-|----------|------|-------------|
-| getModels | src/lib/data.ts | Cached list of active models |
-| getFeaturedModels | src/lib/data.ts | Featured models for homepage |
-| getModelBySlug | src/lib/data.ts | Model detail with variants/specs |
-| getOffers | src/lib/data.ts | Active promotional offers |
-| getDealerLocations | src/lib/data.ts | Dealer location list |
-
-### Deliverables
-
-- [x] Homepage with hero and featured models
-- [x] Searchable/filterable model catalog
-- [x] Model detail pages with full specs
-- [x] Responsive across all device sizes
-- [x] Offers listing page
-
-### Checkpoint 3 Review ✅ PASSED
-
-```
-All verification criteria passed:
-- [x] Homepage loads with featured models (graceful fallback if no DB)
-- [x] Model catalog page renders with grid layout
-- [x] Model detail shows variants and grouped specs
-- [x] Offers page displays active promotions
-- [x] Loading skeletons show during data fetch
-- [x] npm run build completes successfully
-- [x] All pages responsive with Tailwind breakpoints
-```
+| Endpoint | Methods | Status |
+|----------|---------|--------|
+| `/api/models` | GET | ✅ |
+| `/api/models/[slug]` | GET | ✅ |
+| `/api/leads` | GET, POST | ✅ |
+| `/api/leads/[id]` | GET, PATCH, DELETE | ✅ |
+| `/api/test-drive` | GET, POST | ✅ |
+| `/api/test-drive/[id]` | GET, PATCH, DELETE | ✅ |
+| `/api/service-booking` | GET, POST | ✅ |
+| `/api/service-booking/[id]` | GET, PATCH, DELETE | ✅ |
+| `/api/offers` | GET, POST | ✅ |
+| `/api/offers/[id]` | GET, PATCH, DELETE | ✅ |
+| `/api/pages` | GET, POST | ✅ |
+| `/api/pages/[id]` | GET, PATCH, DELETE | ✅ |
+| `/api/blog-posts` | GET, POST | ✅ |
+| `/api/blog-posts/[id]` | GET, PATCH, DELETE | ✅ |
+| `/api/emi` | POST | ✅ |
+| `/api/health` | GET | ✅ |
+| `/api/auth/*` | NextAuth | ✅ |
 
 ---
 
-## Phase 4: Offers & EMI Tools ✅ COMPLETED
+## Weekly Shipping Schedule
 
-**Goal**: Display promotional offers and provide financing calculators.
+After Phase 1 deployment, features will ship on a weekly cadence.
 
-### Tasks
+### Week 1: Production Deployment
+**Target**: Deploy Phase 1 to Railway
 
-| # | Task | Description | Status |
-|---|------|-------------|--------|
-| 4.1 | Offers listing page | All active offers with filters | ✅ (Phase 3) |
-| 4.2 | Offer detail page | Full terms, eligibility, CTA | ✅ |
-| 4.3 | Offer badges on models | Show applicable offers on model cards | ✅ |
-| 4.4 | EMI calculator component | Interactive loan calculator | ✅ |
-| 4.5 | EMI on model detail | Integrate calculator with model pricing | ✅ |
-| 4.6 | Save/share EMI results | Generate shareable calculation link | ⏳ Deferred |
-| 4.7 | Disclaimers | Legal text for offers and EMI | ✅ |
+| Task | Description | Status |
+|------|-------------|--------|
+| Railway setup | Create project, add PostgreSQL | ⏳ |
+| Environment variables | NEXTAUTH_SECRET, RESEND_API_KEY | ⏳ |
+| Database migration | Run `prisma migrate deploy` | ⏳ |
+| Seed data | Run `prisma db seed` | ⏳ |
+| Verify health check | GET /api/health returns 200 | ⏳ |
+| Test all forms | Test drive, service, contact | ⏳ |
+| Admin login test | Verify auth flow | ⏳ |
+| Custom domain | Configure DNS (optional) | ⏳ |
 
-### Components Created
+### Week 2: Content Management UI
+**Target**: Admin can create/edit content without code
 
-| Component | Path | Description |
-|-----------|------|-------------|
-| EMICalculator | src/components/features/emi-calculator.tsx | Interactive EMI calculator with sliders |
-| Slider | src/components/ui/slider.tsx | Radix-based slider component |
+| Task | Description | Priority |
+|------|-------------|----------|
+| Rich text editor | Install Tiptap or TinyMCE | HIGH |
+| Offer create/edit form | Admin UI for offers | HIGH |
+| Page create/edit form | Admin UI for static pages | HIGH |
+| Blog post editor | Admin UI for blog posts | MEDIUM |
+| Image upload | S3/Cloudinary integration | MEDIUM |
 
-### Pages Created
+### Week 3: Performance & Images
+**Target**: Production-ready performance
 
-| Route | Path | Description |
-|-------|------|-------------|
-| /emi-calculator | src/app/emi-calculator/page.tsx | Standalone EMI calculator page |
-| /offers/[slug] | src/app/offers/[slug]/page.tsx | Offer detail with terms & conditions |
+| Task | Description | Priority |
+|------|-------------|----------|
+| Real model images | Upload Kia vehicle images | HIGH |
+| Image optimization | WebP conversion, sizing | HIGH |
+| Lighthouse audit | Target 90+ score | HIGH |
+| Core Web Vitals | LCP < 2.5s, CLS < 0.1 | HIGH |
+| Error tracking | Sentry integration | MEDIUM |
 
-### Deliverables
+### Week 4: Notifications & Email
+**Target**: Full email notification system
 
-- [x] Offers page with active promotions
-- [x] Offer detail page with T&C
-- [x] EMI calculator with adjustable parameters (price, down payment, tenure, interest)
-- [x] EMI integrated into model detail pages (#emi anchor)
-- [x] Legal disclaimers displayed appropriately
+| Task | Description | Priority |
+|------|-------------|----------|
+| Email templates | Styled HTML emails | HIGH |
+| Lead notifications | Email to sales team | HIGH |
+| Customer confirmations | Booking confirmation emails | HIGH |
+| SMS integration | Twilio for SMS (optional) | LOW |
 
-### Checkpoint 4 Review ✅ PASSED
+### Week 5+: Phase 2 Features
+**Target**: Begin AI & Engagement phase
 
-```
-All verification criteria passed:
-- [x] Offers display with correct validity dates
-- [x] Expired offers hidden automatically (filtered in data layer)
-- [x] EMI calculator produces accurate results (standard amortization formula)
-- [x] EMI formula: P * r * (1+r)^n / ((1+r)^n - 1)
-- [x] Disclaimers visible on EMI page and offer detail
-- [x] npm run build completes successfully
-```
-
----
-
-## Phase 5: Lead Capture Forms ✅ COMPLETED
-
-**Goal**: Implement test drive scheduling and inquiry forms.
-
-### Tasks
-
-| # | Task | Description | Status |
-|---|------|-------------|--------|
-| 5.1 | Lead form component | Reusable form with validation | ✅ |
-| 5.2 | Test drive request form | Model, date, time, location selection | ✅ |
-| 5.3 | API route: POST /api/test-drive | Save test drive request | ✅ (Phase 2) |
-| 5.4 | Get quote form | Quick inquiry for pricing | ✅ (via contact) |
-| 5.5 | Contact form | General inquiries | ✅ |
-| 5.6 | Form validation | Zod schemas, error messages | ✅ |
-| 5.7 | Success confirmations | Thank you messages, next steps | ✅ |
-| 5.8 | CAPTCHA integration | Spam protection on forms | ⏳ Deferred |
-
-### Components Created
-
-| Component | Path | Description |
-|-----------|------|-------------|
-| Select | src/components/ui/select.tsx | Radix-based select dropdown |
-| Textarea | src/components/ui/textarea.tsx | Multi-line text input |
-
-### Pages Created
-
-| Route | Path | Description |
-|-------|------|-------------|
-| /test-drive | src/app/test-drive/page.tsx | Test drive booking form |
-| /contact | src/app/contact/page.tsx | Contact form with inquiry subjects |
-| /service | src/app/service/page.tsx | Service booking with service types |
-
-### Deliverables
-
-- [x] Test drive scheduling form with model/date/time selection
-- [x] Contact form for general inquiries with subject selection
-- [x] Service booking page with service types grid
-- [x] All forms connect to API endpoints
-- [x] Success confirmation screens with booking details
-- [x] Form validation with error messages
-
-### Checkpoint 5 Review ✅ PASSED
-
-```
-All verification criteria passed:
-- [x] Test drive form submits to /api/test-drive
-- [x] Contact form submits to /api/leads
-- [x] Service form submits to /api/service-booking
-- [x] Validation errors display inline
-- [x] Success confirmations show booking details
-- [x] npm run build completes successfully
-```
+| Feature | Description | Priority |
+|---------|-------------|----------|
+| AI Chatbot | Vercel AI SDK + Claude | HIGH |
+| 360° Vehicle Viewer | Pannellum integration | HIGH |
+| Competitor comparison | Side-by-side specs | MEDIUM |
+| Personalized recommendations | Based on browsing | MEDIUM |
 
 ---
 
-## Phase 6: Service Booking ✅ COMPLETED (merged into Phase 5)
+## Phase 2: AI & Engagement (Weeks 5-10)
 
-**Goal**: Enable customers to book vehicle service appointments.
+**PRD Alignment**: Phase 2 features from PRD.md
 
-### Tasks
-
-| # | Task | Description | Status |
-|---|------|-------------|--------|
-| 6.1 | Service page | Overview of service offerings | ✅ |
-| 6.2 | Service booking form | Service type, date, time, vehicle info | ✅ |
-| 6.3 | Pickup/drop-off options | Address input for pickup service | ⏳ Deferred |
-| 6.4 | API route: POST /api/service-booking | Save service booking | ✅ (Phase 2) |
-| 6.5 | API route: POST /api/pickup-request | Save pickup request | ⏳ Deferred |
-| 6.6 | Dealer location selector | Choose service center | ⏳ Deferred |
-| 6.7 | Booking confirmation | Summary and confirmation number | ✅ |
-
-### Deliverables
-
-- [x] Service information page with service types grid
-- [x] Service booking form with date/time selection
-- [x] Booking confirmation with appointment details
-- [ ] Pickup request option (deferred)
-- [ ] Dealer location selection (deferred)
-
-### Checkpoint 6 Review ✅ PASSED
-
-```
-All verification criteria passed:
-- [x] Service booking submits to /api/service-booking
-- [x] Form includes service type, date, time selection
-- [x] Confirmation shows booking details
-- [x] Date picker works on all browsers
-- [x] npm run build completes successfully
-```
+| Feature | PRD Priority | Status |
+|---------|--------------|--------|
+| AI Chatbot (text-based) | P1 | ⏳ Week 5-6 |
+| 360° Vehicle Viewer | P1 | ⏳ Week 6-7 |
+| Personalized recommendations | P1 | ⏳ Week 7-8 |
+| Kia India content auto-sync | P1 | ⏳ Week 8-9 |
+| Competitor comparison tool | P1 | ⏳ Week 9-10 |
+| AI Blog content generation | P2 | ⏳ Week 10+ |
+| RAG-based manual query | P2 | ⏳ Future |
+| Google Sign-On | P2 | ⏳ Future |
+| Customer reviews integration | P2 | ⏳ Future |
 
 ---
 
-## Phase 7: Authentication & Admin Foundation ✅ COMPLETED
+## Phase 3: Self-Service & DMS (Future)
 
-**Goal**: Set up admin authentication and basic dashboard structure.
+**PRD Alignment**: Phase 3 features from PRD.md
 
-### Tasks
-
-| # | Task | Description | Status |
-|---|------|-------------|--------|
-| 7.1 | NextAuth.js setup | Configure authentication provider | ✅ |
-| 7.2 | Admin user model | Add users table to schema | ✅ |
-| 7.3 | Login page | Admin login form | ✅ |
-| 7.4 | Session management | Protected routes, middleware | ✅ |
-| 7.5 | Admin layout | Sidebar navigation, header | ✅ |
-| 7.6 | Dashboard home | Overview stats, recent activity | ✅ |
-| 7.7 | Role-based access | Admin, sales_manager, service_advisor roles | ✅ |
-
-### Components Created
-
-| Component | Path | Description |
-|-----------|------|-------------|
-| AdminSidebar | src/components/admin/sidebar.tsx | Navigation sidebar |
-| AdminHeader | src/components/admin/header.tsx | Header with user menu |
-
-### Pages Created
-
-| Route | Path | Description |
-|-------|------|-------------|
-| /admin/login | src/app/admin/login/page.tsx | Admin login form |
-| /admin | src/app/admin/(dashboard)/page.tsx | Dashboard home |
-
-### Deliverables
-
-- [x] Admin login functionality with NextAuth.js v5
-- [x] Protected admin routes via middleware
-- [x] Admin dashboard layout with sidebar/header
-- [x] Role-based access control (admin, sales_manager, service_advisor, staff)
-- [x] Session persistence with JWT strategy
-
-### Checkpoint 7 Review ✅ PASSED
-
-```
-All verification criteria passed:
-- [x] Admin can log in with credentials
-- [x] Unauthenticated users redirected to login
-- [x] Dashboard displays after login
-- [x] Roles restrict access appropriately
-- [x] Session persists across page refreshes
-- [x] npm run build completes successfully
-```
+| Feature | PRD Priority | Notes |
+|---------|--------------|-------|
+| Kia DMS Integration | P1 | Requires dealership DMS access |
+| Customer Portal (My Garage) | P1 | After DMS integration |
+| Service history & tracking | P1 | Depends on DMS |
+| AI Voice Agent | P1 | Sarvam AI integration |
+| Car Exchange Estimator | P1 | OBV API integration |
+| Social Media Management | P2 | Admin scheduling tools |
 
 ---
 
-## Phase 8: Lead Management Dashboard
+## Phase 4: Commerce & Insurance (Future)
 
-**Goal**: Build admin interface for managing customer leads.
+**PRD Alignment**: Phase 4 features from PRD.md
 
-### Tasks
-
-| # | Task | Description |
-|---|------|-------------|
-| 8.1 | Leads list page | Table with sorting, filtering, pagination |
-| 8.2 | Lead detail view | Full lead information, history |
-| 8.3 | Lead status updates | Mark as contacted, qualified, converted |
-| 8.4 | Test drive requests list | View and manage test drive bookings |
-| 8.5 | Service bookings list | View and manage service appointments |
-| 8.6 | Lead export | CSV export of leads |
-| 8.7 | Lead assignment | Assign leads to staff members |
-
-### Deliverables
-
-- [ ] Searchable/filterable leads table
-- [ ] Lead detail view with full history
-- [ ] Status update functionality
-- [ ] Test drive and service booking management
-- [ ] CSV export capability
-
-### Checkpoint 8 Review
-
-```
-Before proceeding to Phase 9, verify:
-- [ ] Leads table loads with pagination
-- [ ] Filters work (date range, status, source)
-- [ ] Status updates save to database
-- [ ] Export downloads valid CSV file
-- [ ] Staff can only see assigned leads (if applicable)
-```
+| Feature | PRD Priority | Notes |
+|---------|--------------|-------|
+| Kia Accessories ecommerce | P1 | Razorpay integration |
+| SMC Insurance integration | P1 | API partnership required |
+| Order management dashboard | P1 | After ecommerce |
+| Shiprocket logistics | P1 | After ecommerce |
 
 ---
 
-## Phase 9: Content Management
+## Phase 5: Advanced Experience (Future)
 
-**Goal**: Enable admin users to manage offers, pages, and blog content.
-
-### Tasks
-
-| # | Task | Description |
-|---|------|-------------|
-| 9.1 | Offers management | CRUD for offers with date validation |
-| 9.2 | Rich text editor | Tiptap or similar for content editing |
-| 9.3 | Pages management | CRUD for static pages |
-| 9.4 | Blog post management | Create, edit, publish blog posts |
-| 9.5 | FAQ management | Add/edit FAQs per page |
-| 9.6 | Media upload | Image upload and management |
-| 9.7 | SEO fields | Meta title, description, OG tags |
-| 9.8 | Preview mode | Preview unpublished content |
-
-### Deliverables
-
-- [ ] Offer creation and editing
-- [ ] Page content management
-- [ ] Blog post editor with rich text
-- [ ] FAQ management
-- [ ] Image upload functionality
-- [ ] SEO metadata editing
-
-### Checkpoint 9 Review
-
-```
-Before proceeding to Phase 10, verify:
-- [ ] New offers appear on public site
-- [ ] Page edits reflect on frontend
-- [ ] Blog posts can be drafted and published
-- [ ] Images upload and display correctly
-- [ ] SEO meta tags render in page head
-```
+| Feature | PRD Priority | Notes |
+|---------|--------------|-------|
+| Mobile App (React Native) | P2 | Long-term |
+| AR vehicle visualization | P2 | WebXR or native |
+| Virtual test drive | P3 | Future consideration |
+| Loyalty program | P2 | Requires customer accounts |
 
 ---
 
-## Phase 10: Chatbot Integration
+## Technical Debt & Known Issues
 
-**Goal**: Implement AI-powered chatbot for customer assistance.
+### Resolved ✅
 
-### Tasks
+| Issue | Resolution | Date |
+|-------|------------|------|
+| Missing Google Maps URLs | Added all 5 locations | Dec 2024 |
+| Contact form field mismatch | Fixed `name` → `fullName` | Dec 2024 |
+| Placeholder phone numbers | Updated with real numbers | Dec 2024 |
+| GA not rendered in layout | Added to JSX | Dec 2024 |
+| Non-functional admin buttons | Wired to API endpoints | Dec 2024 |
 
-| # | Task | Description |
-|---|------|-------------|
-| 10.1 | Chat UI component | Floating chat widget |
-| 10.2 | Chat API route | Streaming chat endpoint |
-| 10.3 | AI integration | Vercel AI SDK + Claude |
-| 10.4 | System prompt | Dealership context, FAQ knowledge |
-| 10.5 | Lead capture in chat | Collect contact info during conversation |
-| 10.6 | Chat session storage | Save conversations to database |
-| 10.7 | Handoff to human | Flag for staff follow-up |
-| 10.8 | Chat admin view | View chat transcripts |
+### Outstanding
 
-### Deliverables
-
-- [ ] Floating chat widget on all pages
-- [ ] AI responses for common questions
-- [ ] Lead capture during chat
-- [ ] Chat history saved to database
-- [ ] Admin view of chat transcripts
-
-### Checkpoint 10 Review
-
-```
-Before proceeding to Phase 11, verify:
-- [ ] Chat widget opens and closes correctly
-- [ ] AI responds to model, offer, service questions
-- [ ] Lead info captured and saved
-- [ ] Chat transcripts viewable in admin
-- [ ] Handoff flag creates notification
-```
+| Issue | Priority | Notes |
+|-------|----------|-------|
+| Placeholder model images | HIGH | Need real Kia vehicle images |
+| CAPTCHA on forms | MEDIUM | Add reCAPTCHA for production |
+| Rich text editor | HIGH | Needed for content management |
+| Image upload to cloud | MEDIUM | S3/Cloudinary setup |
+| Accessibility audit | MEDIUM | WCAG 2.1 AA compliance |
+| E2E tests | LOW | Playwright test suite |
 
 ---
 
-## Phase 11: Notifications & Integrations
+## Success Metrics
 
-**Goal**: Set up email/SMS notifications and CRM integration.
+### Phase 1 KPIs
 
-### Tasks
+| Metric | Target | Measurement |
+|--------|--------|-------------|
+| Page load time | < 3s | Lighthouse |
+| Mobile score | > 90 | Lighthouse |
+| Form submission rate | > 5% | GA4 conversions |
+| Admin response time | < 24h | Internal SLA |
 
-| # | Task | Description |
-|---|------|-------------|
-| 11.1 | Email service setup | SendGrid configuration |
-| 11.2 | Lead notification email | Alert staff of new leads |
-| 11.3 | Confirmation emails | Customer confirmation for bookings |
-| 11.4 | SMS service setup | Twilio configuration |
-| 11.5 | SMS confirmations | Booking reminders via SMS |
-| 11.6 | CRM webhook | Send leads to external CRM |
-| 11.7 | Webhook retry logic | Handle failed webhook deliveries |
-| 11.8 | Notification preferences | Admin settings for notifications |
+### Weekly Review Checklist
 
-### Deliverables
-
-- [ ] Email notifications for new leads
-- [ ] Customer confirmation emails
-- [ ] SMS booking confirmations
-- [ ] CRM webhook integration
-- [ ] Notification settings in admin
-
-### Checkpoint 11 Review
-
-```
-Before proceeding to Phase 12, verify:
-- [ ] Staff receives email on new lead
-- [ ] Customer receives confirmation email
-- [ ] SMS sends for service bookings
-- [ ] CRM webhook delivers lead data
-- [ ] Failed webhooks are retried
-```
-
----
-
-## Phase 12: Analytics & Tracking
-
-**Goal**: Implement comprehensive analytics for measuring KPIs.
-
-### Tasks
-
-| # | Task | Description |
-|---|------|-------------|
-| 12.1 | Google Analytics 4 | Page views, events setup |
-| 12.2 | Conversion tracking | Form submissions as conversions |
-| 12.3 | Event tracking | Button clicks, scroll depth, video plays |
-| 12.4 | PostHog integration | Product analytics, session recordings |
-| 12.5 | Admin analytics dashboard | Internal KPI display |
-| 12.6 | UTM parameter handling | Campaign tracking |
-| 12.7 | Cookie consent | GDPR/CCPA compliant consent banner |
-
-### Deliverables
-
-- [ ] GA4 tracking on all pages
-- [ ] Conversion goals configured
-- [ ] Event tracking for key interactions
-- [ ] Cookie consent banner
-- [ ] Admin analytics overview
-
-### Checkpoint 12 Review
-
-```
-Before proceeding to Phase 13, verify:
-- [ ] Page views appear in GA4
-- [ ] Form submissions tracked as conversions
-- [ ] Cookie consent shows on first visit
-- [ ] Consent choice is remembered
-- [ ] Admin dashboard shows key metrics
-```
-
----
-
-## Phase 13: AI Blog & Content Generation
-
-**Goal**: Implement AI-assisted blog content creation with review workflow.
-
-### Tasks
-
-| # | Task | Description |
-|---|------|-------------|
-| 13.1 | AI content generation | Generate blog drafts from prompts |
-| 13.2 | Content review workflow | Draft → In Review → Approved/Rejected |
-| 13.3 | Editorial UI | Review and edit AI content |
-| 13.4 | Publish workflow | Approved content to blog |
-| 13.5 | Content templates | Pre-defined prompt templates |
-| 13.6 | SEO optimization | Auto-generate meta descriptions |
-| 13.7 | Audit trail | Track content changes and approvals |
-
-### Deliverables
-
-- [ ] AI blog content generation
-- [ ] Multi-step review workflow
-- [ ] Editorial editing interface
-- [ ] Publish to live blog
-- [ ] Audit trail of all changes
-
-### Checkpoint 13 Review
-
-```
-Before proceeding to Phase 14, verify:
-- [ ] AI generates relevant blog content
-- [ ] Review workflow status updates work
-- [ ] Editor can modify AI content
-- [ ] Approved content publishes to blog
-- [ ] Audit trail records all actions
-```
-
----
-
-## Phase 14: Performance Optimization
-
-**Goal**: Optimize for Core Web Vitals and overall performance.
-
-### Tasks
-
-| # | Task | Description |
-|---|------|-------------|
-| 14.1 | Image optimization | WebP/AVIF, lazy loading, sizing |
-| 14.2 | Code splitting | Dynamic imports, bundle analysis |
-| 14.3 | Caching strategy | ISR, SWR, API caching |
-| 14.4 | Font optimization | Subset fonts, font-display |
-| 14.5 | Critical CSS | Above-the-fold CSS inlining |
-| 14.6 | Performance monitoring | Real user metrics tracking |
-| 14.7 | Lighthouse audits | Score improvements |
-
-### Deliverables
-
-- [ ] LCP < 2.5s on all pages
-- [ ] FID < 100ms
-- [ ] CLS < 0.1
-- [ ] Lighthouse Performance score > 90
-- [ ] Bundle size optimized
-
-### Checkpoint 14 Review
-
-```
-Before proceeding to Phase 15, verify:
-- [ ] Core Web Vitals pass on PageSpeed Insights
-- [ ] Lighthouse score > 90 for Performance
-- [ ] Images serve in modern formats
-- [ ] No layout shifts on page load
-- [ ] Time to Interactive < 3s
-```
-
----
-
-## Phase 15: Security & Compliance
-
-**Goal**: Ensure application security and regulatory compliance.
-
-### Tasks
-
-| # | Task | Description |
-|---|------|-------------|
-| 15.1 | Security headers | CSP, HSTS, X-Frame-Options |
-| 15.2 | Input sanitization | XSS prevention |
-| 15.3 | SQL injection prevention | Parameterized queries (Prisma handles) |
-| 15.4 | Rate limiting | API endpoint protection |
-| 15.5 | HTTPS enforcement | SSL/TLS configuration |
-| 15.6 | Data privacy audit | PII handling, retention policies |
-| 15.7 | Accessibility audit | WCAG 2.1 AA compliance |
-| 15.8 | Security testing | OWASP top 10 checks |
-
-### Deliverables
-
-- [ ] Security headers configured
-- [ ] Rate limiting on sensitive endpoints
-- [ ] HTTPS enforced
-- [ ] Privacy policy implemented
-- [ ] Accessibility audit passed
-- [ ] No critical security vulnerabilities
-
-### Checkpoint 15 Review
-
-```
-Before proceeding to Phase 16, verify:
-- [ ] Security headers present (check securityheaders.com)
-- [ ] Rate limiting blocks excessive requests
-- [ ] No XSS vulnerabilities found
-- [ ] Accessibility score > 90 on Lighthouse
-- [ ] Privacy policy and terms pages exist
-```
-
----
-
-## Phase 16: Launch Preparation
-
-**Goal**: Final testing, content migration, and production deployment.
-
-### Tasks
-
-| # | Task | Description |
-|---|------|-------------|
-| 16.1 | End-to-end testing | Full user journey tests |
-| 16.2 | Cross-browser testing | Chrome, Firefox, Safari, Edge |
-| 16.3 | Mobile device testing | iOS Safari, Android Chrome |
-| 16.4 | Content migration | Load production content |
-| 16.5 | DNS configuration | Domain setup, SSL certificates |
-| 16.6 | Production environment | Final environment variables |
-| 16.7 | Monitoring setup | Error tracking, uptime monitoring |
-| 16.8 | Soft launch | Limited release for final testing |
-| 16.9 | Go live | Full production launch |
-
-### Deliverables
-
-- [ ] All E2E tests passing
-- [ ] Cross-browser compatibility verified
-- [ ] Production content loaded
-- [ ] Domain configured and SSL active
-- [ ] Monitoring and alerts configured
-- [ ] Site live at production URL
-
-### Checkpoint 16 (Final) Review
-
-```
-Launch readiness checklist:
-- [ ] All previous checkpoints passed
-- [ ] E2E tests pass in production environment
-- [ ] Content reviewed and approved
-- [ ] SSL certificate valid
-- [ ] Error tracking active
-- [ ] Uptime monitoring configured
-- [ ] Rollback plan documented
-- [ ] Team trained on admin functions
-```
-
----
-
-## Summary Timeline
-
-| Phase | Name | Key Deliverable |
-|-------|------|-----------------|
-| 1 | Project Foundation | Next.js app with Prisma |
-| 2 | Database & API | Working API endpoints |
-| 3 | Model Catalog | Public browsing experience |
-| 4 | Offers & EMI | Promotions and calculators |
-| 5 | Lead Capture | Test drive and inquiry forms |
-| 6 | Service Booking | Service appointment scheduling |
-| 7 | Auth & Admin | Admin login and dashboard |
-| 8 | Lead Management | Lead tracking interface |
-| 9 | Content Management | CMS for offers and blog |
-| 10 | Chatbot | AI-powered customer support |
-| 11 | Notifications | Email, SMS, CRM integration |
-| 12 | Analytics | Tracking and reporting |
-| 13 | AI Blog | Content generation workflow |
-| 14 | Performance | Core Web Vitals optimization |
-| 15 | Security | Compliance and hardening |
-| 16 | Launch | Production deployment |
+- [ ] All forms working in production
+- [ ] No critical errors in logs
+- [ ] Lighthouse score maintained
+- [ ] New features documented
+- [ ] User feedback reviewed
 
 ---
 
 ## How to Use This Plan
 
-1. **Review each phase** before starting implementation
-2. **Complete all tasks** within a phase before the checkpoint
-3. **Run checkpoint verification** to confirm readiness
-4. **Get approval** before proceeding to next phase
-5. **Document any issues** or deviations from plan
+1. **Week 1**: Deploy to Railway following DEPLOYMENT.md
+2. **Weekly**: Pick tasks from current week's section
+3. **Review**: Update status after each feature ships
+4. **Adapt**: Reprioritize based on user feedback
+5. **Document**: Update CLAUDE.md with new patterns
 
 ---
 
-## Approval
+## Changelog
 
-**Approve to begin Phase 1?**
-
-- [ ] Yes, proceed with implementation
-- [ ] No, modifications needed (specify below)
-
-**Notes/Modifications:**
-
-```
-[Add any modifications or notes here]
-```
+| Date | Update |
+|------|--------|
+| Dec 2024 | Phase 1 marked complete, added weekly shipping structure |
+| Dec 2024 | Aligned with PRD phases |
+| Dec 2024 | Added Google Maps URLs for all locations |
+| Dec 2024 | Created ARCHITECTURE.md |
