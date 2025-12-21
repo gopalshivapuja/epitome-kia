@@ -10,13 +10,20 @@ COPY package*.json ./
 COPY prisma ./prisma/
 
 # Install dependencies (runs prisma generate via postinstall)
-RUN npm install
+RUN npm ci
 
 # Copy remaining source code
 COPY . .
 
-# Expose port
-EXPOSE 3005
+# Build production app
+RUN npm run build
 
-# Start dev server
-CMD ["npm", "run", "dev", "--", "-p", "3005"]
+# Expose port (matches railway.toml internalPort)
+EXPOSE 3000
+
+# Set production environment
+ENV NODE_ENV=production
+ENV PORT=3000
+
+# Start production server
+CMD ["npm", "start"]
