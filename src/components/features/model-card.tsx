@@ -1,9 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { Tag } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 import { formatPrice } from '@/lib/utils'
 
 interface ModelCardProps {
@@ -21,92 +18,74 @@ interface ModelCardProps {
 
 export function ModelCard({ model }: ModelCardProps) {
   return (
-    <Card className="group overflow-hidden transition-all hover:shadow-lg">
+    <div className="group block relative bg-white rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300">
       {/* Model Image */}
-      <div className="relative aspect-video bg-gradient-to-br from-gray-100 to-gray-200">
+      <div className="relative aspect-[4/3] bg-gray-50">
         <Image
           src={`/models/${model.slug}.png`}
           alt={model.name}
           fill
-          className="object-contain p-4 transition-transform group-hover:scale-105"
+          className="object-contain p-8 transition-transform duration-500 group-hover:scale-105"
         />
-        {model.hasActiveOffers && (
-          <Badge variant="kia" className="absolute left-3 top-3">
-            <Tag className="mr-1 h-3 w-3" />
-            Special Offer
-          </Badge>
-        )}
-        <Badge variant="secondary" className="absolute right-3 top-3">
-          {model.modelYear}
-        </Badge>
       </div>
 
-      <CardHeader className="pb-2">
-        <div className="flex items-start justify-between">
-          <div>
-            <CardTitle className="text-xl group-hover:text-kia-red">{model.name}</CardTitle>
-            <CardDescription className="mt-1">
-              {model.variantCount
-                ? `${model.variantCount} variant${model.variantCount > 1 ? 's' : ''} available`
-                : 'Multiple variants available'}
-            </CardDescription>
-          </div>
-        </div>
-      </CardHeader>
+      {/* Content */}
+      <div className="p-6 text-center">
+        {/* Model Name */}
+        <h3 className="text-xl font-heading font-semibold text-gray-900">
+          {model.name}
+        </h3>
 
-      <CardContent>
-        {model.description && (
-          <p className="mb-4 line-clamp-2 text-sm text-muted-foreground">{model.description}</p>
-        )}
-
-        <div className="mb-4">
+        {/* Price */}
+        <div className="mt-2">
           {model.startingPrice ? (
-            <div>
-              <span className="text-sm text-muted-foreground">Starting from</span>
-              <p className="text-xl font-bold text-kia-red">
-                {formatPrice(model.startingPrice)}*
-              </p>
-            </div>
+            <p className="text-gray-500">
+              From {formatPrice(model.startingPrice)}
+            </p>
           ) : (
-            <p className="text-lg font-semibold text-muted-foreground">Price on request</p>
+            <p className="text-gray-500">Price on request</p>
           )}
         </div>
 
-        <div className="flex gap-2">
-          <Button variant="kia" size="sm" className="flex-1" asChild>
-            <Link href={`/models/${model.slug}`}>View Details</Link>
+        {/* CTA Buttons - Tesla style */}
+        <div className="mt-6 flex gap-3">
+          <Button
+            size="sm"
+            className="flex-1"
+            asChild
+          >
+            <Link href={`/models/${model.slug}`}>
+              Order Now
+            </Link>
           </Button>
-          <Button variant="outline" size="sm" className="flex-1" asChild>
-            <Link href={`/test-drive?model=${model.slug}`}>Test Drive</Link>
+          <Button
+            variant="outline"
+            size="sm"
+            className="flex-1"
+            asChild
+          >
+            <Link href={`/test-drive?model=${model.slug}`}>
+              Test Drive
+            </Link>
           </Button>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   )
 }
 
 export function ModelCardSkeleton() {
   return (
-    <Card className="overflow-hidden">
-      <div className="aspect-video animate-pulse bg-muted" />
-      <CardHeader className="pb-2">
-        <div className="h-6 w-3/4 animate-pulse rounded bg-muted" />
-        <div className="mt-2 h-4 w-1/2 animate-pulse rounded bg-muted" />
-      </CardHeader>
-      <CardContent>
-        <div className="mb-4 space-y-2">
-          <div className="h-4 w-full animate-pulse rounded bg-muted" />
-          <div className="h-4 w-4/5 animate-pulse rounded bg-muted" />
+    <div className="overflow-hidden rounded-lg bg-white">
+      <div className="aspect-[4/3] bg-gray-100 animate-pulse" />
+      <div className="p-6 space-y-4">
+        <div className="h-6 w-3/4 mx-auto bg-gray-100 rounded animate-pulse" />
+        <div className="h-4 w-1/2 mx-auto bg-gray-100 rounded animate-pulse" />
+        <div className="flex gap-3 pt-2">
+          <div className="h-9 flex-1 bg-gray-100 rounded animate-pulse" />
+          <div className="h-9 flex-1 bg-gray-100 rounded animate-pulse" />
         </div>
-        <div className="mb-4">
-          <div className="h-4 w-1/3 animate-pulse rounded bg-muted" />
-          <div className="mt-1 h-7 w-1/2 animate-pulse rounded bg-muted" />
-        </div>
-        <div className="flex gap-2">
-          <div className="h-9 flex-1 animate-pulse rounded bg-muted" />
-          <div className="h-9 flex-1 animate-pulse rounded bg-muted" />
-        </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   )
 }

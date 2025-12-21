@@ -2,73 +2,87 @@
 
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Button } from '@/components/ui/button'
-import { ArrowRight, ChevronDown } from 'lucide-react'
 
 export function HeroSection() {
     return (
-        <section className="relative h-screen w-full overflow-hidden bg-kia-black">
-            {/* Video Background */}
-            <div className="absolute inset-0 z-0">
-                <video
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                    className="h-full w-full object-cover opacity-60"
-                >
-                    {/* Using a placeholder/sourced Kia video or generic refined car video */}
-                    <source src="https://videos.pexels.com/video-files/3840441/3840441-uhd_2560_1440_30fps.mp4" type="video/mp4" />
-                </video>
-                {/* Gradient Overlay for Readability */}
-                <div className="absolute inset-0 bg-gradient-to-t from-kia-black via-kia-black/50 to-transparent" />
-            </div>
-
-            {/* Content */}
-            <div className="container relative z-10 flex h-full flex-col justify-center pt-20 text-white">
+        <section className="relative min-h-screen w-full overflow-hidden bg-white pt-16">
+            {/* Hero Content - Tesla style */}
+            <div className="container mx-auto px-6 py-12 md:py-20">
+                {/* Text Content - Centered */}
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 0.2 }}
-                    className="max-w-3xl"
+                    transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
+                    className="text-center max-w-3xl mx-auto"
                 >
-                    <h2 className="mb-4 text-lg font-medium tracking-[0.2em] text-kia-red uppercase">
-                        Movement that Inspires
-                    </h2>
-                    <h1 className="mb-6 font-heading text-6xl font-black leading-tight tracking-tight md:text-8xl">
-                        THE NEW <br />
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">
-                            AUTHORITY
-                        </span>
+                    <h1 className="font-heading text-4xl sm:text-5xl md:text-6xl font-semibold tracking-tight text-gray-900">
+                        Kia Seltos
                     </h1>
-                    <p className="mb-8 max-w-xl text-lg text-gray-300 md:text-xl font-light">
-                        Experience the future of mobility with Epitome Kia.
-                        Discover award-winning designs and cutting-edge technology.
+                    <p className="mt-4 text-lg text-gray-500">
+                        Starting from ₹10.90 Lakh
                     </p>
 
-                    <div className="flex flex-wrap gap-4">
-                        <Button size="lg" className="rounded-full bg-kia-red hover:bg-kia-red-dark text-white px-8 h-12 text-base" asChild>
-                            <Link href="/models">Explore Models</Link>
+                    {/* CTA Buttons - Tesla style */}
+                    <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+                        <Button
+                            size="lg"
+                            className="w-full sm:w-auto min-w-[200px]"
+                            asChild
+                        >
+                            <Link href="/models/seltos">Order Now</Link>
                         </Button>
-                        <Button variant="outline" size="lg" className="rounded-full border-white/30 bg-white/10 text-white backdrop-blur-sm hover:bg-white hover:text-black px-8 h-12 text-base group" asChild>
-                            <Link href="/test-drive">
-                                Book Test Drive <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                            </Link>
+                        <Button
+                            variant="outline"
+                            size="lg"
+                            className="w-full sm:w-auto min-w-[200px]"
+                            asChild
+                        >
+                            <Link href="/test-drive">Test Drive</Link>
                         </Button>
                     </div>
                 </motion.div>
-            </div>
 
-            {/* Scroll Indicator */}
-            <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1.5, duration: 1 }}
-                className="absolute bottom-10 left-1/2 -translate-x-1/2 transform text-white flex flex-col items-center gap-2"
-            >
-                <span className="text-xs uppercase tracking-widest opacity-70">Scroll</span>
-                <ChevronDown className="h-6 w-6 animate-bounce opacity-70" />
-            </motion.div>
+                {/* Hero Car Image */}
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 1, delay: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
+                    className="relative mt-12 md:mt-16"
+                >
+                    <div className="relative aspect-[16/9] md:aspect-[21/9] max-w-6xl mx-auto">
+                        <Image
+                            src="/models/seltos.png"
+                            alt="Kia Seltos"
+                            fill
+                            className="object-contain"
+                            priority
+                        />
+                    </div>
+                </motion.div>
+
+                {/* Feature highlights - Tesla style */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 0.4 }}
+                    className="mt-8 md:mt-12 grid grid-cols-3 gap-4 max-w-xl mx-auto text-center"
+                >
+                    <div>
+                        <p className="text-2xl md:text-3xl font-semibold text-gray-900">138 hp</p>
+                        <p className="text-sm text-gray-500 mt-1">Power</p>
+                    </div>
+                    <div>
+                        <p className="text-2xl md:text-3xl font-semibold text-gray-900">6 Airbags</p>
+                        <p className="text-sm text-gray-500 mt-1">Safety</p>
+                    </div>
+                    <div>
+                        <p className="text-2xl md:text-3xl font-semibold text-gray-900">17 km/l</p>
+                        <p className="text-sm text-gray-500 mt-1">Mileage</p>
+                    </div>
+                </motion.div>
+            </div>
         </section>
     )
 }

@@ -22,12 +22,13 @@ const config: Config = {
         ring: 'hsl(var(--ring))',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
+        // Tesla-inspired light palette with Kia brand accent
         kia: {
-          red: '#BB162B', // Official Kia Red
+          red: '#BB162B',       // Official Kia Red - key CTAs only
           'red-dark': '#8B1120',
-          black: '#05141F', // Midnight Black
-          graphite: '#444444',
-          silver: '#E5E5E5',
+          black: '#171717',     // Text black
+          gray: '#393c41',      // Tesla gray for text
+          silver: '#f4f4f4',    // Light gray backgrounds
           white: '#FFFFFF',
         },
         primary: {
@@ -65,8 +66,13 @@ const config: Config = {
         sm: 'calc(var(--radius) - 4px)',
       },
       fontFamily: {
-        sans: ['var(--font-inter)', 'sans-serif'],
-        heading: ['var(--font-outfit)', 'sans-serif'],
+        sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
+        heading: ['var(--font-outfit)', 'system-ui', 'sans-serif'],
+      },
+      fontSize: {
+        // Tesla-style large, clean typography
+        'hero': ['clamp(2.5rem, 6vw, 4rem)', { lineHeight: '1.1', letterSpacing: '-0.02em', fontWeight: '600' }],
+        'hero-sub': ['clamp(0.875rem, 1.5vw, 1rem)', { lineHeight: '1.5', letterSpacing: '0' }],
       },
       keyframes: {
         'accordion-down': {
@@ -81,21 +87,32 @@ const config: Config = {
           '0%': { opacity: '0', transform: 'translateY(20px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
         },
-        'reveal': {
-          '0%': { clipPath: 'inset(0 100% 0 0)' },
-          '100%': { clipPath: 'inset(0 0 0 0)' },
-        }
+        'fade-in': {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        'scale-in': {
+          '0%': { opacity: '0', transform: 'scale(0.98)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
-        'fade-in-up': 'fade-in-up 0.8s ease-out forwards',
-        'reveal': 'reveal 1.2s cubic-bezier(0.77, 0, 0.175, 1) forwards',
+        'fade-in-up': 'fade-in-up 0.6s ease-out forwards',
+        'fade-in': 'fade-in 0.5s ease-out forwards',
+        'scale-in': 'scale-in 0.4s ease-out forwards',
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'hero-gradient': 'linear-gradient(to bottom, rgba(5,20,31,0.3), rgba(5,20,31,0.8))',
-      }
+        // Light gradient overlays for hero images
+        'hero-gradient': 'linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0.9))',
+        'hero-gradient-subtle': 'linear-gradient(to bottom, transparent, rgba(255,255,255,0.8))',
+      },
+      spacing: {
+        '18': '4.5rem',
+        '22': '5.5rem',
+      },
     },
   },
   plugins: [require('tailwindcss-animate')],
