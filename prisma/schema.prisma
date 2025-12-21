@@ -1,0 +1,336 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model CarModel {
+  id          String    @id @default(uuid()) @db.Uuid
+  name        String
+  slug        String    @unique
+  modelYear   Int       @map("model_year")
+  description String?
+  isActive    Boolean   @default(true) @map("is_active")
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt   DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt   DateTime? @map("deleted_at") @db.Timestamptz
+
+  variants         Variant[]
+  offers           Offer[]
+  testDriveRequests TestDriveRequest[]
+  serviceBookings  ServiceBooking[]
+
+  @@index([isActive], name: "car_models_active_idx")
+  @@map("car_models")
+}
+
+model Variant {
+  id         String    @id @default(uuid()) @db.Uuid
+  carModelId String    @map("car_model_id") @db.Uuid
+  name       String
+  slug       String    @unique
+  trimLevel  String?   @map("trim_level")
+  basePrice  Decimal?  @map("base_price") @db.Decimal(12, 2)
+  isActive   Boolean   @default(true) @map("is_active")
+  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt  DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt  DateTime? @map("deleted_at") @db.Timestamptz
+
+  carModel       CarModel        @relation(fields: [carModelId], references: [id])
+  specifications Specification[]
+  offers         Offer[]
+  testDriveRequests TestDriveRequest[]
+  serviceBookings  ServiceBooking[]
+
+  @@index([carModelId], name: "variants_car_model_idx")
+  @@index([isActive], name: "variants_active_idx")
+  @@map("variants")
+}
+
+model Specification {
+  id        String    @id @default(uuid()) @db.Uuid
+  variantId String    @map("variant_id") @db.Uuid
+  specKey   String    @map("spec_key")
+  specValue String    @map("spec_value")
+  unit      String?
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt DateTime? @map("deleted_at") @db.Timestamptz
+
+  variant Variant @relation(fields: [variantId], references: [id])
+
+  @@unique([variantId, specKey], name: "specifications_variant_key_unique")
+  @@index([variantId], name: "specifications_variant_idx")
+  @@map("specifications")
+}
+
+model Offer {
+  id          String    @id @default(uuid()) @db.Uuid
+  carModelId  String?   @map("car_model_id") @db.Uuid
+  variantId   String?   @map("variant_id") @db.Uuid
+  title       String
+  slug        String    @unique
+  description String?
+  startAt     DateTime  @map("start_at") @db.Timestamptz
+  endAt       DateTime? @map("end_at") @db.Timestamptz
+  isActive    Boolean   @default(true) @map("is_active")
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt   DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt   DateTime? @map("deleted_at") @db.Timestamptz
+
+  carModel CarModel? @relation(fields: [carModelId], references: [id])
+  variant  Variant?  @relation(fields: [variantId], references: [id])
+
+  @@index([carModelId], name: "offers_car_model_idx")
+  @@index([variantId], name: "offers_variant_idx")
+  @@index([isActive], name: "offers_active_idx")
+  @@map("offers")
+}
+
+model Page {
+  id             String    @id @default(uuid()) @db.Uuid
+  title          String
+  slug           String    @unique
+  content        String?
+  seoTitle       String?   @map("seo_title")
+  seoDescription String?   @map("seo_description")
+  isPublished    Boolean   @default(false) @map("is_published")
+  publishedAt    DateTime? @map("published_at") @db.Timestamptz
+  createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt      DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt      DateTime? @map("deleted_at") @db.Timestamptz
+
+  faqs FAQ[]
+
+  @@index([isPublished], name: "pages_published_idx")
+  @@map("pages")
+}
+
+model BlogPost {
+  id          String    @id @default(uuid()) @db.Uuid
+  title       String
+  slug        String    @unique
+  summary     String?
+  content     String?
+  authorName  String?   @map("author_name")
+  isPublished Boolean   @default(false) @map("is_published")
+  publishedAt DateTime? @map("published_at") @db.Timestamptz
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt   DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt   DateTime? @map("deleted_at") @db.Timestamptz
+
+  @@index([isPublished], name: "blog_posts_published_idx")
+  @@map("blog_posts")
+}
+
+model FAQ {
+  id           String    @id @default(uuid()) @db.Uuid
+  pageId       String?   @map("page_id") @db.Uuid
+  question     String
+  answer       String
+  displayOrder Int       @default(0) @map("display_order")
+  isActive     Boolean   @default(true) @map("is_active")
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt    DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt    DateTime? @map("deleted_at") @db.Timestamptz
+
+  page Page? @relation(fields: [pageId], references: [id])
+
+  @@index([pageId], name: "faqs_page_idx")
+  @@index([isActive], name: "faqs_active_idx")
+  @@map("faqs")
+}
+
+model DealerLocation {
+  id           String    @id @default(uuid()) @db.Uuid
+  name         String
+  slug         String    @unique
+  addressLine1 String    @map("address_line1")
+  addressLine2 String?   @map("address_line2")
+  city         String
+  state        String
+  postalCode   String    @map("postal_code")
+  country      String    @default("IN")
+  phone        String?
+  email        String?
+  latitude     Decimal?  @db.Decimal(9, 6)
+  longitude    Decimal?  @db.Decimal(9, 6)
+  hours        String?
+  isActive     Boolean   @default(true) @map("is_active")
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt    DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt    DateTime? @map("deleted_at") @db.Timestamptz
+
+  serviceBookings ServiceBooking[]
+  pickupRequests  PickupRequest[]
+
+  @@index([isActive], name: "dealer_locations_active_idx")
+  @@index([city], name: "dealer_locations_city_idx")
+  @@map("dealer_locations")
+}
+
+model CustomerLead {
+  id               String    @id @default(uuid()) @db.Uuid
+  fullName         String    @map("full_name")
+  email            String?
+  phone            String?
+  preferredContact String?   @map("preferred_contact")
+  source           String?
+  notes            String?
+  createdAt        DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt        DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt        DateTime? @map("deleted_at") @db.Timestamptz
+
+  testDriveRequests TestDriveRequest[]
+  serviceBookings   ServiceBooking[]
+  pickupRequests    PickupRequest[]
+  chatSessions      ChatSession[]
+
+  @@index([email], name: "customer_leads_email_idx")
+  @@index([phone], name: "customer_leads_phone_idx")
+  @@map("customer_leads")
+}
+
+model TestDriveRequest {
+  id             String    @id @default(uuid()) @db.Uuid
+  customerLeadId String    @map("customer_lead_id") @db.Uuid
+  carModelId     String?   @map("car_model_id") @db.Uuid
+  variantId      String?   @map("variant_id") @db.Uuid
+  preferredDate  DateTime  @map("preferred_date") @db.Date
+  preferredTime  String?   @map("preferred_time")
+  locationNotes  String?   @map("location_notes")
+  status         String    @default("pending")
+  createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt      DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt      DateTime? @map("deleted_at") @db.Timestamptz
+
+  customerLead CustomerLead @relation(fields: [customerLeadId], references: [id])
+  carModel     CarModel?    @relation(fields: [carModelId], references: [id])
+  variant      Variant?     @relation(fields: [variantId], references: [id])
+
+  @@index([customerLeadId], name: "test_drive_customer_idx")
+  @@index([carModelId], name: "test_drive_model_idx")
+  @@index([variantId], name: "test_drive_variant_idx")
+  @@map("test_drive_requests")
+}
+
+model ServiceBooking {
+  id               String    @id @default(uuid()) @db.Uuid
+  customerLeadId   String    @map("customer_lead_id") @db.Uuid
+  dealerLocationId String?   @map("dealer_location_id") @db.Uuid
+  carModelId       String?   @map("car_model_id") @db.Uuid
+  variantId        String?   @map("variant_id") @db.Uuid
+  serviceDate      DateTime  @map("service_date") @db.Date
+  serviceTime      String?   @map("service_time")
+  serviceType      String    @map("service_type")
+  notes            String?
+  status           String    @default("requested")
+  createdAt        DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt        DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt        DateTime? @map("deleted_at") @db.Timestamptz
+
+  customerLead   CustomerLead    @relation(fields: [customerLeadId], references: [id])
+  dealerLocation DealerLocation? @relation(fields: [dealerLocationId], references: [id])
+  carModel       CarModel?       @relation(fields: [carModelId], references: [id])
+  variant        Variant?        @relation(fields: [variantId], references: [id])
+
+  @@index([customerLeadId], name: "service_booking_customer_idx")
+  @@index([dealerLocationId], name: "service_booking_location_idx")
+  @@map("service_bookings")
+}
+
+model PickupRequest {
+  id               String    @id @default(uuid()) @db.Uuid
+  customerLeadId   String    @map("customer_lead_id") @db.Uuid
+  dealerLocationId String?   @map("dealer_location_id") @db.Uuid
+  pickupAddress    String    @map("pickup_address")
+  pickupDate       DateTime  @map("pickup_date") @db.Date
+  pickupTime       String?   @map("pickup_time")
+  status           String    @default("requested")
+  createdAt        DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt        DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt        DateTime? @map("deleted_at") @db.Timestamptz
+
+  customerLead   CustomerLead    @relation(fields: [customerLeadId], references: [id])
+  dealerLocation DealerLocation? @relation(fields: [dealerLocationId], references: [id])
+
+  @@index([customerLeadId], name: "pickup_requests_customer_idx")
+  @@index([dealerLocationId], name: "pickup_requests_location_idx")
+  @@map("pickup_requests")
+}
+
+model ChatSession {
+  id             String    @id @default(uuid()) @db.Uuid
+  customerLeadId String?   @map("customer_lead_id") @db.Uuid
+  sessionTopic   String?   @map("session_topic")
+  channel        String    @default("web")
+  startedAt      DateTime  @default(now()) @map("started_at") @db.Timestamptz
+  endedAt        DateTime? @map("ended_at") @db.Timestamptz
+  createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt      DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt      DateTime? @map("deleted_at") @db.Timestamptz
+
+  customerLead CustomerLead?  @relation(fields: [customerLeadId], references: [id])
+  messages     ChatMessage[]
+
+  @@index([customerLeadId], name: "chat_sessions_customer_idx")
+  @@map("chat_sessions")
+}
+
+model ChatMessage {
+  id            String    @id @default(uuid()) @db.Uuid
+  chatSessionId String    @map("chat_session_id") @db.Uuid
+  senderType    String    @map("sender_type")
+  message       String
+  metadata      Json?
+  createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt     DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt     DateTime? @map("deleted_at") @db.Timestamptz
+
+  chatSession ChatSession @relation(fields: [chatSessionId], references: [id])
+
+  @@index([chatSessionId], name: "chat_messages_session_idx")
+  @@map("chat_messages")
+}
+
+model AIContentDraft {
+  id           String    @id @default(uuid()) @db.Uuid
+  title        String
+  slug         String    @unique
+  contentType  String    @map("content_type")
+  draftContent String    @map("draft_content")
+  sourcePrompt String?   @map("source_prompt")
+  status       String    @default("draft")
+  createdBy    String?   @map("created_by")
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt    DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt    DateTime? @map("deleted_at") @db.Timestamptz
+
+  reviews AIContentReview[]
+
+  @@index([contentType], name: "ai_content_drafts_type_idx")
+  @@map("ai_content_drafts")
+}
+
+model AIContentReview {
+  id           String    @id @default(uuid()) @db.Uuid
+  draftId      String    @map("draft_id") @db.Uuid
+  reviewerName String    @map("reviewer_name")
+  reviewNotes  String?   @map("review_notes")
+  status       String
+  reviewedAt   DateTime  @default(now()) @map("reviewed_at") @db.Timestamptz
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt    DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt    DateTime? @map("deleted_at") @db.Timestamptz
+
+  draft AIContentDraft @relation(fields: [draftId], references: [id])
+
+  @@index([draftId], name: "ai_content_reviews_draft_idx")
+  @@map("ai_content_reviews")
+}
