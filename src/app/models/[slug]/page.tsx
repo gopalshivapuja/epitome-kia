@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ArrowLeft, Car, Calendar, Wrench, Calculator, Tag, ChevronRight } from 'lucide-react'
 import { getModelBySlug, getModels } from '@/lib/data'
+import { EMICalculator } from '@/components/features/emi-calculator'
 import { formatPrice } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -271,6 +272,17 @@ async function ModelDetail({ slug }: { slug: string }) {
           ) : (
             <p className="text-muted-foreground">No variants available at the moment.</p>
           )}
+        </section>
+
+        {/* EMI Calculator Section */}
+        <section id="emi" className="mt-12 scroll-mt-20">
+          <h2 className="mb-6 text-2xl font-bold">Calculate Your EMI</h2>
+          <div className="mx-auto max-w-xl">
+            <EMICalculator
+              initialPrice={model.startingPrice || 1500000}
+              modelName={model.name}
+            />
+          </div>
         </section>
 
         {/* Back Link */}
