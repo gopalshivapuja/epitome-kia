@@ -334,3 +334,20 @@ model AIContentReview {
   @@index([draftId], name: "ai_content_reviews_draft_idx")
   @@map("ai_content_reviews")
 }
+
+model AdminUser {
+  id           String    @id @default(uuid()) @db.Uuid
+  email        String    @unique
+  passwordHash String    @map("password_hash")
+  fullName     String    @map("full_name")
+  role         String    @default("staff") // admin, sales_manager, service_advisor, staff
+  isActive     Boolean   @default(true) @map("is_active")
+  lastLoginAt  DateTime? @map("last_login_at") @db.Timestamptz
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt    DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt    DateTime? @map("deleted_at") @db.Timestamptz
+
+  @@index([email], name: "admin_users_email_idx")
+  @@index([role], name: "admin_users_role_idx")
+  @@map("admin_users")
+}

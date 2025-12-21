@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client'
+import bcrypt from 'bcryptjs'
 
 const prisma = new PrismaClient()
 
@@ -6,6 +7,7 @@ async function main() {
   console.log('Seeding database...')
 
   // Clear existing data
+  await prisma.adminUser.deleteMany()
   await prisma.aIContentReview.deleteMany()
   await prisma.aIContentDraft.deleteMany()
   await prisma.chatMessage.deleteMany()
@@ -22,6 +24,38 @@ async function main() {
   await prisma.variant.deleteMany()
   await prisma.carModel.deleteMany()
   await prisma.dealerLocation.deleteMany()
+
+  console.log('Creating admin users...')
+
+  // Create admin users
+  const adminPassword = await bcrypt.hash('admin123', 10)
+  const staffPassword = await bcrypt.hash('staff123', 10)
+
+  await prisma.adminUser.createMany({
+    data: [
+      {
+        email: 'admin@epitomekia.com',
+        passwordHash: adminPassword,
+        fullName: 'Admin User',
+        role: 'admin',
+        isActive: true,
+      },
+      {
+        email: 'sales@epitomekia.com',
+        passwordHash: staffPassword,
+        fullName: 'Sales Manager',
+        role: 'sales_manager',
+        isActive: true,
+      },
+      {
+        email: 'service@epitomekia.com',
+        passwordHash: staffPassword,
+        fullName: 'Service Advisor',
+        role: 'service_advisor',
+        isActive: true,
+      },
+    ],
+  })
 
   console.log('Creating dealer locations...')
 
