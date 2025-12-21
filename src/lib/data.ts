@@ -273,6 +273,65 @@ export const getOffers = unstable_cache(
   { tags: [CACHE_TAGS.offers], revalidate: 3600 }
 )
 
+// Get single offer by slug
+export const getOfferBySlug = unstable_cache(
+  async (slug: string) => {
+    try {
+      const offer = await prisma.offer.findFirst({
+        where: {
+          slug,
+          isActive: true,
+          deletedAt: null,
+          startAt: { lte: new Date() },
+          OR: [{ endAt: null }, { endAt: { gte: new Date() } }],
+        },
+        include: {
+          carModel: {
+            select: {
+              id: true,
+              name: true,
+              slug: true,
+              modelYear: true,
+              description: true,
+            },
+          },
+          variant: {
+            select: {
+              id: true,
+              name: true,
+              slug: true,
+              basePrice: true,
+            },
+          },
+        },
+      })
+
+      if (!offer) return null
+
+      return {
+        id: offer.id,
+        title: offer.title,
+        slug: offer.slug,
+        description: offer.description,
+        startAt: offer.startAt,
+        endAt: offer.endAt,
+        carModel: offer.carModel,
+        variant: offer.variant
+          ? {
+              ...offer.variant,
+              basePrice: offer.variant.basePrice ? Number(offer.variant.basePrice) : null,
+            }
+          : null,
+      }
+    } catch (error) {
+      console.error('Error fetching offer by slug:', error)
+      return null
+    }
+  },
+  ['offer-detail'],
+  { tags: [CACHE_TAGS.offers], revalidate: 3600 }
+)
+
 // Get dealer locations
 export const getDealerLocations = unstable_cache(
   async () => {

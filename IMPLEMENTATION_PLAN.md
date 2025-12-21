@@ -146,38 +146,54 @@ All verification criteria passed:
 
 ---
 
-## Phase 4: Offers & EMI Tools
+## Phase 4: Offers & EMI Tools ✅ COMPLETED
 
 **Goal**: Display promotional offers and provide financing calculators.
 
 ### Tasks
 
-| # | Task | Description |
-|---|------|-------------|
-| 4.1 | Offers listing page | All active offers with filters |
-| 4.2 | Offer detail page | Full terms, eligibility, CTA |
-| 4.3 | Offer badges on models | Show applicable offers on model cards |
-| 4.4 | EMI calculator component | Interactive loan calculator |
-| 4.5 | EMI on model detail | Integrate calculator with model pricing |
-| 4.6 | Save/share EMI results | Generate shareable calculation link |
-| 4.7 | Disclaimers | Legal text for offers and EMI |
+| # | Task | Description | Status |
+|---|------|-------------|--------|
+| 4.1 | Offers listing page | All active offers with filters | ✅ (Phase 3) |
+| 4.2 | Offer detail page | Full terms, eligibility, CTA | ✅ |
+| 4.3 | Offer badges on models | Show applicable offers on model cards | ✅ |
+| 4.4 | EMI calculator component | Interactive loan calculator | ✅ |
+| 4.5 | EMI on model detail | Integrate calculator with model pricing | ✅ |
+| 4.6 | Save/share EMI results | Generate shareable calculation link | ⏳ Deferred |
+| 4.7 | Disclaimers | Legal text for offers and EMI | ✅ |
+
+### Components Created
+
+| Component | Path | Description |
+|-----------|------|-------------|
+| EMICalculator | src/components/features/emi-calculator.tsx | Interactive EMI calculator with sliders |
+| Slider | src/components/ui/slider.tsx | Radix-based slider component |
+
+### Pages Created
+
+| Route | Path | Description |
+|-------|------|-------------|
+| /emi-calculator | src/app/emi-calculator/page.tsx | Standalone EMI calculator page |
+| /offers/[slug] | src/app/offers/[slug]/page.tsx | Offer detail with terms & conditions |
 
 ### Deliverables
 
-- [ ] Offers page with active promotions
-- [ ] EMI calculator with adjustable parameters
-- [ ] EMI integrated into model detail pages
-- [ ] Legal disclaimers displayed appropriately
+- [x] Offers page with active promotions
+- [x] Offer detail page with T&C
+- [x] EMI calculator with adjustable parameters (price, down payment, tenure, interest)
+- [x] EMI integrated into model detail pages (#emi anchor)
+- [x] Legal disclaimers displayed appropriately
 
-### Checkpoint 4 Review
+### Checkpoint 4 Review ✅ PASSED
 
 ```
-Before proceeding to Phase 5, verify:
-- [ ] Offers display with correct validity dates
-- [ ] Expired offers are hidden automatically
-- [ ] EMI calculator produces accurate results
-- [ ] EMI formula matches standard amortization
-- [ ] Disclaimers are visible and compliant
+All verification criteria passed:
+- [x] Offers display with correct validity dates
+- [x] Expired offers hidden automatically (filtered in data layer)
+- [x] EMI calculator produces accurate results (standard amortization formula)
+- [x] EMI formula: P * r * (1+r)^n / ((1+r)^n - 1)
+- [x] Disclaimers visible on EMI page and offer detail
+- [x] npm run build completes successfully
 ```
 
 ---
