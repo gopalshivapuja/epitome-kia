@@ -14,8 +14,14 @@
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate dev",
+    "db:migrate:deploy": "prisma migrate deploy",
     "db:seed": "tsx prisma/seed.ts",
-    "db:studio": "prisma studio"
+    "db:studio": "prisma studio",
+    "db:reset": "prisma migrate reset --force",
+    "prebuild": "prisma generate",
+    "postinstall": "prisma generate",
+    "deploy:check": "npm run lint && npm run type-check && npm run build",
+    "setup": "npm install && prisma generate && prisma db push && npm run db:seed"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
