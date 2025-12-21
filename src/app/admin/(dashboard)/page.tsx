@@ -1,5 +1,9 @@
 import { Suspense } from 'react'
 import Link from 'next/link'
+
+// Force dynamic rendering - no static generation
+export const dynamic = 'force-dynamic'
+
 import {
   Users,
   Calendar,

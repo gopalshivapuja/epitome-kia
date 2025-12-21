@@ -1,6 +1,9 @@
 import { Suspense } from 'react'
 import Link from 'next/link'
 import { ArrowRight, Car, Wrench, Calculator, Calendar, Tag } from 'lucide-react'
+
+// Force dynamic rendering - no static generation at build time
+export const dynamic = 'force-dynamic'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'

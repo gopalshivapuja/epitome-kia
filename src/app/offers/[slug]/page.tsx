@@ -1,6 +1,9 @@
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+
+// Force dynamic rendering - no static generation at build time
+export const dynamic = 'force-dynamic'
 import { Tag, Calendar, Car, ArrowRight, Clock, AlertCircle } from 'lucide-react'
 import { getOfferBySlug, getOffers } from '@/lib/data'
 import { formatPrice } from '@/lib/utils'

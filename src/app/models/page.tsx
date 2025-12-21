@@ -1,6 +1,9 @@
 import { Suspense } from 'react'
 import { Metadata } from 'next'
 import { getModels } from '@/lib/data'
+
+// Force dynamic rendering - no static generation at build time
+export const dynamic = 'force-dynamic'
 import { ModelCard, ModelCardSkeleton } from '@/components/features/model-card'
 
 export const metadata: Metadata = {
