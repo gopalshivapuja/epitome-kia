@@ -14,8 +14,8 @@ function getResend(): Resend | null {
 }
 
 const FROM_EMAIL = process.env.EMAIL_FROM || 'Epitome Kia <noreply@epitomekia.com>'
-const SALES_EMAIL = process.env.EMAIL_SALES_TEAM || 'sales@epitomekia.com'
-const SERVICE_EMAIL = process.env.EMAIL_SERVICE_TEAM || 'service@epitomekia.com'
+const SALES_EMAIL = process.env.EMAIL_SALES_TEAM || 'ccm@epitomekia.in'
+const SERVICE_EMAIL = process.env.EMAIL_SERVICE_TEAM || 'ccm@epitomekia.in'
 
 interface TestDriveEmailData {
   customerName: string

@@ -2,9 +2,9 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [main]
+    branches: [main, develop]
   pull_request:
-    branches: [main]
+    branches: [main, develop]
 
 env:
   NODE_VERSION: '20'
@@ -36,10 +36,34 @@ jobs:
       - name: Run Type Check
         run: npm run type-check
 
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    needs: lint-and-typecheck
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
+
+      - name: Run Unit Tests
+        run: npm run test:run
+
   build:
     name: Build
     runs-on: ubuntu-latest
-    needs: lint-and-typecheck
+    needs: [lint-and-typecheck, unit-tests]
 
     steps:
       - name: Checkout code
@@ -71,60 +95,53 @@ jobs:
           path: .next
           retention-days: 7
 
-  # Tests job (uncomment when tests are added)
-  # test:
-  #   name: Test
-  #   runs-on: ubuntu-latest
-  #   needs: lint-and-typecheck
-  #
-  #   services:
-  #     postgres:
-  #       image: postgres:15
-  #       env:
-  #         POSTGRES_USER: test
-  #         POSTGRES_PASSWORD: test
-  #         POSTGRES_DB: epitome_kia_test
-  #       ports:
-  #         - 5432:5432
-  #       options: >-
-  #         --health-cmd pg_isready
-  #         --health-interval 10s
-  #         --health-timeout 5s
-  #         --health-retries 5
-  #
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v4
-  #
-  #     - name: Setup Node.js
-  #       uses: actions/setup-node@v4
-  #       with:
-  #         node-version: ${{ env.NODE_VERSION }}
-  #         cache: 'npm'
-  #
-  #     - name: Install dependencies
-  #       run: npm ci
-  #
-  #     - name: Generate Prisma Client
-  #       run: npx prisma generate
-  #
-  #     - name: Run database migrations
-  #       run: npx prisma migrate deploy
-  #       env:
-  #         DATABASE_URL: postgresql://test:test@localhost:5432/epitome_kia_test
-  #
-  #     - name: Run tests
-  #       run: npm test
-  #       env:
-  #         DATABASE_URL: postgresql://test:test@localhost:5432/epitome_kia_test
+  e2e-tests:
+    name: E2E Tests
+    runs-on: ubuntu-latest
+    needs: build
+    # Only run E2E tests on PRs to main
+    if: github.event_name == 'pull_request' && github.base_ref == 'main'
 
-  # Railway auto-deploys on push to main
-  # This job just confirms the build succeeded before Railway picks it up
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run E2E tests
+        run: npm run test:e2e
+        env:
+          DATABASE_URL: 'postgresql://dummy:dummy@localhost:5432/dummy'
+          NEXTAUTH_SECRET: 'dummy-secret-for-test-only'
+          NEXTAUTH_URL: 'http://localhost:3000'
+
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
+
+  # Railway auto-deploys on push to main or develop
   deploy-ready:
     name: Ready for Deploy
     runs-on: ubuntu-latest
     needs: [build]
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
 
     steps:
       - name: Deployment Ready
@@ -132,6 +149,13 @@ jobs:
           echo "✅ Build successful!"
           echo "🚀 Railway will auto-deploy this commit"
           echo ""
+          echo "Branch: ${{ github.ref_name }}"
           echo "Commit: ${{ github.sha }}"
           echo "Author: ${{ github.actor }}"
           echo "Message: ${{ github.event.head_commit.message }}"
+
+          if [ "${{ github.ref_name }}" = "main" ]; then
+            echo "📦 Deploying to PRODUCTION"
+          else
+            echo "🧪 Deploying to DEVELOPMENT"
+          fi

@@ -3,6 +3,7 @@ import { prisma } from '@/lib/db'
 import { successResponse, errorResponse, handleApiError } from '@/lib/api-utils'
 import { leadSchema } from '@/lib/validations'
 import { rateLimit, getClientIp, rateLimitConfigs } from '@/lib/rate-limit'
+import { notifySalesTeam } from '@/lib/email'
 
 export async function POST(request: NextRequest) {
   try {
@@ -38,6 +39,18 @@ export async function POST(request: NextRequest) {
         source: data.source || 'website',
         notes: data.notes || null,
       },
+    })
+
+    // Send email notification to sales team
+    notifySalesTeam({
+      customerName: lead.fullName,
+      customerEmail: lead.email || '',
+      customerPhone: lead.phone || undefined,
+      subject: 'New Contact Form Inquiry',
+      message: data.notes || 'Customer submitted a contact form.',
+      source: data.source || 'website',
+    }).catch((error) => {
+      console.error('Failed to send lead notification email:', error)
     })
 
     return successResponse(

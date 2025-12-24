@@ -7,7 +7,7 @@ export const COMPANY_INFO = {
     tagline: 'Movement that Inspires',
     description: 'Authorized sales, service & spares dealer for Kia India. Present in Whitefield, International Airport Road-Yelahanka, Avalahalli, Kolar and Varthur.',
     copyright: '© 2024 Epitome Automobiles Private Limited. All Rights Reserved.',
-    logo: '/logo-white.png',
+    logo: '/logo-black.png',
 }
 
 export const LOCATIONS = [
