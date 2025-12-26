@@ -13,6 +13,7 @@ import {
   FileText,
   Settings,
   X,
+  DollarSign,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -23,6 +24,7 @@ const navigation = [
   { name: 'Test Drives', href: '/admin/test-drives', icon: Calendar },
   { name: 'Service Bookings', href: '/admin/service-bookings', icon: Wrench },
   { name: 'Models', href: '/admin/models', icon: Car },
+  { name: 'Pricing', href: '/admin/pricing', icon: DollarSign },
   { name: 'Offers', href: '/admin/offers', icon: Tag },
   { name: 'Chat Sessions', href: '/admin/chats', icon: MessageSquare },
   { name: 'Content', href: '/admin/content', icon: FileText },

@@ -1,10 +1,12 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { useState } from 'react'
 import { Menu, X, Phone, MapPin } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
+import { COMPANY_INFO } from '@/lib/company-data'
 
 const navigation = [
   { name: 'Models', href: '/models' },
@@ -45,9 +47,14 @@ export function Header() {
       <nav className="container flex h-16 items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
-          <div className="flex h-10 w-20 items-center justify-center rounded bg-kia-red">
-            <span className="text-xl font-bold tracking-wider text-white">KIA</span>
-          </div>
+          <Image
+            src={COMPANY_INFO.logo}
+            alt={COMPANY_INFO.brand}
+            width={140}
+            height={45}
+            className="h-8 w-auto"
+            priority
+          />
           <span className="hidden text-lg font-semibold text-kia-black sm:block">Epitome Kia</span>
         </Link>
 

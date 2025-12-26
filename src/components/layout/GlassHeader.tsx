@@ -38,7 +38,7 @@ export function GlassHeader() {
                             alt={COMPANY_INFO.brand}
                             width={140}
                             height={45}
-                            className="h-7 w-auto"
+                            className="h-8 w-auto"
                             priority
                         />
                     </Link>
@@ -93,7 +93,7 @@ export function GlassHeader() {
                                     alt={COMPANY_INFO.brand}
                                     width={140}
                                     height={45}
-                                    className="h-7 w-auto"
+                                    className="h-8 w-auto"
                                 />
                             </Link>
                             <button
@@ -109,11 +109,10 @@ export function GlassHeader() {
                         <div className="flex-1 flex flex-col items-start justify-center px-12 gap-4">
                             {[
                                 { name: 'Models', href: '/models' },
-                                { name: 'Test Drive', href: '/test-drive' },
                                 { name: 'Service', href: '/service' },
                                 { name: 'EMI Calculator', href: '/emi-calculator' },
                                 { name: 'Offers', href: '/offers' },
-                                { name: 'Contact', href: '/contact' },
+                                { name: 'Schedule Consultation', href: '/contact' },
                             ].map((item, index) => (
                                 <motion.div
                                     key={item.name}

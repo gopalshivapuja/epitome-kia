@@ -6,6 +6,7 @@ import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
+import { COMPANY_INFO } from '@/lib/company-data'
 
 const HEADER_LINKS = [
     { name: 'Models', href: '/models' },
@@ -35,11 +36,12 @@ export function ModernHeader() {
                 {/* Logo */}
                 <Link href="/" className="z-50 flex items-center">
                     <Image
-                        src="/logo.png"
-                        alt="Epitome Kia"
-                        width={120}
-                        height={40}
-                        className={cn("transition-all duration-300", isScrolled ? "invert-0" : "invert")}
+                        src={COMPANY_INFO.logo}
+                        alt={COMPANY_INFO.brand}
+                        width={140}
+                        height={45}
+                        className={cn("h-8 w-auto transition-all duration-300", isScrolled ? "invert-0" : "invert")}
+                        priority
                     />
                 </Link>
 

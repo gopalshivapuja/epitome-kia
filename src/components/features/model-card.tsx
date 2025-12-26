@@ -55,7 +55,7 @@ export function ModelCard({ model }: ModelCardProps) {
             asChild
           >
             <Link href={`/models/${model.slug}`}>
-              Order Now
+              Explore
             </Link>
           </Button>
           <Button
