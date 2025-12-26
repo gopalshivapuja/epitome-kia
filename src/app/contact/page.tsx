@@ -2,6 +2,8 @@ import { Metadata } from 'next'
 import { MapPin, Phone, Mail, Clock } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { ContactForm } from '@/components/forms/contact-form'
+import { DealerLocator } from '@/components/features/DealerLocator'
+import { ConsultationButton } from '@/components/features/ConsultationButton'
 import { LOCATIONS, COMPANY_INFO } from '@/lib/company-data'
 
 export const metadata: Metadata = {
@@ -19,13 +21,27 @@ export default function ContactPage() {
           <p className="mt-4 text-lg text-gray-400 max-w-2xl mx-auto">
             Visit our showrooms or get in touch with our team. We&apos;re here to help you find your perfect Kia.
           </p>
+          <div className="mt-8">
+            <ConsultationButton
+              size="lg"
+              className="bg-kia-red hover:bg-kia-red-dark text-white"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Interactive Dealer Locator */}
+      <section className="py-16">
+        <div className="container">
+          <h2 className="mb-8 text-2xl font-bold font-heading text-center">Find a Showroom</h2>
+          <DealerLocator />
         </div>
       </section>
 
       {/* Locations Grid */}
-      <section className="py-16">
+      <section className="py-16 bg-zinc-900">
         <div className="container">
-          <h2 className="mb-12 text-2xl font-bold font-heading text-center">Our Showrooms</h2>
+          <h2 className="mb-12 text-2xl font-bold font-heading text-center">All Locations</h2>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {LOCATIONS.map((loc) => (
               <Card key={loc.id} className="bg-zinc-900 border-zinc-800 overflow-hidden group hover:border-kia-red transition-colors">
