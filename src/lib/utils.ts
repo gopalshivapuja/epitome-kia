@@ -28,3 +28,13 @@ export function slugify(text: string): string {
     .replace(/[\s_-]+/g, '-')
     .replace(/^-+|-+$/g, '')
 }
+
+/**
+ * Get the Kia India brochure URL for a model
+ * @param slug - The model slug (e.g., 'seltos', 'sonet', 'ev6')
+ * @returns The brochure PDF URL from Kia India
+ */
+export function getKiaBrochureUrl(slug: string): string {
+  // Kia India brochure URL pattern
+  return `https://www.kia.com/content/dam/kia2/in/en/our-vehicles/${slug}/download/${slug}-brochure.pdf`
+}

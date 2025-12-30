@@ -2,10 +2,9 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import { cn } from '@/lib/utils'
-import { Button } from '@/components/ui/button'
+import { Logo } from '@/components/ui/logo'
 
 const HEADER_LINKS = [
     { name: 'Models', href: '/models' },
@@ -30,18 +29,15 @@ export function ModernHeader() {
         <header className="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
             <div className={cn(
                 "flex items-center justify-between px-6 py-4 transition-all duration-500",
-                isScrolled ? "bg-white/90 backdrop-blur-md text-black shadow-sm" : "bg-transparent text-white"
+                isScrolled ? "bg-white/90 backdrop-blur-md shadow-sm" : "bg-black/20 backdrop-blur-sm"
             )}>
                 {/* Logo */}
-                <Link href="/" className="z-50 flex items-center">
-                    <Image
-                        src="/logo.png"
-                        alt="Epitome Kia"
-                        width={120}
-                        height={40}
-                        className={cn("transition-all duration-300", isScrolled ? "invert-0" : "invert")}
+                <div className="z-50">
+                    <Logo
+                        variant={isScrolled ? 'dark' : 'light'}
+                        size="lg"
                     />
-                </Link>
+                </div>
 
                 {/* Desktop Center Nav (Tesla Style) */}
                 <nav className="hidden lg:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
@@ -49,7 +45,12 @@ export function ModernHeader() {
                         <Link
                             key={link.name}
                             href={link.href}
-                            className="text-sm font-medium tracking-wide hover:bg-black/5 dark:hover:bg-white/10 px-3 py-2 rounded transition-colors"
+                            className={cn(
+                                "text-sm font-medium tracking-wide px-3 py-2 rounded transition-colors",
+                                isScrolled
+                                    ? "text-gray-700 hover:text-gray-900 hover:bg-gray-100"
+                                    : "text-white hover:text-white/80 hover:bg-white/10"
+                            )}
                         >
                             {link.name}
                         </Link>
@@ -59,14 +60,24 @@ export function ModernHeader() {
                 {/* Right Actions */}
                 <div className="flex items-center gap-4 z-50">
                     <Link href="/test-drive" className="hidden sm:block">
-                        <span className="text-sm font-medium hover:bg-black/5 px-3 py-2 rounded transition-colors">
+                        <span className={cn(
+                            "text-sm font-medium px-3 py-2 rounded transition-colors",
+                            isScrolled
+                                ? "text-gray-700 hover:bg-gray-100"
+                                : "text-white hover:bg-white/10"
+                        )}>
                             Test Drive
                         </span>
                     </Link>
 
                     <button
                         onClick={() => setIsMenuOpen(!isMenuOpen)}
-                        className="text-sm font-medium bg-black/5 dark:bg-white/10 px-4 py-2 rounded backdrop-blur-sm transition-colors hover:bg-black/10"
+                        className={cn(
+                            "text-sm font-medium px-4 py-2 rounded backdrop-blur-sm transition-colors",
+                            isScrolled
+                                ? "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                                : "bg-white/10 text-white hover:bg-white/20"
+                        )}
                     >
                         {isMenuOpen ? 'Close' : 'Menu'}
                     </button>

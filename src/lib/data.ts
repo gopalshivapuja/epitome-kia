@@ -332,6 +332,32 @@ export const getOfferBySlug = unstable_cache(
   { tags: [CACHE_TAGS.offers], revalidate: 3600 }
 )
 
+// Get FAQs
+export const getFAQs = unstable_cache(
+  async () => {
+    try {
+      const faqs = await prisma.fAQ.findMany({
+        where: {
+          isActive: true,
+          deletedAt: null,
+        },
+        orderBy: { displayOrder: 'asc' },
+      })
+
+      return faqs.map((faq) => ({
+        id: faq.id,
+        question: faq.question,
+        answer: faq.answer,
+      }))
+    } catch (error) {
+      console.error('Error fetching FAQs:', error)
+      return []
+    }
+  },
+  ['faqs-list'],
+  { revalidate: 3600 }
+)
+
 // Get dealer locations
 export const getDealerLocations = unstable_cache(
   async () => {
