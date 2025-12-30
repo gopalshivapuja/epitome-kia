@@ -31,7 +31,7 @@ export function HeroSection() {
                             className="w-full sm:w-auto min-w-[200px]"
                             asChild
                         >
-                            <Link href="/models/seltos">Order Now</Link>
+                            <Link href="/models/seltos">Explore</Link>
                         </Button>
                         <Button
                             variant="outline"

@@ -1,7 +1,10 @@
 import { Metadata } from 'next'
+import { MapPin, Phone, Mail } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { ContactForm } from '@/components/forms/contact-form'
 import { DealerLocator } from '@/components/features/DealerLocator'
+import { ConsultationButton } from '@/components/features/ConsultationButton'
+import { LOCATIONS } from '@/lib/company-data'
 
 export const metadata: Metadata = {
   title: 'Contact Us | Epitome Kia',
@@ -18,13 +21,78 @@ export default function ContactPage() {
           <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
             Visit our showrooms or get in touch with our team. We&apos;re here to help you find your perfect Kia.
           </p>
+          <div className="mt-8">
+            <ConsultationButton
+              size="lg"
+              className="bg-kia-red hover:bg-kia-red-dark text-white"
+            />
+          </div>
         </div>
       </section>
 
-      {/* Dealer Locator with Google Maps */}
+      {/* Interactive Dealer Locator */}
       <section className="py-16">
         <div className="container">
+          <h2 className="mb-8 text-2xl font-bold font-heading text-center">Find a Showroom</h2>
           <DealerLocator />
+        </div>
+      </section>
+
+      {/* Locations Grid */}
+      <section className="py-16 bg-zinc-900">
+        <div className="container">
+          <h2 className="mb-12 text-2xl font-bold font-heading text-center text-white">All Locations</h2>
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {LOCATIONS.map((loc) => (
+              <Card key={loc.id} className="bg-zinc-900 border-zinc-800 overflow-hidden group hover:border-kia-red transition-colors">
+                <CardContent className="p-6 space-y-4">
+                  <div className="flex items-start justify-between">
+                    <h3 className="text-xl font-bold text-white">{loc.name}</h3>
+                    {'label' in loc && (
+                      <span className="text-xs bg-kia-red text-white px-2 py-1 rounded-full">{loc.label}</span>
+                    )}
+                  </div>
+
+                  <div className="space-y-3 text-sm">
+                    <div className="flex items-start gap-3">
+                      <MapPin className="h-5 w-5 text-kia-red shrink-0 mt-0.5" />
+                      <span className="text-gray-400">{loc.address}</span>
+                    </div>
+
+                    <div className="flex items-start gap-3">
+                      <Phone className="h-5 w-5 text-kia-red shrink-0 mt-0.5" />
+                      <div className="flex flex-col gap-1">
+                        <span className="text-gray-500 text-xs uppercase">Sales</span>
+                        {loc.salesPhone.map((p) => (
+                          <a key={p} href={`tel:${p}`} className="text-gray-300 hover:text-white transition-colors">
+                            {p}
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                      <Mail className="h-5 w-5 text-kia-red shrink-0" />
+                      <a href={`mailto:${loc.email}`} className="text-gray-300 hover:text-white transition-colors">
+                        {loc.email}
+                      </a>
+                    </div>
+                  </div>
+
+                  {'mapUrl' in loc && (
+                    <a
+                      href={loc.mapUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-block mt-4 text-sm text-kia-red hover:underline"
+                    >
+                      View on Google Maps →
+                    </a>
+                  )}
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
       </section>
 
