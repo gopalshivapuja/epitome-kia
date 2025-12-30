@@ -71,6 +71,22 @@ export default function ConfiguratorPage() {
     )
   }, [slug, selectedVariant, selectedColor, selectedAccessories])
 
+  // Group accessories by category (must be before early return)
+  const accessoriesByCategory = useMemo(() => {
+    const grouped: Record<string, AccessoryOption[]> = {
+      exterior: [],
+      interior: [],
+      protection: [],
+      technology: [],
+    }
+    modelAccessories.forEach((acc) => {
+      if (grouped[acc.category]) {
+        grouped[acc.category].push(acc)
+      }
+    })
+    return grouped
+  }, [modelAccessories])
+
   if (!modelConfig) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -142,22 +158,6 @@ export default function ConfiguratorPage() {
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
   }
-
-  // Group accessories by category
-  const accessoriesByCategory = useMemo(() => {
-    const grouped: Record<string, AccessoryOption[]> = {
-      exterior: [],
-      interior: [],
-      protection: [],
-      technology: [],
-    }
-    modelAccessories.forEach((acc) => {
-      if (grouped[acc.category]) {
-        grouped[acc.category].push(acc)
-      }
-    })
-    return grouped
-  }, [modelAccessories])
 
   return (
     <div className="min-h-screen bg-gray-50">

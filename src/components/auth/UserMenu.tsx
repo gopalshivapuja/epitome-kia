@@ -39,6 +39,7 @@ export function UserMenu() {
         className="flex items-center gap-2 rounded-full p-1 hover:bg-gray-100 transition-colors"
       >
         {session.user.image ? (
+          // eslint-disable-next-line @next/next/no-img-element
           <img
             src={session.user.image}
             alt={session.user.name || 'User'}
