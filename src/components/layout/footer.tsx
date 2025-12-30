@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { Facebook, Instagram, Youtube, Linkedin, Twitter, Send, Loader2 } from 'lucide-react'
-import { COMPANY_INFO, LOCATIONS, SOCIAL_LINKS } from '@/lib/company-data'
+import { COMPANY_INFO, LOCATIONS, SOCIAL_LINKS, CAR_MODELS } from '@/lib/company-data'
 import { Logo } from '@/components/ui/logo'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -107,10 +107,13 @@ export function Footer() {
           <div>
             <h3 className="text-xs font-semibold uppercase tracking-widest text-gray-500 mb-5">Models</h3>
             <ul className="space-y-3">
-              <li><Link href="/models/seltos" className="text-gray-400 hover:text-white transition-colors text-sm">Kia Seltos</Link></li>
-              <li><Link href="/models/sonet" className="text-gray-400 hover:text-white transition-colors text-sm">Kia Sonet</Link></li>
-              <li><Link href="/models/carens" className="text-gray-400 hover:text-white transition-colors text-sm">Kia Carens</Link></li>
-              <li><Link href="/models/ev6" className="text-gray-400 hover:text-white transition-colors text-sm">Kia EV6</Link></li>
+              {CAR_MODELS.slice(0, 6).map((model) => (
+                <li key={model.slug}>
+                  <Link href={`/models/${model.slug}`} className="text-gray-400 hover:text-white transition-colors text-sm">
+                    {model.name}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 

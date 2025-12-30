@@ -16,7 +16,7 @@ export default async function AdminDashboardLayout({
 
   return (
     <div className="flex min-h-screen bg-gray-100">
-      <AdminSidebar />
+      <AdminSidebar userRole={session.user?.role} />
       <div className="flex flex-1 flex-col lg:pl-64">
         <AdminHeader user={session.user} />
         <main className="flex-1 p-6">{children}</main>

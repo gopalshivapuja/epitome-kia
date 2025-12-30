@@ -19,25 +19,38 @@ import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 
 const navigation = [
-  { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
-  { name: 'Leads', href: '/admin/leads', icon: Users },
-  { name: 'Test Drives', href: '/admin/test-drives', icon: Calendar },
-  { name: 'Service Bookings', href: '/admin/service-bookings', icon: Wrench },
-  { name: 'Models', href: '/admin/models', icon: Car },
-  { name: 'Pricing', href: '/admin/pricing', icon: DollarSign },
-  { name: 'Offers', href: '/admin/offers', icon: Tag },
-  { name: 'Chat Sessions', href: '/admin/chats', icon: MessageSquare },
-  { name: 'Content', href: '/admin/content', icon: FileText },
-  { name: 'Settings', href: '/admin/settings', icon: Settings },
+  { name: 'Dashboard', href: '/admin', icon: LayoutDashboard, key: 'dashboard' },
+  { name: 'Leads', href: '/admin/leads', icon: Users, key: 'leads' },
+  { name: 'Test Drives', href: '/admin/test-drives', icon: Calendar, key: 'test-drives' },
+  { name: 'Service Bookings', href: '/admin/service-bookings', icon: Wrench, key: 'service-bookings' },
+  { name: 'Models', href: '/admin/models', icon: Car, key: 'models' },
+  { name: 'Pricing', href: '/admin/pricing', icon: DollarSign, key: 'pricing' },
+  { name: 'Offers', href: '/admin/offers', icon: Tag, key: 'offers' },
+  { name: 'Chat Sessions', href: '/admin/chats', icon: MessageSquare, key: 'chats' },
+  { name: 'Content', href: '/admin/content', icon: FileText, key: 'content' },
+  { name: 'Settings', href: '/admin/settings', icon: Settings, key: 'settings' },
 ]
+
+// Role-based navigation visibility
+const ROLE_PERMISSIONS: Record<string, string[]> = {
+  admin: ['dashboard', 'leads', 'test-drives', 'service-bookings', 'models', 'pricing', 'offers', 'chats', 'content', 'settings'],
+  sales_manager: ['dashboard', 'leads', 'test-drives', 'models', 'offers'],
+  service_advisor: ['dashboard', 'service-bookings', 'models'],
+  staff: ['dashboard'],
+}
 
 interface AdminSidebarProps {
   open?: boolean
   onClose?: () => void
+  userRole?: string
 }
 
-export function AdminSidebar({ open, onClose }: AdminSidebarProps) {
+export function AdminSidebar({ open, onClose, userRole = 'staff' }: AdminSidebarProps) {
   const pathname = usePathname()
+
+  // Filter navigation based on user role
+  const allowedPages = ROLE_PERMISSIONS[userRole] || ROLE_PERMISSIONS.staff
+  const filteredNavigation = navigation.filter((item) => allowedPages.includes(item.key))
 
   return (
     <>
@@ -75,7 +88,7 @@ export function AdminSidebar({ open, onClose }: AdminSidebarProps) {
 
         {/* Navigation */}
         <nav className="mt-4 space-y-1 px-2">
-          {navigation.map((item) => {
+          {filteredNavigation.map((item) => {
             const isActive =
               pathname === item.href ||
               (item.href !== '/admin' && pathname.startsWith(item.href))

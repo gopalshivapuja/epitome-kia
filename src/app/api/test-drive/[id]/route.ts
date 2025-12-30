@@ -59,6 +59,11 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
       return errorResponse('Unauthorized', 401)
     }
 
+    // Only admin and sales_manager can update test drive requests
+    if (!['admin', 'sales_manager'].includes(session.user.role as string)) {
+      return errorResponse('Forbidden: Insufficient permissions', 403)
+    }
+
     const { id } = await params
     const body = await request.json()
 

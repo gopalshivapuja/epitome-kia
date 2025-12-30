@@ -61,6 +61,11 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
       return errorResponse('Unauthorized', 401)
     }
 
+    // Only admin and service_advisor can update service bookings
+    if (!['admin', 'service_advisor'].includes(session.user.role as string)) {
+      return errorResponse('Forbidden: Insufficient permissions', 403)
+    }
+
     const { id } = await params
     const body = await request.json()
 

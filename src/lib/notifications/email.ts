@@ -4,6 +4,8 @@ const resend = process.env.RESEND_API_KEY
   ? new Resend(process.env.RESEND_API_KEY)
   : null
 
+const baseUrl = process.env.NEXTAUTH_URL || 'https://epitomekia.com'
+
 interface PriceAlertEmailParams {
   to: string
   modelName: string
@@ -69,14 +71,14 @@ export async function sendPriceDropEmail({
             </div>
 
             <div style="text-align: center; margin-bottom: 30px;">
-              <a href="https://epitomekia.com/models/${modelSlug}"
+              <a href="${baseUrl}/models/${modelSlug}"
                  style="background: #BB162B; color: white; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: 600; display: inline-block;">
                 View ${modelName}
               </a>
             </div>
 
             <div style="text-align: center; margin-bottom: 30px;">
-              <a href="https://epitomekia.com/test-drive?model=${modelSlug}"
+              <a href="${baseUrl}/test-drive?model=${modelSlug}"
                  style="color: #BB162B; text-decoration: none; font-weight: 500;">
                 Book a Test Drive
               </a>
@@ -88,7 +90,7 @@ export async function sendPriceDropEmail({
               <p>Epitome Kia | Authorized Kia Dealer in Bangalore</p>
               <p>Sales: 08047363737 | Service: 08047363838</p>
               <p style="margin-top: 15px;">
-                <a href="https://epitomekia.com/unsubscribe?email=${encodeURIComponent(to)}"
+                <a href="${baseUrl}/unsubscribe?email=${encodeURIComponent(to)}"
                    style="color: #999;">Unsubscribe from alerts</a>
               </p>
             </div>
@@ -154,7 +156,7 @@ export async function sendNewOfferEmail({
             </div>
 
             <div style="text-align: center; margin-bottom: 30px;">
-              <a href="https://epitomekia.com/offers"
+              <a href="${baseUrl}/offers"
                  style="background: #BB162B; color: white; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: 600; display: inline-block;">
                 View All Offers
               </a>
@@ -166,7 +168,7 @@ export async function sendNewOfferEmail({
               <p>Epitome Kia | Authorized Kia Dealer in Bangalore</p>
               <p>Sales: 08047363737 | Service: 08047363838</p>
               <p style="margin-top: 15px;">
-                <a href="https://epitomekia.com/unsubscribe?email=${encodeURIComponent(to)}"
+                <a href="${baseUrl}/unsubscribe?email=${encodeURIComponent(to)}"
                    style="color: #999;">Unsubscribe from alerts</a>
               </p>
             </div>
@@ -230,14 +232,14 @@ export async function sendAvailabilityEmail({
             </div>
 
             <div style="text-align: center; margin-bottom: 20px;">
-              <a href="https://epitomekia.com/models/${modelSlug}"
+              <a href="${baseUrl}/models/${modelSlug}"
                  style="background: #BB162B; color: white; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: 600; display: inline-block;">
                 Explore ${modelName}
               </a>
             </div>
 
             <div style="text-align: center; margin-bottom: 30px;">
-              <a href="https://epitomekia.com/test-drive?model=${modelSlug}"
+              <a href="${baseUrl}/test-drive?model=${modelSlug}"
                  style="color: #BB162B; text-decoration: none; font-weight: 500;">
                 Book Test Drive
               </a>
@@ -249,7 +251,7 @@ export async function sendAvailabilityEmail({
               <p>Epitome Kia | Authorized Kia Dealer in Bangalore</p>
               <p>Sales: 08047363737 | Service: 08047363838</p>
               <p style="margin-top: 15px;">
-                <a href="https://epitomekia.com/unsubscribe?email=${encodeURIComponent(to)}"
+                <a href="${baseUrl}/unsubscribe?email=${encodeURIComponent(to)}"
                    style="color: #999;">Unsubscribe from alerts</a>
               </p>
             </div>

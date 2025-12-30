@@ -3,6 +3,9 @@
 import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { testDriveSchema, type TestDriveInput } from '@/lib/validations'
 import { Calendar, Car, Clock, User, Mail, Phone, CheckCircle2, Loader2 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -24,21 +27,6 @@ interface Model {
   name: string
   slug: string
   modelYear: number
-}
-
-interface FormData {
-  fullName: string
-  email: string
-  phone: string
-  carModelId: string
-  preferredDate: string
-  preferredTime: string
-  preferredContact: 'email' | 'phone' | 'whatsapp'
-  notes: string
-}
-
-interface FormErrors {
-  [key: string]: string
 }
 
 const timeSlots = [
@@ -81,20 +69,30 @@ function TestDriveForm() {
 
   const [models, setModels] = useState<Model[]>([])
   const [loading, setLoading] = useState(true)
-  const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
-  const [errors, setErrors] = useState<FormErrors>({})
+  const [submitError, setSubmitError] = useState<string | null>(null)
 
-  const [formData, setFormData] = useState<FormData>({
-    fullName: '',
-    email: '',
-    phone: '',
-    carModelId: '',
-    preferredDate: '',
-    preferredTime: '',
-    preferredContact: 'phone',
-    notes: '',
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors, isSubmitting },
+  } = useForm<TestDriveInput>({
+    resolver: zodResolver(testDriveSchema),
+    defaultValues: {
+      fullName: '',
+      email: '',
+      phone: '',
+      carModelId: '',
+      preferredDate: '',
+      preferredTime: '',
+      preferredContact: 'phone',
+      locationNotes: '',
+    },
   })
+
+  const formValues = watch()
 
   // Fetch models on mount
   useEffect(() => {
@@ -108,7 +106,7 @@ function TestDriveForm() {
           if (preselectedModel) {
             const model = data.data.models.find((m: Model) => m.slug === preselectedModel)
             if (model) {
-              setFormData((prev) => ({ ...prev, carModelId: model.id }))
+              setValue('carModelId', model.id)
             }
           }
         }
@@ -119,59 +117,17 @@ function TestDriveForm() {
       }
     }
     fetchModels()
-  }, [preselectedModel])
+  }, [preselectedModel, setValue])
 
-  const validateForm = (): boolean => {
-    const newErrors: FormErrors = {}
-
-    if (!formData.fullName || formData.fullName.length < 2) {
-      newErrors.fullName = 'Name must be at least 2 characters'
-    }
-
-    if (!formData.email && !formData.phone) {
-      newErrors.email = 'Either email or phone is required'
-    }
-
-    if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Invalid email address'
-    }
-
-    if (formData.phone && !/^[+]?[(]?[0-9]{1,4}[)]?[-\s./0-9]*$/.test(formData.phone)) {
-      newErrors.phone = 'Invalid phone number'
-    }
-
-    if (!formData.carModelId) {
-      newErrors.carModelId = 'Please select a model'
-    }
-
-    if (!formData.preferredDate) {
-      newErrors.preferredDate = 'Please select a date'
-    } else {
-      const selectedDate = new Date(formData.preferredDate)
-      const today = new Date()
-      today.setHours(0, 0, 0, 0)
-      if (selectedDate < today) {
-        newErrors.preferredDate = 'Date must be today or in the future'
-      }
-    }
-
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-
-    if (!validateForm()) return
-
-    setSubmitting(true)
+  const onSubmit = async (data: TestDriveInput) => {
+    setSubmitError(null)
 
     try {
       const res = await fetch('/api/test-drive', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          ...formData,
+          ...data,
           source: 'website',
         }),
       })
@@ -179,24 +135,11 @@ function TestDriveForm() {
       if (res.ok) {
         setSubmitted(true)
       } else {
-        const data = await res.json()
-        setErrors({ submit: data.error || 'Something went wrong. Please try again.' })
+        const responseData = await res.json()
+        setSubmitError(responseData.error || 'Something went wrong. Please try again.')
       }
     } catch {
-      setErrors({ submit: 'Failed to submit. Please try again.' })
-    } finally {
-      setSubmitting(false)
-    }
-  }
-
-  const handleChange = (field: keyof FormData, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
-    if (errors[field]) {
-      setErrors((prev) => {
-        const newErrors = { ...prev }
-        delete newErrors[field]
-        return newErrors
-      })
+      setSubmitError('Failed to submit. Please try again.')
     }
   }
 
@@ -222,20 +165,20 @@ function TestDriveForm() {
                 <ul className="mt-2 space-y-1 text-sm text-muted-foreground">
                   <li>
                     <strong>Model:</strong>{' '}
-                    {models.find((m) => m.id === formData.carModelId)?.name}
+                    {models.find((m) => m.id === formValues.carModelId)?.name}
                   </li>
                   <li>
                     <strong>Date:</strong>{' '}
-                    {new Date(formData.preferredDate).toLocaleDateString('en-IN', {
+                    {new Date(formValues.preferredDate).toLocaleDateString('en-IN', {
                       weekday: 'long',
                       year: 'numeric',
                       month: 'long',
                       day: 'numeric',
                     })}
                   </li>
-                  {formData.preferredTime && (
+                  {formValues.preferredTime && (
                     <li>
-                      <strong>Time:</strong> {formData.preferredTime}
+                      <strong>Time:</strong> {formValues.preferredTime}
                     </li>
                   )}
                 </ul>
@@ -281,7 +224,7 @@ function TestDriveForm() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                   {/* Personal Info */}
                   <div className="space-y-4">
                     <div>
@@ -291,13 +234,12 @@ function TestDriveForm() {
                       </Label>
                       <Input
                         id="fullName"
-                        value={formData.fullName}
-                        onChange={(e) => handleChange('fullName', e.target.value)}
+                        {...register('fullName')}
                         placeholder="Enter your full name"
                         className={errors.fullName ? 'border-destructive' : ''}
                       />
                       {errors.fullName && (
-                        <p className="mt-1 text-sm text-destructive">{errors.fullName}</p>
+                        <p className="mt-1 text-sm text-destructive">{errors.fullName.message}</p>
                       )}
                     </div>
 
@@ -310,13 +252,12 @@ function TestDriveForm() {
                         <Input
                           id="email"
                           type="email"
-                          value={formData.email}
-                          onChange={(e) => handleChange('email', e.target.value)}
+                          {...register('email')}
                           placeholder="you@example.com"
                           className={errors.email ? 'border-destructive' : ''}
                         />
                         {errors.email && (
-                          <p className="mt-1 text-sm text-destructive">{errors.email}</p>
+                          <p className="mt-1 text-sm text-destructive">{errors.email.message}</p>
                         )}
                       </div>
 
@@ -328,13 +269,12 @@ function TestDriveForm() {
                         <Input
                           id="phone"
                           type="tel"
-                          value={formData.phone}
-                          onChange={(e) => handleChange('phone', e.target.value)}
+                          {...register('phone')}
                           placeholder="+91 98765 43210"
                           className={errors.phone ? 'border-destructive' : ''}
                         />
                         {errors.phone && (
-                          <p className="mt-1 text-sm text-destructive">{errors.phone}</p>
+                          <p className="mt-1 text-sm text-destructive">{errors.phone.message}</p>
                         )}
                       </div>
                     </div>
@@ -347,8 +287,8 @@ function TestDriveForm() {
                       Select Model *
                     </Label>
                     <Select
-                      value={formData.carModelId}
-                      onValueChange={(value) => handleChange('carModelId', value)}
+                      value={formValues.carModelId}
+                      onValueChange={(value) => setValue('carModelId', value)}
                       disabled={loading}
                     >
                       <SelectTrigger className={errors.carModelId ? 'border-destructive' : ''}>
@@ -363,7 +303,7 @@ function TestDriveForm() {
                       </SelectContent>
                     </Select>
                     {errors.carModelId && (
-                      <p className="mt-1 text-sm text-destructive">{errors.carModelId}</p>
+                      <p className="mt-1 text-sm text-destructive">{errors.carModelId.message}</p>
                     )}
                   </div>
 
@@ -377,13 +317,12 @@ function TestDriveForm() {
                       <Input
                         id="preferredDate"
                         type="date"
-                        value={formData.preferredDate}
-                        onChange={(e) => handleChange('preferredDate', e.target.value)}
+                        {...register('preferredDate')}
                         min={today}
                         className={errors.preferredDate ? 'border-destructive' : ''}
                       />
                       {errors.preferredDate && (
-                        <p className="mt-1 text-sm text-destructive">{errors.preferredDate}</p>
+                        <p className="mt-1 text-sm text-destructive">{errors.preferredDate.message}</p>
                       )}
                     </div>
 
@@ -393,8 +332,8 @@ function TestDriveForm() {
                         Preferred Time
                       </Label>
                       <Select
-                        value={formData.preferredTime}
-                        onValueChange={(value) => handleChange('preferredTime', value)}
+                        value={formValues.preferredTime}
+                        onValueChange={(value) => setValue('preferredTime', value)}
                       >
                         <SelectTrigger>
                           <SelectValue placeholder="Select a time" />
@@ -414,10 +353,8 @@ function TestDriveForm() {
                   <div>
                     <Label>Preferred Contact Method</Label>
                     <Select
-                      value={formData.preferredContact}
-                      onValueChange={(value) =>
-                        handleChange('preferredContact', value as 'email' | 'phone' | 'whatsapp')
-                      }
+                      value={formValues.preferredContact}
+                      onValueChange={(value) => setValue('preferredContact', value as 'email' | 'phone' | 'whatsapp')}
                     >
                       <SelectTrigger>
                         <SelectValue />
@@ -432,20 +369,19 @@ function TestDriveForm() {
 
                   {/* Notes */}
                   <div>
-                    <Label htmlFor="notes">Additional Notes</Label>
+                    <Label htmlFor="locationNotes">Additional Notes</Label>
                     <Textarea
-                      id="notes"
-                      value={formData.notes}
-                      onChange={(e) => handleChange('notes', e.target.value)}
+                      id="locationNotes"
+                      {...register('locationNotes')}
                       placeholder="Any specific requirements or questions?"
                       rows={3}
                     />
                   </div>
 
                   {/* Submit Error */}
-                  {errors.submit && (
+                  {submitError && (
                     <div className="rounded-lg bg-destructive/10 p-3 text-sm text-destructive">
-                      {errors.submit}
+                      {submitError}
                     </div>
                   )}
 
@@ -455,9 +391,9 @@ function TestDriveForm() {
                     variant="kia"
                     size="lg"
                     className="w-full"
-                    disabled={submitting}
+                    disabled={isSubmitting}
                   >
-                    {submitting ? (
+                    {isSubmitting ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                         Booking...

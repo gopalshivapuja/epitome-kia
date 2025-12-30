@@ -2,6 +2,9 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { serviceBookingSchema, type ServiceBookingInput } from '@/lib/validations'
 import {
   Wrench,
   Calendar,
@@ -10,7 +13,6 @@ import {
   Mail,
   Phone,
   Car,
-  MapPin,
   CheckCircle2,
   Loader2,
   Shield,
@@ -33,23 +35,6 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
-
-interface FormData {
-  fullName: string
-  email: string
-  phone: string
-  carModelId: string
-  vehicleRegNumber: string
-  serviceType: string
-  serviceDate: string
-  serviceTime: string
-  preferredContact: 'email' | 'phone' | 'whatsapp'
-  notes: string
-}
-
-interface FormErrors {
-  [key: string]: string
-}
 
 interface Model {
   id: string
@@ -84,23 +69,32 @@ const timeSlots = [
 export default function ServicePage() {
   const [models, setModels] = useState<Model[]>([])
   const [loading, setLoading] = useState(true)
-  const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
-  const [errors, setErrors] = useState<FormErrors>({})
+  const [submitError, setSubmitError] = useState<string | null>(null)
   const [showForm, setShowForm] = useState(false)
 
-  const [formData, setFormData] = useState<FormData>({
-    fullName: '',
-    email: '',
-    phone: '',
-    carModelId: '',
-    vehicleRegNumber: '',
-    serviceType: '',
-    serviceDate: '',
-    serviceTime: '',
-    preferredContact: 'phone',
-    notes: '',
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors, isSubmitting },
+  } = useForm<ServiceBookingInput>({
+    resolver: zodResolver(serviceBookingSchema),
+    defaultValues: {
+      fullName: '',
+      email: '',
+      phone: '',
+      carModelId: '',
+      serviceType: 'regular_service',
+      serviceDate: '',
+      serviceTime: '',
+      preferredContact: 'phone',
+      notes: '',
+    },
   })
+
+  const formValues = watch()
 
   useEffect(() => {
     async function fetchModels() {
@@ -119,57 +113,15 @@ export default function ServicePage() {
     fetchModels()
   }, [])
 
-  const validateForm = (): boolean => {
-    const newErrors: FormErrors = {}
-
-    if (!formData.fullName || formData.fullName.length < 2) {
-      newErrors.fullName = 'Name must be at least 2 characters'
-    }
-
-    if (!formData.email && !formData.phone) {
-      newErrors.email = 'Either email or phone is required'
-    }
-
-    if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Invalid email address'
-    }
-
-    if (formData.phone && !/^[+]?[(]?[0-9]{1,4}[)]?[-\s./0-9]*$/.test(formData.phone)) {
-      newErrors.phone = 'Invalid phone number'
-    }
-
-    if (!formData.serviceType) {
-      newErrors.serviceType = 'Please select a service type'
-    }
-
-    if (!formData.serviceDate) {
-      newErrors.serviceDate = 'Please select a date'
-    } else {
-      const selectedDate = new Date(formData.serviceDate)
-      const today = new Date()
-      today.setHours(0, 0, 0, 0)
-      if (selectedDate < today) {
-        newErrors.serviceDate = 'Date must be today or in the future'
-      }
-    }
-
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-
-    if (!validateForm()) return
-
-    setSubmitting(true)
+  const onSubmit = async (data: ServiceBookingInput) => {
+    setSubmitError(null)
 
     try {
       const res = await fetch('/api/service-booking', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          ...formData,
+          ...data,
           source: 'website',
         }),
       })
@@ -177,24 +129,11 @@ export default function ServicePage() {
       if (res.ok) {
         setSubmitted(true)
       } else {
-        const data = await res.json()
-        setErrors({ submit: data.error || 'Something went wrong. Please try again.' })
+        const responseData = await res.json()
+        setSubmitError(responseData.error || 'Something went wrong. Please try again.')
       }
     } catch {
-      setErrors({ submit: 'Failed to submit. Please try again.' })
-    } finally {
-      setSubmitting(false)
-    }
-  }
-
-  const handleChange = (field: keyof FormData, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
-    if (errors[field]) {
-      setErrors((prev) => {
-        const newErrors = { ...prev }
-        delete newErrors[field]
-        return newErrors
-      })
+      setSubmitError('Failed to submit. Please try again.')
     }
   }
 
@@ -219,25 +158,20 @@ export default function ServicePage() {
                 <ul className="mt-2 space-y-1 text-sm text-muted-foreground">
                   <li>
                     <strong>Service:</strong>{' '}
-                    {serviceTypes.find((s) => s.value === formData.serviceType)?.label}
+                    {serviceTypes.find((s) => s.value === formValues.serviceType)?.label}
                   </li>
                   <li>
                     <strong>Date:</strong>{' '}
-                    {new Date(formData.serviceDate).toLocaleDateString('en-IN', {
+                    {new Date(formValues.serviceDate).toLocaleDateString('en-IN', {
                       weekday: 'long',
                       year: 'numeric',
                       month: 'long',
                       day: 'numeric',
                     })}
                   </li>
-                  {formData.serviceTime && (
+                  {formValues.serviceTime && (
                     <li>
-                      <strong>Time:</strong> {formData.serviceTime}
-                    </li>
-                  )}
-                  {formData.vehicleRegNumber && (
-                    <li>
-                      <strong>Vehicle:</strong> {formData.vehicleRegNumber}
+                      <strong>Time:</strong> {formValues.serviceTime}
                     </li>
                   )}
                 </ul>
@@ -283,7 +217,7 @@ export default function ServicePage() {
                     key={service.value}
                     className="cursor-pointer transition-all hover:border-kia-red hover:shadow-md"
                     onClick={() => {
-                      setFormData((prev) => ({ ...prev, serviceType: service.value }))
+                      setValue('serviceType', service.value as ServiceBookingInput['serviceType'])
                       setShowForm(true)
                     }}
                   >
@@ -364,7 +298,7 @@ export default function ServicePage() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                   {/* Personal Info */}
                   <div className="grid gap-4 sm:grid-cols-2">
                     <div>
@@ -374,13 +308,12 @@ export default function ServicePage() {
                       </Label>
                       <Input
                         id="fullName"
-                        value={formData.fullName}
-                        onChange={(e) => handleChange('fullName', e.target.value)}
+                        {...register('fullName')}
                         placeholder="Enter your full name"
                         className={errors.fullName ? 'border-destructive' : ''}
                       />
                       {errors.fullName && (
-                        <p className="mt-1 text-sm text-destructive">{errors.fullName}</p>
+                        <p className="mt-1 text-sm text-destructive">{errors.fullName.message}</p>
                       )}
                     </div>
 
@@ -392,13 +325,12 @@ export default function ServicePage() {
                       <Input
                         id="phone"
                         type="tel"
-                        value={formData.phone}
-                        onChange={(e) => handleChange('phone', e.target.value)}
+                        {...register('phone')}
                         placeholder="+91 98765 43210"
                         className={errors.phone ? 'border-destructive' : ''}
                       />
                       {errors.phone && (
-                        <p className="mt-1 text-sm text-destructive">{errors.phone}</p>
+                        <p className="mt-1 text-sm text-destructive">{errors.phone.message}</p>
                       )}
                     </div>
                   </div>
@@ -411,50 +343,37 @@ export default function ServicePage() {
                     <Input
                       id="email"
                       type="email"
-                      value={formData.email}
-                      onChange={(e) => handleChange('email', e.target.value)}
+                      {...register('email')}
                       placeholder="you@example.com"
                       className={errors.email ? 'border-destructive' : ''}
                     />
                     {errors.email && (
-                      <p className="mt-1 text-sm text-destructive">{errors.email}</p>
+                      <p className="mt-1 text-sm text-destructive">{errors.email.message}</p>
                     )}
                   </div>
 
                   {/* Vehicle Info */}
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <div>
-                      <Label className="flex items-center gap-2">
-                        <Car className="h-4 w-4" />
-                        Vehicle Model
-                      </Label>
-                      <Select
-                        value={formData.carModelId}
-                        onValueChange={(value) => handleChange('carModelId', value)}
-                        disabled={loading}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder={loading ? 'Loading...' : 'Select model'} />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {models.map((model) => (
-                            <SelectItem key={model.id} value={model.id}>
-                              {model.name} ({model.modelYear})
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    <div>
-                      <Label htmlFor="vehicleRegNumber">Vehicle Registration</Label>
-                      <Input
-                        id="vehicleRegNumber"
-                        value={formData.vehicleRegNumber}
-                        onChange={(e) => handleChange('vehicleRegNumber', e.target.value)}
-                        placeholder="MH 01 AB 1234"
-                      />
-                    </div>
+                  <div>
+                    <Label className="flex items-center gap-2">
+                      <Car className="h-4 w-4" />
+                      Vehicle Model
+                    </Label>
+                    <Select
+                      value={formValues.carModelId}
+                      onValueChange={(value) => setValue('carModelId', value)}
+                      disabled={loading}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder={loading ? 'Loading...' : 'Select model'} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {models.map((model) => (
+                          <SelectItem key={model.id} value={model.id}>
+                            {model.name} ({model.modelYear})
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
 
                   {/* Service Type */}
@@ -464,8 +383,8 @@ export default function ServicePage() {
                       Service Type *
                     </Label>
                     <Select
-                      value={formData.serviceType}
-                      onValueChange={(value) => handleChange('serviceType', value)}
+                      value={formValues.serviceType}
+                      onValueChange={(value) => setValue('serviceType', value as ServiceBookingInput['serviceType'])}
                     >
                       <SelectTrigger className={errors.serviceType ? 'border-destructive' : ''}>
                         <SelectValue placeholder="Select service type" />
@@ -479,7 +398,7 @@ export default function ServicePage() {
                       </SelectContent>
                     </Select>
                     {errors.serviceType && (
-                      <p className="mt-1 text-sm text-destructive">{errors.serviceType}</p>
+                      <p className="mt-1 text-sm text-destructive">{errors.serviceType.message}</p>
                     )}
                   </div>
 
@@ -493,13 +412,12 @@ export default function ServicePage() {
                       <Input
                         id="serviceDate"
                         type="date"
-                        value={formData.serviceDate}
-                        onChange={(e) => handleChange('serviceDate', e.target.value)}
+                        {...register('serviceDate')}
                         min={today}
                         className={errors.serviceDate ? 'border-destructive' : ''}
                       />
                       {errors.serviceDate && (
-                        <p className="mt-1 text-sm text-destructive">{errors.serviceDate}</p>
+                        <p className="mt-1 text-sm text-destructive">{errors.serviceDate.message}</p>
                       )}
                     </div>
 
@@ -509,8 +427,8 @@ export default function ServicePage() {
                         Preferred Time
                       </Label>
                       <Select
-                        value={formData.serviceTime}
-                        onValueChange={(value) => handleChange('serviceTime', value)}
+                        value={formValues.serviceTime}
+                        onValueChange={(value) => setValue('serviceTime', value)}
                       >
                         <SelectTrigger>
                           <SelectValue placeholder="Select time" />
@@ -531,16 +449,15 @@ export default function ServicePage() {
                     <Label htmlFor="notes">Additional Notes</Label>
                     <Textarea
                       id="notes"
-                      value={formData.notes}
-                      onChange={(e) => handleChange('notes', e.target.value)}
+                      {...register('notes')}
                       placeholder="Describe any issues or specific requirements"
                       rows={3}
                     />
                   </div>
 
-                  {errors.submit && (
+                  {submitError && (
                     <div className="rounded-lg bg-destructive/10 p-3 text-sm text-destructive">
-                      {errors.submit}
+                      {submitError}
                     </div>
                   )}
 
@@ -549,9 +466,9 @@ export default function ServicePage() {
                     variant="kia"
                     size="lg"
                     className="w-full"
-                    disabled={submitting}
+                    disabled={isSubmitting}
                   >
-                    {submitting ? (
+                    {isSubmitting ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                         Booking...

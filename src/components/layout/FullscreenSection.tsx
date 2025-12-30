@@ -42,7 +42,7 @@ export function FullscreenSection({
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
-                    viewport={{ once: false }}
+                    viewport={{ once: true }}
                     className="flex flex-col items-center"
                 >
                     {/* Title */}
@@ -88,7 +88,7 @@ export function FullscreenSection({
                         initial={{ opacity: 0, scale: 0.95 }}
                         whileInView={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 1, delay: 0.2 }}
-                        viewport={{ once: false }}
+                        viewport={{ once: true }}
                         className="relative mt-12 md:mt-16"
                     >
                         <div className="relative aspect-[16/9] md:aspect-[21/9] max-w-5xl mx-auto">

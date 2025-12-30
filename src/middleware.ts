@@ -73,11 +73,26 @@ export default auth((req) => {
       return addSecurityHeaders(response)
     }
 
-    // Role-based route protection
-    // Only admins can access settings
-    if (pathname.startsWith('/admin/settings') && session.user?.role !== 'admin') {
-      response = NextResponse.redirect(new URL('/admin', nextUrl.origin))
-      return addSecurityHeaders(response)
+    // Role-based route protection mapping
+    const ADMIN_ROUTE_ROLES: Record<string, string[]> = {
+      '/admin/settings': ['admin'],
+      '/admin/content': ['admin'],
+      '/admin/pricing': ['admin'],
+      '/admin/chats': ['admin', 'sales_manager'],
+      '/admin/offers': ['admin', 'sales_manager'],
+      '/admin/test-drives': ['admin', 'sales_manager'],
+      '/admin/service-bookings': ['admin', 'service_advisor'],
+      '/admin/leads': ['admin', 'sales_manager'],
+      '/admin/models': ['admin', 'sales_manager', 'service_advisor'],
+    }
+
+    // Check route-specific permissions
+    const userRole = session.user?.role as string
+    for (const [route, roles] of Object.entries(ADMIN_ROUTE_ROLES)) {
+      if (pathname.startsWith(route) && !roles.includes(userRole)) {
+        response = NextResponse.redirect(new URL('/admin', nextUrl.origin))
+        return addSecurityHeaders(response)
+      }
     }
   }
 

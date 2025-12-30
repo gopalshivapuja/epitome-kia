@@ -1,5 +1,6 @@
 import { prisma } from './db'
 import { unstable_cache } from 'next/cache'
+import { HOMEPAGE_SECTIONS, type HomepageSection } from './homepage-sections'
 
 // Cache tags for revalidation
 export const CACHE_TAGS = {
@@ -7,6 +8,60 @@ export const CACHE_TAGS = {
   offers: 'offers',
   locations: 'locations',
 } as const
+
+// Type for homepage section with dynamic price
+export type HomepageSectionWithPrice = HomepageSection & {
+  price: string | null
+  startingPrice: number | null
+}
+
+// Get homepage sections with dynamic prices from database
+export const getHomepageSections = unstable_cache(
+  async (): Promise<HomepageSectionWithPrice[]> => {
+    try {
+      const sectionModels = await prisma.carModel.findMany({
+        where: {
+          slug: { in: HOMEPAGE_SECTIONS.map((s) => s.modelSlug) },
+          isActive: true,
+          deletedAt: null,
+        },
+        include: {
+          variants: {
+            where: { isActive: true, deletedAt: null },
+            orderBy: { basePrice: 'asc' },
+            take: 1,
+          },
+        },
+      })
+
+      const modelsBySlug = new Map(sectionModels.map((m) => [m.slug, m]))
+
+      return HOMEPAGE_SECTIONS.map((section) => {
+        const model = modelsBySlug.get(section.modelSlug)
+        const basePrice = model?.variants[0]?.basePrice
+          ? Number(model.variants[0].basePrice)
+          : null
+        return {
+          ...section,
+          startingPrice: basePrice,
+          price: basePrice
+            ? `Starting from ₹${(basePrice / 100000).toFixed(2)} Lakh*`
+            : null,
+        }
+      })
+    } catch (error) {
+      console.error('Error fetching homepage sections:', error)
+      // Fallback: return sections without prices
+      return HOMEPAGE_SECTIONS.map((s) => ({
+        ...s,
+        price: null,
+        startingPrice: null,
+      }))
+    }
+  },
+  ['homepage-sections'],
+  { tags: [CACHE_TAGS.models], revalidate: 3600 }
+)
 
 // Type for model list item
 export type ModelListItem = {

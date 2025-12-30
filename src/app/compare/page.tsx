@@ -6,6 +6,13 @@ import Image from 'next/image'
 import { ChevronRight, Plus, X, ArrowRight, Calendar, Trophy, Shield, CheckCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { formatPriceLakh } from '@/lib/utils'
 import {
   COMPETITOR_MODELS,
@@ -254,22 +261,25 @@ export default function ComparePage() {
                     ? 'First, select a Kia model'
                     : 'Add a Kia model'}
                 </p>
-                <select
-                  className="w-full max-w-[200px] rounded-md border px-3 py-2 text-sm"
+                <Select
                   value=""
-                  onChange={(e) => {
-                    const model = models.find((m) => m.id === e.target.value)
+                  onValueChange={(value) => {
+                    const model = models.find((m) => m.id === value)
                     if (model) addKiaModel(model)
                   }}
                   disabled={isLoading || availableKiaModels.length === 0}
                 >
-                  <option value="">Select a Kia</option>
-                  {availableKiaModels.map((model) => (
-                    <option key={model.id} value={model.id}>
-                      Kia {model.name}
-                    </option>
-                  ))}
-                </select>
+                  <SelectTrigger className="w-full max-w-[200px]">
+                    <SelectValue placeholder="Select a Kia" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {availableKiaModels.map((model) => (
+                      <SelectItem key={model.id} value={model.id}>
+                        Kia {model.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </CardContent>
             </Card>
           ) : null}
@@ -282,21 +292,24 @@ export default function ComparePage() {
                   <Plus className="h-6 w-6 text-blue-600" />
                 </div>
                 <p className="mb-4 text-sm text-muted-foreground">Add a competitor</p>
-                <select
-                  className="w-full max-w-[200px] rounded-md border px-3 py-2 text-sm"
+                <Select
                   value=""
-                  onChange={(e) => {
-                    const competitor = COMPETITOR_MODELS.find((c) => c.id === e.target.value)
+                  onValueChange={(value) => {
+                    const competitor = COMPETITOR_MODELS.find((c) => c.id === value)
                     if (competitor) addCompetitor(competitor)
                   }}
                 >
-                  <option value="">Select a competitor</option>
-                  {getAvailableCompetitors().map((competitor) => (
-                    <option key={competitor.id} value={competitor.id}>
-                      {competitor.name}
-                    </option>
-                  ))}
-                </select>
+                  <SelectTrigger className="w-full max-w-[200px]">
+                    <SelectValue placeholder="Select a competitor" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {getAvailableCompetitors().map((competitor) => (
+                      <SelectItem key={competitor.id} value={competitor.id}>
+                        {competitor.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </CardContent>
             </Card>
           )}

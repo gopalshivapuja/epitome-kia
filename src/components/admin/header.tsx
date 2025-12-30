@@ -27,7 +27,7 @@ export function AdminHeader({ user }: AdminHeaderProps) {
 
   return (
     <>
-      <AdminSidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <AdminSidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} userRole={user.role} />
 
       <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b bg-white px-4 lg:px-6">
         {/* Mobile menu button */}
