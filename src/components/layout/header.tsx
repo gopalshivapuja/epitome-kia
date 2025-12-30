@@ -53,7 +53,7 @@ export function Header() {
             alt={COMPANY_INFO.brand}
             width={140}
             height={45}
-            className="h-10 w-auto"
+            className="h-8 w-auto sm:h-10"
             priority
           />
           <span className="hidden text-lg font-semibold text-kia-black sm:block">Epitome Kia</span>
@@ -113,7 +113,7 @@ export function Header() {
             </Link>
           ))}
           <div className="pt-4">
-            <Button variant="kia" className="w-full" asChild>
+            <Button variant="kia" size="sm" className="w-full whitespace-nowrap" asChild>
               <Link href="/test-drive">Book Test Drive</Link>
             </Button>
           </div>

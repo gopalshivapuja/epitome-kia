@@ -40,11 +40,11 @@ async function QuickModelLinks() {
             >
               <div>
                 <p className="font-medium">{model.name}</p>
-                {model.startingPrice && (
-                  <p className="text-sm text-muted-foreground">
-                    From {formatPrice(model.startingPrice)}
-                  </p>
-                )}
+                <p className="text-sm text-muted-foreground">
+                  {model.startingPrice
+                    ? `From ${formatPrice(model.startingPrice)}`
+                    : 'Price on Request'}
+                </p>
               </div>
               <Badge variant="secondary">{model.modelYear}</Badge>
             </Link>

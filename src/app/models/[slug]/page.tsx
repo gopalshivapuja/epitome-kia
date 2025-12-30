@@ -115,8 +115,8 @@ async function ModelDetail({ slug }: { slug: string }) {
               )}
             </div>
 
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Button variant="kia" size="lg" asChild>
+            <div className="mt-8 grid grid-cols-2 gap-3 sm:flex sm:flex-wrap">
+              <Button variant="kia" size="lg" className="col-span-2 sm:col-span-1" asChild>
                 <Link href={`/test-drive?model=${model.slug}`}>
                   <Calendar className="mr-2 h-5 w-5" />
                   Book Test Drive
@@ -135,7 +135,7 @@ async function ModelDetail({ slug }: { slug: string }) {
                   rel="noopener noreferrer"
                 >
                   <Download className="mr-2 h-5 w-5" />
-                  Download Brochure
+                  Brochure
                 </a>
               </Button>
               <Button variant="outline" size="lg" asChild>

@@ -60,22 +60,22 @@ export function ContactForm() {
         <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
-                    <Label htmlFor="fullName">Full Name</Label>
+                    <Label htmlFor="fullName">Full Name <span className="text-destructive">*</span></Label>
                     <Input id="fullName" name="fullName" placeholder="John Doe" required />
                 </div>
                 <div className="space-y-2">
-                    <Label htmlFor="phone">Phone Number</Label>
+                    <Label htmlFor="phone">Phone Number <span className="text-destructive">*</span></Label>
                     <Input id="phone" name="phone" type="tel" placeholder="+91 98765 43210" required />
                 </div>
             </div>
 
             <div className="space-y-2">
-                <Label htmlFor="email">Email Address</Label>
+                <Label htmlFor="email">Email Address <span className="text-destructive">*</span></Label>
                 <Input id="email" name="email" type="email" placeholder="john@example.com" required />
             </div>
 
             <div className="space-y-2">
-                <Label htmlFor="subject">Subject</Label>
+                <Label htmlFor="subject">Subject <span className="text-destructive">*</span></Label>
                 <Select name="subject" required>
                     <SelectTrigger>
                         <SelectValue placeholder="Select a subject" />
@@ -91,7 +91,7 @@ export function ContactForm() {
             </div>
 
             <div className="space-y-2">
-                <Label htmlFor="message">Message</Label>
+                <Label htmlFor="message">Message <span className="text-destructive">*</span></Label>
                 <Textarea id="message" name="message" placeholder="How can we help you?" rows={4} required />
             </div>
 

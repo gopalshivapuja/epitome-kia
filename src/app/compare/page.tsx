@@ -118,7 +118,7 @@ export default function ComparePage() {
 
   const getItemName = (item: SelectedItem): string => {
     if (item.type === 'kia') {
-      return `Kia ${(item.data as KiaModel).name}`
+      return (item.data as KiaModel).name
     }
     return (item.data as CompetitorModelData).name
   }
@@ -275,7 +275,7 @@ export default function ComparePage() {
                   <SelectContent>
                     {availableKiaModels.map((model) => (
                       <SelectItem key={model.id} value={model.id}>
-                        Kia {model.name}
+                        {model.name}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -318,15 +318,15 @@ export default function ComparePage() {
         {/* Comparison Table */}
         {selectedItems.length >= 2 && (
           <div className="overflow-x-auto rounded-lg border">
-            <table className="w-full border-collapse">
+            <table className="w-full min-w-[600px] border-collapse">
               <thead>
                 <tr className="border-b bg-gray-50">
-                  <th className="p-4 text-left font-medium text-muted-foreground">
+                  <th className="min-w-[120px] p-3 text-left text-sm font-medium text-muted-foreground md:p-4 md:text-base">
                     Specifications
                   </th>
                   {selectedItems.map((item, index) => (
-                    <th key={index} className="p-4 text-center">
-                      <span className={`font-semibold ${item.type === 'kia' ? 'text-kia-red' : 'text-gray-900'}`}>
+                    <th key={index} className="min-w-[140px] p-3 text-center md:p-4">
+                      <span className={`text-sm font-semibold md:text-base ${item.type === 'kia' ? 'text-kia-red' : 'text-gray-900'}`}>
                         {getItemName(item)}
                       </span>
                     </th>
@@ -336,9 +336,9 @@ export default function ComparePage() {
               <tbody>
                 {/* Price Row */}
                 <tr className="border-b bg-kia-red/5">
-                  <td className="p-4 text-sm font-medium">Price</td>
+                  <td className="p-3 text-sm font-medium md:p-4">Price</td>
                   {selectedItems.map((item, index) => (
-                    <td key={index} className="p-4 text-center font-semibold">
+                    <td key={index} className="p-3 text-center text-sm font-semibold md:p-4">
                       {getItemPrice(item)}
                     </td>
                   ))}
@@ -349,7 +349,7 @@ export default function ComparePage() {
                   const isWarranty = spec.key === 'warranty'
                   return (
                     <tr key={spec.key} className={`border-b ${isWarranty ? 'bg-green-50' : ''}`}>
-                      <td className="p-4 text-sm text-muted-foreground">{spec.label}</td>
+                      <td className="p-3 text-sm text-muted-foreground md:p-4">{spec.label}</td>
                       {selectedItems.map((item, index) => {
                         const specs = getItemSpecs(item)
                         const value = specs?.[spec.key] || '-'
@@ -357,7 +357,7 @@ export default function ComparePage() {
                         const isKiaAdvantage = isWarranty && isKia
 
                         return (
-                          <td key={index} className="p-4 text-center text-sm">
+                          <td key={index} className="p-3 text-center text-sm md:p-4">
                             <span className={isKiaAdvantage ? 'font-semibold text-green-700' : ''}>
                               {value}
                               {isKiaAdvantage && (
@@ -401,7 +401,7 @@ export default function ComparePage() {
             {selectedItems.filter((m) => m.type === 'kia').map((item, index) => (
               <Button key={index} variant="outline" asChild>
                 <Link href={`/models/${(item.data as KiaModel).slug}`}>
-                  View Kia {(item.data as KiaModel).name} <ArrowRight className="ml-2 h-4 w-4" />
+                  View {(item.data as KiaModel).name} <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
             ))}
