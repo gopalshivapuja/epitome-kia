@@ -27,6 +27,7 @@ model CarModel {
   offers           Offer[]
   testDriveRequests TestDriveRequest[]
   serviceBookings  ServiceBooking[]
+  images           CarModelImage[]
 
   @@index([isActive], name: "car_models_active_idx")
   @@map("car_models")
@@ -397,4 +398,165 @@ model CuratedArticle {
   @@index([isApproved], name: "curated_articles_approved_idx")
   @@index([kiaTags], name: "curated_articles_tags_idx")
   @@map("curated_articles")
+}
+
+// Customer accounts (Google OAuth or email/phone)
+model Customer {
+  id          String    @id @default(uuid()) @db.Uuid
+  email       String    @unique
+  name        String?
+  phone       String?
+  googleId    String?   @unique @map("google_id")
+  avatarUrl   String?   @map("avatar_url")
+  savedModels String[]  @map("saved_models") // Model slugs
+  preferences Json?     // { budget, fuelType, transmission, etc. }
+  lastLoginAt DateTime? @map("last_login_at") @db.Timestamptz
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt   DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt   DateTime? @map("deleted_at") @db.Timestamptz
+
+  alerts         AlertSubscription[]
+  configurations VehicleConfiguration[]
+
+  @@index([email], name: "customers_email_idx")
+  @@index([googleId], name: "customers_google_id_idx")
+  @@map("customers")
+}
+
+// Price and availability alert subscriptions
+model AlertSubscription {
+  id           String    @id @default(uuid()) @db.Uuid
+  email        String
+  phone        String?
+  modelSlug    String?   @map("model_slug") // Specific model or null for all
+  alertType    String    @map("alert_type") // "price_drop", "new_offer", "availability"
+  threshold    Decimal?  @db.Decimal(12, 2) // Price threshold for alerts
+  isActive     Boolean   @default(true) @map("is_active")
+  customerId   String?   @map("customer_id") @db.Uuid
+  lastNotified DateTime? @map("last_notified") @db.Timestamptz
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt    DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt    DateTime? @map("deleted_at") @db.Timestamptz
+
+  customer Customer? @relation(fields: [customerId], references: [id])
+
+  @@index([email], name: "alert_subscriptions_email_idx")
+  @@index([modelSlug], name: "alert_subscriptions_model_idx")
+  @@index([alertType], name: "alert_subscriptions_type_idx")
+  @@index([customerId], name: "alert_subscriptions_customer_idx")
+  @@map("alert_subscriptions")
+}
+
+// Vehicle configurations (Tesla-style configurator)
+model VehicleConfiguration {
+  id          String    @id @default(uuid()) @db.Uuid
+  modelSlug   String    @map("model_slug")
+  variantId   String    @map("variant_id") @db.Uuid
+  colorCode   String    @map("color_code")
+  accessories String[]  // Accessory IDs
+  totalPrice  Decimal   @map("total_price") @db.Decimal(12, 2)
+  shareCode   String    @unique @map("share_code") // For shareable links
+  customerId  String?   @map("customer_id") @db.Uuid
+  expiresAt   DateTime  @map("expires_at") @db.Timestamptz // Configs expire after 30 days
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt   DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt   DateTime? @map("deleted_at") @db.Timestamptz
+
+  customer Customer? @relation(fields: [customerId], references: [id])
+
+  @@index([shareCode], name: "vehicle_configurations_share_code_idx")
+  @@index([customerId], name: "vehicle_configurations_customer_idx")
+  @@map("vehicle_configurations")
+}
+
+// Accessories for vehicle configurator
+model Accessory {
+  id          String    @id @default(uuid()) @db.Uuid
+  name        String
+  description String?
+  price       Decimal   @db.Decimal(10, 2)
+  imageUrl    String?   @map("image_url")
+  modelSlugs  String[]  @map("model_slugs") // Compatible models
+  category    String    // "exterior", "interior", "protection", "technology"
+  isActive    Boolean   @default(true) @map("is_active")
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt   DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt   DateTime? @map("deleted_at") @db.Timestamptz
+
+  @@index([category], name: "accessories_category_idx")
+  @@index([isActive], name: "accessories_active_idx")
+  @@map("accessories")
+}
+
+// Competitor models for comparison tool
+model CompetitorModel {
+  id           String    @id @default(uuid()) @db.Uuid
+  name         String    // "Hyundai Creta"
+  brand        String    // "Hyundai"
+  segment      String    // "compact_suv", "subcompact_suv", "mpv"
+  priceRange   String    @map("price_range") // "₹11.0 - 20.0 Lakh"
+  specs        Json      // { engine, power, torque, mileage, dimensions, etc. }
+  imageUrl     String?   @map("image_url")
+  sourceUrl    String?   @map("source_url") // CarDekho/CarWale URL
+  competesWith String[]  @map("competes_with") // ["seltos", "sonet"]
+  lastUpdated  DateTime  @default(now()) @map("last_updated") @db.Timestamptz
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt    DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt    DateTime? @map("deleted_at") @db.Timestamptz
+
+  @@index([brand], name: "competitor_models_brand_idx")
+  @@index([segment], name: "competitor_models_segment_idx")
+  @@map("competitor_models")
+}
+
+// User browsing preferences for personalization
+model UserPreference {
+  id           String    @id @default(uuid()) @db.Uuid
+  visitorId    String    @unique @map("visitor_id") // Anonymous ID stored in cookie
+  customerId   String?   @map("customer_id") @db.Uuid // Linked when logged in
+  viewedModels String[]  @map("viewed_models") // Model slugs
+  interests    Json?     // { budget: "15-20L", fuelType: "petrol", etc. }
+  lastVisit    DateTime  @default(now()) @map("last_visit") @db.Timestamptz
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt    DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@index([visitorId], name: "user_preferences_visitor_idx")
+  @@index([customerId], name: "user_preferences_customer_idx")
+  @@map("user_preferences")
+}
+
+// Sync logs for Kia India content auto-sync
+model SyncLog {
+  id           String    @id @default(uuid()) @db.Uuid
+  source       String    // "kia_india"
+  modelSlug    String?   @map("model_slug")
+  status       String    // "success", "failed", "partial"
+  changesFound Json?     @map("changes_found") // { prices: [{...}], specs: [{...}] }
+  appliedAt    DateTime? @map("applied_at") @db.Timestamptz
+  error        String?
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz
+
+  @@index([source], name: "sync_logs_source_idx")
+  @@index([status], name: "sync_logs_status_idx")
+  @@map("sync_logs")
+}
+
+// Car model images for 360° viewer and gallery
+model CarModelImage {
+  id         String    @id @default(uuid()) @db.Uuid
+  carModelId String    @map("car_model_id") @db.Uuid
+  type       String    // "exterior_360", "interior_360", "gallery", "hero"
+  angle      Int?      // 0-35 for 360 images (10° increments)
+  url        String
+  altText    String?   @map("alt_text")
+  sortOrder  Int       @default(0) @map("sort_order")
+  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt  DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt  DateTime? @map("deleted_at") @db.Timestamptz
+
+  carModel CarModel @relation(fields: [carModelId], references: [id])
+
+  @@index([carModelId], name: "car_model_images_model_idx")
+  @@index([type], name: "car_model_images_type_idx")
+  @@map("car_model_images")
 }

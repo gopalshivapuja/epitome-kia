@@ -8,9 +8,9 @@ import { AdminSidebar } from './sidebar'
 
 interface AdminHeaderProps {
   user: {
-    name: string
+    name?: string | null
     email: string
-    role: string
+    role?: string
   }
 }
 
@@ -62,9 +62,9 @@ export function AdminHeader({ user }: AdminHeaderProps) {
                 <User className="h-4 w-4" />
               </div>
               <div className="hidden text-left md:block">
-                <p className="text-sm font-medium">{user.name}</p>
+                <p className="text-sm font-medium">{user.name || 'Admin'}</p>
                 <p className="text-xs text-muted-foreground">
-                  {roleLabels[user.role] || user.role}
+                  {user.role ? (roleLabels[user.role] || user.role) : 'Staff'}
                 </p>
               </div>
               <ChevronDown className="h-4 w-4" />
@@ -78,7 +78,7 @@ export function AdminHeader({ user }: AdminHeaderProps) {
                 />
                 <div className="absolute right-0 top-full z-50 mt-2 w-56 rounded-lg border bg-white py-1 shadow-lg">
                   <div className="border-b px-4 py-3">
-                    <p className="font-medium">{user.name}</p>
+                    <p className="font-medium">{user.name || 'Admin'}</p>
                     <p className="text-sm text-muted-foreground">{user.email}</p>
                   </div>
                   <button

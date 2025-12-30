@@ -88,21 +88,28 @@ declare module 'next-auth' {
   interface User {
     id?: string
     role?: string
+    customerId?: string
+    isCustomer?: boolean
   }
 
   interface Session {
     user: {
-      id: string
+      id?: string
       email: string
-      name: string
-      role: string
+      name?: string | null
+      image?: string | null
+      role?: string
+      customerId?: string
+      isCustomer?: boolean
     }
   }
 }
 
 declare module '@auth/core/jwt' {
   interface JWT {
-    id: string
-    role: string
+    id?: string
+    role?: string
+    customerId?: string
+    isCustomer?: boolean
   }
 }
