@@ -2,11 +2,10 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
 import { Menu, X } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { cn } from '@/lib/utils'
-import { COMPANY_INFO } from '@/lib/company-data'
+import { Logo } from '@/components/ui/logo'
 
 export function GlassHeader() {
     const [isScrolled, setIsScrolled] = useState(false)
@@ -27,21 +26,17 @@ export function GlassHeader() {
                     'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
                     isScrolled
                         ? 'bg-white/95 backdrop-blur-md py-3 shadow-sm'
-                        : 'bg-transparent py-4'
+                        : 'bg-black/20 backdrop-blur-sm py-4'
                 )}
             >
                 <div className="container mx-auto px-6 flex items-center justify-between">
                     {/* Logo */}
-                    <Link href="/" className="relative z-50 flex items-center">
-                        <Image
-                            src={COMPANY_INFO.logo}
-                            alt={COMPANY_INFO.brand}
-                            width={140}
-                            height={45}
-                            className="h-7 w-auto"
-                            priority
+                    <div className="relative z-50">
+                        <Logo
+                            variant={isScrolled ? 'dark' : 'light'}
+                            size="lg"
                         />
-                    </Link>
+                    </div>
 
                     {/* Desktop Nav - Tesla style centered */}
                     <nav className="hidden md:flex items-center gap-8 absolute left-1/2 transform -translate-x-1/2">
@@ -49,7 +44,12 @@ export function GlassHeader() {
                             <Link
                                 key={item}
                                 href={`/models/${item.toLowerCase()}`}
-                                className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors duration-200"
+                                className={cn(
+                                    "text-sm font-medium transition-colors duration-200",
+                                    isScrolled
+                                        ? "text-gray-700 hover:text-gray-900"
+                                        : "text-white hover:text-white/80"
+                                )}
                             >
                                 {item}
                             </Link>
@@ -60,12 +60,22 @@ export function GlassHeader() {
                     <div className="flex items-center gap-4">
                         <Link
                             href="/test-drive"
-                            className="hidden sm:inline-flex text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
+                            className={cn(
+                                "hidden sm:inline-flex text-sm font-medium transition-colors",
+                                isScrolled
+                                    ? "text-gray-700 hover:text-gray-900"
+                                    : "text-white hover:text-white/80"
+                            )}
                         >
                             Test Drive
                         </Link>
                         <button
-                            className="p-2 text-gray-600 hover:text-gray-900 transition-colors"
+                            className={cn(
+                                "p-2 transition-colors",
+                                isScrolled
+                                    ? "text-gray-700 hover:text-gray-900"
+                                    : "text-white hover:text-white/80"
+                            )}
                             onClick={() => setIsMenuOpen(true)}
                             aria-label="Open menu"
                         >
@@ -87,15 +97,11 @@ export function GlassHeader() {
                     >
                         {/* Header */}
                         <div className="flex items-center justify-between p-6">
-                            <Link href="/" onClick={() => setIsMenuOpen(false)}>
-                                <Image
-                                    src={COMPANY_INFO.logo}
-                                    alt={COMPANY_INFO.brand}
-                                    width={140}
-                                    height={45}
-                                    className="h-7 w-auto"
-                                />
-                            </Link>
+                            <Logo
+                                variant="dark"
+                                size="lg"
+                                asLink={true}
+                            />
                             <button
                                 className="p-2 text-gray-600 hover:text-gray-900 transition-colors"
                                 onClick={() => setIsMenuOpen(false)}
@@ -109,10 +115,12 @@ export function GlassHeader() {
                         <div className="flex-1 flex flex-col items-start justify-center px-12 gap-4">
                             {[
                                 { name: 'Models', href: '/models' },
+                                { name: 'Compare', href: '/compare' },
                                 { name: 'Test Drive', href: '/test-drive' },
                                 { name: 'Service', href: '/service' },
                                 { name: 'EMI Calculator', href: '/emi-calculator' },
                                 { name: 'Offers', href: '/offers' },
+                                { name: 'FAQ', href: '/faq' },
                                 { name: 'Contact', href: '/contact' },
                             ].map((item, index) => (
                                 <motion.div

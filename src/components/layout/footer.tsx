@@ -1,25 +1,85 @@
+'use client'
+
+import { useState } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
-import { Facebook, Instagram, Youtube, Linkedin, Twitter } from 'lucide-react'
+import { Facebook, Instagram, Youtube, Linkedin, Twitter, Send, Loader2 } from 'lucide-react'
 import { COMPANY_INFO, LOCATIONS, SOCIAL_LINKS } from '@/lib/company-data'
+import { Logo } from '@/components/ui/logo'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 
 export function Footer() {
+  const [email, setEmail] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
+
+  const handleNewsletterSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!email) return
+
+    setIsLoading(true)
+    setMessage(null)
+
+    try {
+      const response = await fetch('/api/newsletter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        setMessage({ type: 'success', text: 'Thank you for subscribing!' })
+        setEmail('')
+      } else {
+        setMessage({ type: 'error', text: data.error || 'Something went wrong' })
+      }
+    } catch {
+      setMessage({ type: 'error', text: 'Failed to subscribe. Please try again.' })
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   return (
     <footer className="bg-gray-900 text-white">
+      {/* Newsletter Section */}
+      <div className="border-b border-gray-800">
+        <div className="container py-10">
+          <div className="flex flex-col items-center gap-6 md:flex-row md:justify-between">
+            <div>
+              <h3 className="text-lg font-semibold">Stay Updated</h3>
+              <p className="text-sm text-gray-400">Get the latest news, offers, and updates from Epitome Kia</p>
+            </div>
+            <form onSubmit={handleNewsletterSubmit} className="flex w-full max-w-md gap-2">
+              <Input
+                type="email"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="bg-gray-800 border-gray-700 text-white placeholder:text-gray-500"
+                required
+              />
+              <Button type="submit" variant="kia" disabled={isLoading}>
+                {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+              </Button>
+            </form>
+          </div>
+          {message && (
+            <p className={`mt-3 text-center text-sm ${message.type === 'success' ? 'text-green-400' : 'text-red-400'}`}>
+              {message.text}
+            </p>
+          )}
+        </div>
+      </div>
+
       {/* Main Footer */}
       <div className="container py-16">
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
           {/* Brand */}
           <div className="space-y-5">
-            <Link href="/" className="block">
-              <Image
-                src={COMPANY_INFO.logo}
-                alt={COMPANY_INFO.brand}
-                width={140}
-                height={45}
-                className="h-8 w-auto brightness-0 invert opacity-90"
-              />
-            </Link>
+            <Logo variant="light" size="lg" />
             <p className="text-sm text-gray-400 leading-relaxed max-w-xs">
               {COMPANY_INFO.description}
             </p>
@@ -62,6 +122,8 @@ export function Footer() {
               <li><Link href="/service" className="text-gray-400 hover:text-white transition-colors text-sm">Service Booking</Link></li>
               <li><Link href="/emi-calculator" className="text-gray-400 hover:text-white transition-colors text-sm">EMI Calculator</Link></li>
               <li><Link href="/offers" className="text-gray-400 hover:text-white transition-colors text-sm">Current Offers</Link></li>
+              <li><Link href="/compare" className="text-gray-400 hover:text-white transition-colors text-sm">Compare Models</Link></li>
+              <li><Link href="/faq" className="text-gray-400 hover:text-white transition-colors text-sm">FAQ</Link></li>
               <li><Link href="/contact" className="text-gray-400 hover:text-white transition-colors text-sm">Contact Us</Link></li>
             </ul>
           </div>

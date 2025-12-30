@@ -5,6 +5,7 @@ import { useState } from 'react'
 import { Menu, X, Phone, MapPin } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
+import { Logo } from '@/components/ui/logo'
 
 const navigation = [
   { name: 'Models', href: '/models' },
@@ -44,12 +45,7 @@ export function Header() {
       {/* Main navigation */}
       <nav className="container flex h-16 items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2">
-          <div className="flex h-10 w-20 items-center justify-center rounded bg-kia-red">
-            <span className="text-xl font-bold tracking-wider text-white">KIA</span>
-          </div>
-          <span className="hidden text-lg font-semibold text-kia-black sm:block">Epitome Kia</span>
-        </Link>
+        <Logo variant="dark" size="lg" />
 
         {/* Desktop navigation */}
         <div className="hidden items-center gap-6 lg:flex">

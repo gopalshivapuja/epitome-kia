@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 import { MessageCircle } from 'lucide-react'
 
 export function WhatsAppButton() {
-    const phoneNumber = '918047363737' // Epitome general sales/service line from research
+    const phoneNumber = '917022318666' // Epitome Kia official WhatsApp
     const message = 'Hi Epitome Kia, I would like to inquire about Kia models.'
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`
 

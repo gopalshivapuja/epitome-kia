@@ -245,7 +245,7 @@ async function main() {
       name: 'HTE',
       slug: 'sonet-hte',
       trimLevel: 'Base',
-      basePrice: 799000,
+      basePrice: 730138, // ₹7.30 Lakh (Dec 2025, post GST cut)
       isActive: true,
     },
   })
@@ -256,7 +256,7 @@ async function main() {
       name: 'HTK+',
       slug: 'sonet-htk-plus',
       trimLevel: 'Mid',
-      basePrice: 999000,
+      basePrice: 910125, // ₹9.10 Lakh (Dec 2025, post GST cut)
       isActive: true,
     },
   })
@@ -264,10 +264,10 @@ async function main() {
   const sonetHTX = await prisma.variant.create({
     data: {
       carModelId: sonet.id,
-      name: 'HTX+',
-      slug: 'sonet-htx-plus',
+      name: 'HTX',
+      slug: 'sonet-htx',
       trimLevel: 'Top',
-      basePrice: 1199000,
+      basePrice: 1080328, // ₹10.80 Lakh (Dec 2025, post GST cut)
       isActive: true,
     },
   })
@@ -278,7 +278,7 @@ async function main() {
       name: 'GTX+',
       slug: 'sonet-gtx-plus',
       trimLevel: 'Premium',
-      basePrice: 1499000,
+      basePrice: 1350652, // ₹13.50 Lakh (Dec 2025, post GST cut)
       isActive: true,
     },
   })
@@ -318,7 +318,7 @@ async function main() {
       name: 'Premium',
       slug: 'carens-premium',
       trimLevel: 'Base',
-      basePrice: 1052000,
+      basePrice: 1099159, // ₹10.99 Lakh (Dec 2025, post GST cut)
       isActive: true,
     },
   })
@@ -329,7 +329,7 @@ async function main() {
       name: 'Prestige',
       slug: 'carens-prestige',
       trimLevel: 'Mid',
-      basePrice: 1299000,
+      basePrice: 1150000, // ₹11.50 Lakh approx
       isActive: true,
     },
   })
@@ -340,7 +340,7 @@ async function main() {
       name: 'Luxury',
       slug: 'carens-luxury',
       trimLevel: 'Top',
-      basePrice: 1599000,
+      basePrice: 1200000, // ₹12.00 Lakh approx
       isActive: true,
     },
   })
@@ -351,7 +351,7 @@ async function main() {
       name: 'Luxury Plus',
       slug: 'carens-luxury-plus',
       trimLevel: 'Premium',
-      basePrice: 1799000,
+      basePrice: 1277000, // ₹12.77 Lakh (Dec 2025, post GST cut - top variant)
       isActive: true,
     },
   })
@@ -384,38 +384,27 @@ async function main() {
     },
   })
 
-  const carnivalLimousine = await prisma.variant.create({
-    data: {
-      carModelId: carnival.id,
-      name: 'Limousine',
-      slug: 'carnival-limousine',
-      trimLevel: 'Base',
-      basePrice: 6390000,
-      isActive: true,
-    },
-  })
-
   const carnivalLimousinePlus = await prisma.variant.create({
     data: {
       carModelId: carnival.id,
       name: 'Limousine Plus',
       slug: 'carnival-limousine-plus',
-      trimLevel: 'Top',
-      basePrice: 6490000,
+      trimLevel: 'Premium',
+      basePrice: 5942459, // ₹59.42 Lakh (Dec 2025, post GST cut)
       isActive: true,
     },
   })
 
   await prisma.specification.createMany({
     data: [
-      { variantId: carnivalLimousine.id, specKey: 'engine', specValue: '2.2L CRDi Diesel', unit: null },
-      { variantId: carnivalLimousine.id, specKey: 'power', specValue: '200', unit: 'PS' },
-      { variantId: carnivalLimousine.id, specKey: 'torque', specValue: '440', unit: 'Nm' },
-      { variantId: carnivalLimousine.id, specKey: 'transmission', specValue: '8-Speed AT', unit: null },
-      { variantId: carnivalLimousine.id, specKey: 'fuel_type', specValue: 'Diesel', unit: null },
-      { variantId: carnivalLimousine.id, specKey: 'seating_capacity', specValue: '7', unit: 'persons' },
-      { variantId: carnivalLimousine.id, specKey: 'sunroof', specValue: 'Dual Sunroof', unit: null },
-      { variantId: carnivalLimousine.id, specKey: 'display', specValue: '12.3 inch Dual Screens', unit: null },
+      { variantId: carnivalLimousinePlus.id, specKey: 'engine', specValue: '2.2L CRDi Diesel', unit: null },
+      { variantId: carnivalLimousinePlus.id, specKey: 'power', specValue: '190', unit: 'PS' },
+      { variantId: carnivalLimousinePlus.id, specKey: 'torque', specValue: '441', unit: 'Nm' },
+      { variantId: carnivalLimousinePlus.id, specKey: 'transmission', specValue: '8-Speed AT', unit: null },
+      { variantId: carnivalLimousinePlus.id, specKey: 'fuel_type', specValue: 'Diesel', unit: null },
+      { variantId: carnivalLimousinePlus.id, specKey: 'seating_capacity', specValue: '7', unit: 'persons' },
+      { variantId: carnivalLimousinePlus.id, specKey: 'sunroof', specValue: 'Dual Sunroof', unit: null },
+      { variantId: carnivalLimousinePlus.id, specKey: 'display', specValue: '12.3 inch Dual Screens', unit: null },
     ],
   })
 
@@ -437,7 +426,7 @@ async function main() {
       name: 'GT Line AWD',
       slug: 'ev6-gt-line-awd',
       trimLevel: 'Premium',
-      basePrice: 6095000,
+      basePrice: 6590000, // ₹65.90 Lakh (Dec 2025)
       isActive: true,
     },
   })
@@ -447,8 +436,8 @@ async function main() {
       { variantId: ev6GT.id, specKey: 'motor', specValue: 'Dual Motor AWD', unit: null },
       { variantId: ev6GT.id, specKey: 'power', specValue: '325', unit: 'PS' },
       { variantId: ev6GT.id, specKey: 'torque', specValue: '605', unit: 'Nm' },
-      { variantId: ev6GT.id, specKey: 'battery', specValue: '77.4', unit: 'kWh' },
-      { variantId: ev6GT.id, specKey: 'range', specValue: '528', unit: 'km' },
+      { variantId: ev6GT.id, specKey: 'battery', specValue: '84', unit: 'kWh' },
+      { variantId: ev6GT.id, specKey: 'range', specValue: '663', unit: 'km' },
       { variantId: ev6GT.id, specKey: 'charging_time', specValue: '18 min (10-80%)', unit: null },
       { variantId: ev6GT.id, specKey: '0_to_100', specValue: '5.2', unit: 'seconds' },
       { variantId: ev6GT.id, specKey: 'drive_type', specValue: 'All Wheel Drive', unit: null },
@@ -473,7 +462,7 @@ async function main() {
       name: 'GT Line AWD',
       slug: 'ev9-gt-line-awd',
       trimLevel: 'Premium',
-      basePrice: 13000000,
+      basePrice: 12990000, // ₹1.30 Crore (Dec 2025)
       isActive: true,
     },
   })
@@ -509,7 +498,7 @@ async function main() {
       name: 'HTK',
       slug: 'syros-htk',
       trimLevel: 'Base',
-      basePrice: null, // Coming soon
+      basePrice: 867053, // ₹8.67 Lakh (Dec 2025, post GST cut)
       isActive: true,
     },
   })
@@ -517,10 +506,21 @@ async function main() {
   const syrosHTX = await prisma.variant.create({
     data: {
       carModelId: syros.id,
+      name: 'HTX',
+      slug: 'syros-htx',
+      trimLevel: 'Mid',
+      basePrice: 1210484, // ₹12.10 Lakh (Dec 2025, post GST cut)
+      isActive: true,
+    },
+  })
+
+  const syrosHTXPlus = await prisma.variant.create({
+    data: {
+      carModelId: syros.id,
       name: 'HTX+',
       slug: 'syros-htx-plus',
       trimLevel: 'Top',
-      basePrice: null, // Coming soon
+      basePrice: 1456233, // ₹14.56 Lakh (Dec 2025, post GST cut)
       isActive: true,
     },
   })
@@ -551,7 +551,7 @@ async function main() {
       name: 'HTK',
       slug: 'clavis-htk',
       trimLevel: 'Base',
-      basePrice: null, // Coming soon
+      basePrice: 1107829, // ₹11.07 Lakh (Dec 2025 - Carens Clavis starting price)
       isActive: true,
     },
   })
@@ -581,7 +581,7 @@ async function main() {
       name: 'Standard',
       slug: 'clavis-ev-standard',
       trimLevel: 'Base',
-      basePrice: null, // Coming soon
+      basePrice: 1799000, // ₹17.99 Lakh (Dec 2025 - Carens Clavis EV starting price)
       isActive: true,
     },
   })
