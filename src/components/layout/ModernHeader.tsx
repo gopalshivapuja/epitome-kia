@@ -8,8 +8,9 @@ import { Logo } from '@/components/ui/logo'
 
 const HEADER_LINKS = [
     { name: 'Models', href: '/models' },
+    { name: 'Compare', href: '/compare' },
     { name: 'Offers', href: '/offers' },
-    { name: 'Services', href: '/service' },
+    { name: 'Service', href: '/service' },
     { name: 'Contact', href: '/contact' },
 ]
 
@@ -26,31 +27,25 @@ export function ModernHeader() {
     }, [])
 
     return (
-        <header className="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+        <header className="fixed top-0 left-0 right-0 z-50">
             <div className={cn(
-                "flex items-center justify-between px-6 py-4 transition-all duration-500",
-                isScrolled ? "bg-white/90 backdrop-blur-md shadow-sm" : "bg-black/20 backdrop-blur-sm"
+                "flex items-center justify-between px-6 transition-all duration-300",
+                isScrolled
+                    ? "py-3 bg-white shadow-md"
+                    : "py-4 bg-white shadow-sm"
             )}>
                 {/* Logo */}
                 <div className="z-50">
-                    <Logo
-                        variant={isScrolled ? 'dark' : 'light'}
-                        size="lg"
-                    />
+                    <Logo variant="dark" size="lg" />
                 </div>
 
-                {/* Desktop Center Nav (Tesla Style) */}
-                <nav className="hidden lg:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
+                {/* Desktop Center Nav */}
+                <nav className="hidden lg:flex items-center gap-6 absolute left-1/2 -translate-x-1/2">
                     {HEADER_LINKS.map((link) => (
                         <Link
                             key={link.name}
                             href={link.href}
-                            className={cn(
-                                "text-sm font-medium tracking-wide px-3 py-2 rounded transition-colors",
-                                isScrolled
-                                    ? "text-gray-700 hover:text-gray-900 hover:bg-gray-100"
-                                    : "text-white hover:text-white/80 hover:bg-white/10"
-                            )}
+                            className="text-sm font-medium text-gray-700 hover:text-gray-900 px-3 py-2 rounded transition-colors hover:bg-gray-100"
                         >
                             {link.name}
                         </Link>
@@ -58,26 +53,17 @@ export function ModernHeader() {
                 </nav>
 
                 {/* Right Actions */}
-                <div className="flex items-center gap-4 z-50">
-                    <Link href="/test-drive" className="hidden sm:block">
-                        <span className={cn(
-                            "text-sm font-medium px-3 py-2 rounded transition-colors",
-                            isScrolled
-                                ? "text-gray-700 hover:bg-gray-100"
-                                : "text-white hover:bg-white/10"
-                        )}>
-                            Test Drive
-                        </span>
+                <div className="flex items-center gap-3 z-50">
+                    <Link
+                        href="/test-drive"
+                        className="hidden sm:inline-flex items-center justify-center bg-kia-red text-white hover:bg-kia-red-dark px-4 py-2 rounded text-sm font-medium transition-colors"
+                    >
+                        Book Test Drive
                     </Link>
 
                     <button
                         onClick={() => setIsMenuOpen(!isMenuOpen)}
-                        className={cn(
-                            "text-sm font-medium px-4 py-2 rounded backdrop-blur-sm transition-colors",
-                            isScrolled
-                                ? "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                                : "bg-white/10 text-white hover:bg-white/20"
-                        )}
+                        className="text-sm font-medium px-4 py-2 rounded bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors lg:hidden"
                     >
                         {isMenuOpen ? 'Close' : 'Menu'}
                     </button>
