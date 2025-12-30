@@ -1,15 +1,22 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
-import { ChevronRight, Plus, X, ArrowRight, Calendar } from 'lucide-react'
+import { ChevronRight, Plus, X, ArrowRight, Calendar, Trophy, Shield, CheckCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { formatPriceLakh } from '@/lib/utils'
+import {
+  COMPETITOR_MODELS,
+  KIA_MODEL_SPECS,
+  KIA_ADVANTAGES,
+  getCompetitorsForModel,
+  type CompetitorModelData,
+  type CompetitorSpecs,
+} from '@/lib/competitor-data'
 
-type Model = {
+type KiaModel = {
   id: string
   name: string
   slug: string
@@ -18,87 +25,35 @@ type Model = {
   startingPrice: number | null
 }
 
-const SPEC_CATEGORIES = [
-  {
-    name: 'Price & Value',
-    specs: [
-      { key: 'startingPrice', label: 'Starting Price' },
-      { key: 'modelYear', label: 'Model Year' },
-    ],
-  },
-  {
-    name: 'Performance',
-    specs: [
-      { key: 'engine', label: 'Engine Options' },
-      { key: 'power', label: 'Max Power' },
-      { key: 'transmission', label: 'Transmission' },
-    ],
-  },
-  {
-    name: 'Dimensions',
-    specs: [
-      { key: 'seating', label: 'Seating Capacity' },
-      { key: 'bootSpace', label: 'Boot Space' },
-    ],
-  },
-]
+type CompareMode = 'kia' | 'competitor'
 
-// Model specifications (static data for comparison)
-const MODEL_SPECS: Record<string, Record<string, string>> = {
-  seltos: {
-    engine: '1.5L Petrol / 1.5L Diesel / 1.4L Turbo',
-    power: 'Up to 140 PS',
-    transmission: '6MT / IVT / 7DCT',
-    seating: '5 Seater',
-    bootSpace: '433L',
-  },
-  sonet: {
-    engine: '1.2L Petrol / 1.5L Diesel / 1.0L Turbo',
-    power: 'Up to 120 PS',
-    transmission: '5MT / 6MT / 6iMT / 7DCT',
-    seating: '5 Seater',
-    bootSpace: '392L',
-  },
-  carens: {
-    engine: '1.5L Petrol / 1.5L Diesel / 1.4L Turbo',
-    power: 'Up to 140 PS',
-    transmission: '6MT / IVT / 7DCT',
-    seating: '6/7 Seater',
-    bootSpace: '216L (3rd row up)',
-  },
-  ev6: {
-    engine: '77.4 kWh Battery',
-    power: 'Up to 325 PS',
-    transmission: 'Single Speed',
-    seating: '5 Seater',
-    bootSpace: '490L',
-  },
-  ev9: {
-    engine: '99.8 kWh Battery',
-    power: 'Up to 384 PS',
-    transmission: 'Single Speed',
-    seating: '6/7 Seater',
-    bootSpace: '333L (3rd row up)',
-  },
-  carnival: {
-    engine: '2.2L Diesel',
-    power: '200 PS',
-    transmission: '8AT',
-    seating: '7/8/9 Seater',
-    bootSpace: '627L (3rd row up)',
-  },
-  syros: {
-    engine: '1.0L Turbo Petrol / 1.5L Diesel',
-    power: 'Up to 120 PS',
-    transmission: '6MT / 7DCT',
-    seating: '5 Seater',
-    bootSpace: '465L',
-  },
+type SelectedItem = {
+  type: 'kia' | 'competitor'
+  data: KiaModel | CompetitorModelData
 }
 
+const SPEC_LABELS: { key: keyof CompetitorSpecs; label: string }[] = [
+  { key: 'engine', label: 'Engine/Battery' },
+  { key: 'power', label: 'Power' },
+  { key: 'torque', label: 'Torque' },
+  { key: 'transmission', label: 'Transmission' },
+  { key: 'fuelType', label: 'Fuel Type' },
+  { key: 'mileage', label: 'Mileage/Range' },
+  { key: 'length', label: 'Length' },
+  { key: 'width', label: 'Width' },
+  { key: 'height', label: 'Height' },
+  { key: 'wheelbase', label: 'Wheelbase' },
+  { key: 'bootSpace', label: 'Boot Space' },
+  { key: 'groundClearance', label: 'Ground Clearance' },
+  { key: 'seatingCapacity', label: 'Seating' },
+  { key: 'airbags', label: 'Airbags' },
+  { key: 'warranty', label: 'Warranty' },
+]
+
 export default function ComparePage() {
-  const [models, setModels] = useState<Model[]>([])
-  const [selectedModels, setSelectedModels] = useState<Model[]>([])
+  const [models, setModels] = useState<KiaModel[]>([])
+  const [selectedItems, setSelectedItems] = useState<SelectedItem[]>([])
+  const [compareMode, setCompareMode] = useState<CompareMode>('kia')
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
@@ -118,29 +73,91 @@ export default function ComparePage() {
     fetchModels()
   }, [])
 
-  const addModel = (model: Model) => {
-    if (selectedModels.length < 3 && !selectedModels.find((m) => m.id === model.id)) {
-      setSelectedModels([...selectedModels, model])
+  const addKiaModel = (model: KiaModel) => {
+    if (selectedItems.length < 3 && !selectedItems.find((m) => m.type === 'kia' && (m.data as KiaModel).id === model.id)) {
+      setSelectedItems([...selectedItems, { type: 'kia', data: model }])
     }
   }
 
-  const removeModel = (modelId: string) => {
-    setSelectedModels(selectedModels.filter((m) => m.id !== modelId))
+  const addCompetitor = (competitor: CompetitorModelData) => {
+    if (selectedItems.length < 3 && !selectedItems.find((m) => m.type === 'competitor' && (m.data as CompetitorModelData).id === competitor.id)) {
+      setSelectedItems([...selectedItems, { type: 'competitor', data: competitor }])
+    }
   }
 
-  const availableModels = (models || []).filter(
-    (model) => !selectedModels.find((m) => m.id === model.id)
+  const removeItem = (index: number) => {
+    setSelectedItems(selectedItems.filter((_, i) => i !== index))
+  }
+
+  const availableKiaModels = (models || []).filter(
+    (model) => !selectedItems.find((m) => m.type === 'kia' && (m.data as KiaModel).id === model.id)
   )
 
-  const getSpecValue = (model: Model, specKey: string): string => {
-    if (specKey === 'startingPrice') {
+  const getAvailableCompetitors = (): CompetitorModelData[] => {
+    // Get competitors based on selected Kia models
+    const selectedKiaModels = selectedItems.filter((m) => m.type === 'kia').map((m) => (m.data as KiaModel).slug)
+    const selectedCompetitorIds = selectedItems.filter((m) => m.type === 'competitor').map((m) => (m.data as CompetitorModelData).id)
+
+    if (selectedKiaModels.length === 0) {
+      return COMPETITOR_MODELS.filter((c) => !selectedCompetitorIds.includes(c.id))
+    }
+
+    // Get competitors that compete with any of the selected Kia models
+    const relevantCompetitors = COMPETITOR_MODELS.filter(
+      (c) => c.competesWith.some((slug) => selectedKiaModels.includes(slug)) && !selectedCompetitorIds.includes(c.id)
+    )
+    return relevantCompetitors
+  }
+
+  const getItemName = (item: SelectedItem): string => {
+    if (item.type === 'kia') {
+      return `Kia ${(item.data as KiaModel).name}`
+    }
+    return (item.data as CompetitorModelData).name
+  }
+
+  const getItemSlug = (item: SelectedItem): string => {
+    if (item.type === 'kia') {
+      return (item.data as KiaModel).slug
+    }
+    return (item.data as CompetitorModelData).id
+  }
+
+  const getItemPrice = (item: SelectedItem): string => {
+    if (item.type === 'kia') {
+      const model = item.data as KiaModel
       return model.startingPrice ? formatPriceLakh(model.startingPrice) + '*' : 'Price on request'
     }
-    if (specKey === 'modelYear') {
-      return model.modelYear.toString()
-    }
-    return MODEL_SPECS[model.slug]?.[specKey] || '-'
+    return (item.data as CompetitorModelData).priceRange
   }
+
+  const getItemSpecs = (item: SelectedItem): CompetitorSpecs | undefined => {
+    if (item.type === 'kia') {
+      return KIA_MODEL_SPECS[(item.data as KiaModel).slug]
+    }
+    return (item.data as CompetitorModelData).specs
+  }
+
+  const getItemImage = (item: SelectedItem): string => {
+    if (item.type === 'kia') {
+      return `/models/${(item.data as KiaModel).slug}.png`
+    }
+    return (item.data as CompetitorModelData).imageUrl || '/images/placeholder-car.png'
+  }
+
+  const handleModeChange = (mode: CompareMode) => {
+    setCompareMode(mode)
+    // Keep only Kia models when switching to competitor mode
+    if (mode === 'competitor') {
+      setSelectedItems(selectedItems.filter((m) => m.type === 'kia').slice(0, 1))
+    } else {
+      // Keep only Kia models in Kia vs Kia mode
+      setSelectedItems(selectedItems.filter((m) => m.type === 'kia'))
+    }
+  }
+
+  const hasKiaModel = selectedItems.some((m) => m.type === 'kia')
+  const canAddCompetitor = compareMode === 'competitor' && hasKiaModel && selectedItems.length < 3
 
   return (
     <div className="py-8 md:py-12">
@@ -155,62 +172,128 @@ export default function ComparePage() {
         </nav>
 
         {/* Header */}
-        <div className="mb-10">
+        <div className="mb-8">
           <h1 className="text-3xl font-bold tracking-tight md:text-4xl">
-            Compare Kia Models
+            Compare Vehicles
           </h1>
           <p className="mt-2 text-muted-foreground">
-            Select up to 3 models to compare specifications side by side
+            Compare Kia models with each other or against competitors
           </p>
+        </div>
+
+        {/* Mode Toggle */}
+        <div className="mb-8 flex flex-wrap gap-2">
+          <button
+            onClick={() => handleModeChange('kia')}
+            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+              compareMode === 'kia'
+                ? 'bg-kia-red text-white'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
+          >
+            Kia vs Kia
+          </button>
+          <button
+            onClick={() => handleModeChange('competitor')}
+            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+              compareMode === 'competitor'
+                ? 'bg-kia-red text-white'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
+          >
+            Kia vs Competitors
+          </button>
         </div>
 
         {/* Model Selection */}
         <div className="mb-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {selectedModels.map((model) => (
-            <Card key={model.id} className="relative">
+          {selectedItems.map((item, index) => (
+            <Card key={`${item.type}-${getItemSlug(item)}`} className="relative">
               <button
-                onClick={() => removeModel(model.id)}
-                className="absolute right-2 top-2 rounded-full bg-gray-100 p-1 hover:bg-gray-200"
+                onClick={() => removeItem(index)}
+                className="absolute right-2 top-2 z-10 rounded-full bg-gray-100 p-1 hover:bg-gray-200"
               >
                 <X className="h-4 w-4" />
               </button>
-              <CardContent className="pt-6">
+              {item.type === 'kia' && (
+                <div className="absolute left-2 top-2 z-10 bg-kia-red text-white text-xs px-2 py-1 rounded">
+                  Kia
+                </div>
+              )}
+              <CardContent className="pt-8">
                 <div className="relative mx-auto mb-4 aspect-video w-full max-w-[200px]">
                   <Image
-                    src={`/models/${model.slug}.png`}
-                    alt={model.name}
+                    src={getItemImage(item)}
+                    alt={getItemName(item)}
                     fill
                     className="object-contain"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement
+                      target.src = '/images/placeholder-car.png'
+                    }}
                   />
                 </div>
-                <h3 className="text-center font-semibold">{model.name}</h3>
+                <h3 className="text-center font-semibold">{getItemName(item)}</h3>
                 <p className="text-center text-sm text-muted-foreground">
-                  {model.startingPrice ? formatPriceLakh(model.startingPrice) + '*' : 'Price on request'}
+                  {getItemPrice(item)}
                 </p>
               </CardContent>
             </Card>
           ))}
 
-          {selectedModels.length < 3 && (
+          {/* Add Kia Model Slot */}
+          {(compareMode === 'kia' && selectedItems.length < 3) ||
+           (compareMode === 'competitor' && !hasKiaModel) ? (
             <Card className="border-dashed">
               <CardContent className="flex h-full flex-col items-center justify-center py-8">
-                <div className="mb-4 rounded-full bg-gray-100 p-4">
-                  <Plus className="h-6 w-6 text-gray-400" />
+                <div className="mb-4 rounded-full bg-kia-red/10 p-4">
+                  <Plus className="h-6 w-6 text-kia-red" />
                 </div>
-                <p className="mb-4 text-sm text-muted-foreground">Add a model to compare</p>
+                <p className="mb-4 text-sm text-muted-foreground">
+                  {compareMode === 'competitor' && !hasKiaModel
+                    ? 'First, select a Kia model'
+                    : 'Add a Kia model'}
+                </p>
                 <select
                   className="w-full max-w-[200px] rounded-md border px-3 py-2 text-sm"
                   value=""
                   onChange={(e) => {
                     const model = models.find((m) => m.id === e.target.value)
-                    if (model) addModel(model)
+                    if (model) addKiaModel(model)
                   }}
-                  disabled={isLoading || availableModels.length === 0}
+                  disabled={isLoading || availableKiaModels.length === 0}
                 >
-                  <option value="">Select a model</option>
-                  {availableModels.map((model) => (
+                  <option value="">Select a Kia</option>
+                  {availableKiaModels.map((model) => (
                     <option key={model.id} value={model.id}>
-                      {model.name}
+                      Kia {model.name}
+                    </option>
+                  ))}
+                </select>
+              </CardContent>
+            </Card>
+          ) : null}
+
+          {/* Add Competitor Slot */}
+          {canAddCompetitor && (
+            <Card className="border-dashed border-blue-200 bg-blue-50/30">
+              <CardContent className="flex h-full flex-col items-center justify-center py-8">
+                <div className="mb-4 rounded-full bg-blue-100 p-4">
+                  <Plus className="h-6 w-6 text-blue-600" />
+                </div>
+                <p className="mb-4 text-sm text-muted-foreground">Add a competitor</p>
+                <select
+                  className="w-full max-w-[200px] rounded-md border px-3 py-2 text-sm"
+                  value=""
+                  onChange={(e) => {
+                    const competitor = COMPETITOR_MODELS.find((c) => c.id === e.target.value)
+                    if (competitor) addCompetitor(competitor)
+                  }}
+                >
+                  <option value="">Select a competitor</option>
+                  {getAvailableCompetitors().map((competitor) => (
+                    <option key={competitor.id} value={competitor.id}>
+                      {competitor.name}
                     </option>
                   ))}
                 </select>
@@ -220,65 +303,104 @@ export default function ComparePage() {
         </div>
 
         {/* Comparison Table */}
-        {selectedModels.length >= 2 && (
-          <div className="overflow-x-auto">
+        {selectedItems.length >= 2 && (
+          <div className="overflow-x-auto rounded-lg border">
             <table className="w-full border-collapse">
               <thead>
-                <tr className="border-b">
+                <tr className="border-b bg-gray-50">
                   <th className="p-4 text-left font-medium text-muted-foreground">
                     Specifications
                   </th>
-                  {selectedModels.map((model) => (
-                    <th key={model.id} className="p-4 text-center font-semibold">
-                      {model.name}
+                  {selectedItems.map((item, index) => (
+                    <th key={index} className="p-4 text-center">
+                      <span className={`font-semibold ${item.type === 'kia' ? 'text-kia-red' : 'text-gray-900'}`}>
+                        {getItemName(item)}
+                      </span>
                     </th>
                   ))}
                 </tr>
               </thead>
               <tbody>
-                {SPEC_CATEGORIES.map((category) => (
-                  <>
-                    <tr key={category.name} className="bg-gray-50">
-                      <td
-                        colSpan={selectedModels.length + 1}
-                        className="p-3 text-sm font-semibold text-kia-red"
-                      >
-                        {category.name}
-                      </td>
-                    </tr>
-                    {category.specs.map((spec) => (
-                      <tr key={spec.key} className="border-b">
-                        <td className="p-4 text-sm text-muted-foreground">{spec.label}</td>
-                        {selectedModels.map((model) => (
-                          <td key={model.id} className="p-4 text-center text-sm">
-                            {getSpecValue(model, spec.key)}
+                {/* Price Row */}
+                <tr className="border-b bg-kia-red/5">
+                  <td className="p-4 text-sm font-medium">Price</td>
+                  {selectedItems.map((item, index) => (
+                    <td key={index} className="p-4 text-center font-semibold">
+                      {getItemPrice(item)}
+                    </td>
+                  ))}
+                </tr>
+
+                {/* Spec Rows */}
+                {SPEC_LABELS.map((spec) => {
+                  const isWarranty = spec.key === 'warranty'
+                  return (
+                    <tr key={spec.key} className={`border-b ${isWarranty ? 'bg-green-50' : ''}`}>
+                      <td className="p-4 text-sm text-muted-foreground">{spec.label}</td>
+                      {selectedItems.map((item, index) => {
+                        const specs = getItemSpecs(item)
+                        const value = specs?.[spec.key] || '-'
+                        const isKia = item.type === 'kia'
+                        const isKiaAdvantage = isWarranty && isKia
+
+                        return (
+                          <td key={index} className="p-4 text-center text-sm">
+                            <span className={isKiaAdvantage ? 'font-semibold text-green-700' : ''}>
+                              {value}
+                              {isKiaAdvantage && (
+                                <Trophy className="inline-block ml-1 h-4 w-4 text-green-600" />
+                              )}
+                            </span>
                           </td>
-                        ))}
-                      </tr>
-                    ))}
-                  </>
-                ))}
+                        )
+                      })}
+                    </tr>
+                  )
+                })}
               </tbody>
             </table>
           </div>
         )}
 
-        {selectedModels.length >= 2 && (
+        {/* Kia Advantages Section (only in competitor mode) */}
+        {compareMode === 'competitor' && selectedItems.length >= 2 && selectedItems.some((m) => m.type === 'competitor') && (
+          <div className="mt-8 p-6 bg-gradient-to-r from-kia-red/5 to-kia-red/10 rounded-lg">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+              <Shield className="h-5 w-5 text-kia-red" />
+              Why Choose Kia?
+            </h3>
+            <div className="grid sm:grid-cols-2 gap-4">
+              {KIA_ADVANTAGES.map((advantage) => (
+                <div key={advantage.title} className="flex items-start gap-3">
+                  <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <p className="font-medium text-gray-900">{advantage.title}</p>
+                    <p className="text-sm text-gray-600">{advantage.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {selectedItems.length >= 2 && (
           <div className="mt-8 flex flex-wrap justify-center gap-4">
-            {selectedModels.map((model) => (
-              <Button key={model.id} variant="outline" asChild>
-                <Link href={`/models/${model.slug}`}>
-                  View {model.name} <ArrowRight className="ml-2 h-4 w-4" />
+            {selectedItems.filter((m) => m.type === 'kia').map((item, index) => (
+              <Button key={index} variant="outline" asChild>
+                <Link href={`/models/${(item.data as KiaModel).slug}`}>
+                  View Kia {(item.data as KiaModel).name} <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
             ))}
           </div>
         )}
 
-        {selectedModels.length < 2 && (
+        {selectedItems.length < 2 && (
           <div className="rounded-lg border border-dashed p-10 text-center">
             <p className="text-muted-foreground">
-              Select at least 2 models to start comparing
+              {compareMode === 'competitor'
+                ? 'Select a Kia model and at least one competitor to start comparing'
+                : 'Select at least 2 Kia models to start comparing'}
             </p>
           </div>
         )}
@@ -287,7 +409,7 @@ export default function ComparePage() {
         <div className="mt-12 rounded-lg bg-gradient-to-r from-kia-red to-kia-red-dark p-8 text-center text-white">
           <h2 className="text-2xl font-bold">Ready to Experience?</h2>
           <p className="mt-2 text-white/80">
-            Book a test drive and feel the difference yourself
+            Book a test drive and feel the Kia difference yourself
           </p>
           <Button variant="secondary" size="lg" className="mt-6" asChild>
             <Link href="/test-drive">
@@ -300,6 +422,7 @@ export default function ComparePage() {
         {/* Disclaimer */}
         <p className="mt-8 text-center text-xs text-muted-foreground">
           * Ex-showroom prices. Specifications are indicative and subject to change.
+          Competitor data sourced from public information and may not reflect latest updates.
           Please contact our sales team for the latest and most accurate information.
         </p>
       </div>
