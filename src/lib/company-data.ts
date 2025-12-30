@@ -1,16 +1,41 @@
 // Epitome Kia - Real Business Data
 // Source: epitomekia.in + kia.com/in
 
+// Type definitions
+export interface Location {
+    id: string
+    name: string
+    label?: string
+    address: string
+    salesPhone: string[]
+    servicePhone: string[]
+    email: string
+    mapUrl: string
+}
+
+export interface CarModelData {
+    name: string
+    slug: string
+    tagline: string
+    image: string
+    startingPrice: string
+    category: 'suv' | 'mpv' | 'ev'
+    isNew?: boolean
+    isElectric?: boolean
+    isPremium?: boolean
+    isComingSoon?: boolean
+}
+
 export const COMPANY_INFO = {
     name: 'Epitome Automobiles Private Limited',
     brand: 'Epitome Kia',
     tagline: 'Movement that Inspires',
     description: 'Authorized sales, service & spares dealer for Kia India. Present in Whitefield, International Airport Road-Yelahanka, Avalahalli, Kolar and Varthur.',
-    copyright: '© 2024 Epitome Automobiles Private Limited. All Rights Reserved.',
+    copyrightTemplate: 'Epitome Automobiles Private Limited. All Rights Reserved.',
     logo: '/logo-black.png',
 }
 
-export const LOCATIONS = [
+export const LOCATIONS: Location[] = [
     {
         id: 'yelahanka',
         name: 'Yelahanka',
@@ -57,7 +82,7 @@ export const LOCATIONS = [
         email: 'ccm@epitomekia.in',
         mapUrl: 'https://www.google.com/maps/place/Epitome+Kia+Varthur/@12.9456,77.7512,17z',
     },
-] as const
+]
 
 export const SOCIAL_LINKS = {
     facebook: 'https://www.facebook.com/EpitomeKia',
@@ -76,7 +101,7 @@ export const QUICK_LINKS = [
 ]
 
 // Complete Kia India lineup as of 2024
-export const CAR_MODELS = [
+export const CAR_MODELS: CarModelData[] = [
     {
         name: 'Kia Seltos',
         slug: 'seltos',
@@ -162,6 +187,6 @@ export const CAR_MODELS = [
         isNew: true,
         isComingSoon: true,
     },
-] as const
+]
 
-export type CarModel = typeof CAR_MODELS[number]
+export type CarModel = CarModelData

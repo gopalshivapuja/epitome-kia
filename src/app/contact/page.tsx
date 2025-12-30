@@ -1,10 +1,10 @@
 import { Metadata } from 'next'
-import { MapPin, Phone, Mail, Clock } from 'lucide-react'
+import { MapPin, Phone, Mail } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { ContactForm } from '@/components/forms/contact-form'
 import { DealerLocator } from '@/components/features/DealerLocator'
 import { ConsultationButton } from '@/components/features/ConsultationButton'
-import { LOCATIONS, COMPANY_INFO } from '@/lib/company-data'
+import { LOCATIONS } from '@/lib/company-data'
 
 export const metadata: Metadata = {
   title: 'Contact Us | Epitome Kia',
@@ -13,12 +13,12 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <div className="flex flex-col bg-black text-white min-h-screen">
+    <div className="flex flex-col bg-white min-h-screen">
       {/* Hero */}
-      <section className="pt-32 pb-16">
+      <section className="pt-32 pb-16 bg-gray-50">
         <div className="container text-center">
-          <h1 className="text-4xl font-heading font-bold md:text-6xl">Contact Us</h1>
-          <p className="mt-4 text-lg text-gray-400 max-w-2xl mx-auto">
+          <h1 className="text-4xl font-heading font-bold md:text-6xl text-gray-900">Contact Us</h1>
+          <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
             Visit our showrooms or get in touch with our team. We&apos;re here to help you find your perfect Kia.
           </p>
           <div className="mt-8">
@@ -41,7 +41,7 @@ export default function ContactPage() {
       {/* Locations Grid */}
       <section className="py-16 bg-zinc-900">
         <div className="container">
-          <h2 className="mb-12 text-2xl font-bold font-heading text-center">All Locations</h2>
+          <h2 className="mb-12 text-2xl font-bold font-heading text-center text-white">All Locations</h2>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {LOCATIONS.map((loc) => (
               <Card key={loc.id} className="bg-zinc-900 border-zinc-800 overflow-hidden group hover:border-kia-red transition-colors">
@@ -97,13 +97,13 @@ export default function ContactPage() {
       </section>
 
       {/* Contact Form */}
-      <section className="py-16 bg-zinc-900">
+      <section className="py-16 bg-gray-50">
         <div className="container max-w-2xl">
           <div className="text-center mb-12">
-            <h2 className="text-2xl font-bold font-heading">Send us a Message</h2>
-            <p className="text-gray-400 mt-2">Have a question? We&apos;d love to hear from you.</p>
+            <h2 className="text-2xl font-bold font-heading text-gray-900">Send us a Message</h2>
+            <p className="text-gray-600 mt-2">Have a question? We&apos;d love to hear from you.</p>
           </div>
-          <Card className="bg-zinc-800 border-zinc-700">
+          <Card className="bg-white border-gray-200 shadow-sm">
             <CardContent className="p-8">
               <ContactForm />
             </CardContent>

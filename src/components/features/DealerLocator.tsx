@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { MapPin, Phone, Mail, Clock, ExternalLink, Navigation } from 'lucide-react'
+import { MapPin, Phone, Mail, Clock, Navigation } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { LOCATIONS } from '@/lib/company-data'
 import { cn } from '@/lib/utils'
@@ -13,14 +13,19 @@ export function DealerLocator() {
 
   // Convert Google Maps place URL to embed URL
   const getEmbedUrl = (mapUrl: string) => {
+    const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
+    if (!apiKey) {
+      // Fallback to basic embed if no API key configured
+      return `https://www.google.com/maps?q=${encodeURIComponent(selectedLocation.address)}&output=embed`
+    }
     // Extract the place name from the URL for embedding
     const placeMatch = mapUrl.match(/place\/([^/@]+)/)
     if (placeMatch) {
       const placeName = decodeURIComponent(placeMatch[1].replace(/\+/g, ' '))
-      return `https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=${encodeURIComponent(placeName)}`
+      return `https://www.google.com/maps/embed/v1/place?key=${apiKey}&q=${encodeURIComponent(placeName)}`
     }
     // Fallback to search by address
-    return `https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=${encodeURIComponent(selectedLocation.address)}`
+    return `https://www.google.com/maps/embed/v1/place?key=${apiKey}&q=${encodeURIComponent(selectedLocation.address)}`
   }
 
   return (
@@ -79,7 +84,7 @@ export function DealerLocator() {
           {/* Map */}
           <div className="aspect-video lg:aspect-auto lg:h-[300px] bg-gray-200">
             <iframe
-              src={`https://www.google.com/maps?q=${encodeURIComponent(selectedLocation.address)}&output=embed`}
+              src={getEmbedUrl(selectedLocation.mapUrl)}
               width="100%"
               height="100%"
               style={{ border: 0 }}

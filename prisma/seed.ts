@@ -207,6 +207,7 @@ async function main() {
 
   await prisma.specification.createMany({
     data: [
+      // Seltos HTE specs
       { variantId: seltosHTE.id, specKey: 'engine', specValue: '1.5L Smartstream Petrol', unit: null },
       { variantId: seltosHTE.id, specKey: 'power', specValue: '115', unit: 'PS' },
       { variantId: seltosHTE.id, specKey: 'torque', specValue: '144', unit: 'Nm' },
@@ -215,6 +216,28 @@ async function main() {
       { variantId: seltosHTE.id, specKey: 'mileage', specValue: '16.8', unit: 'kmpl' },
       { variantId: seltosHTE.id, specKey: 'seating_capacity', specValue: '5', unit: 'persons' },
       { variantId: seltosHTE.id, specKey: 'boot_space', specValue: '433', unit: 'L' },
+      // Seltos HTK specs (from Kia India website)
+      { variantId: seltosHTK.id, specKey: 'engine', specValue: '1.5L Smartstream Petrol', unit: null },
+      { variantId: seltosHTK.id, specKey: 'power', specValue: '115', unit: 'PS' },
+      { variantId: seltosHTK.id, specKey: 'torque', specValue: '144', unit: 'Nm' },
+      { variantId: seltosHTK.id, specKey: 'transmission', specValue: '6-Speed Manual / IVT', unit: null },
+      { variantId: seltosHTK.id, specKey: 'fuel_type', specValue: 'Petrol / Diesel', unit: null },
+      { variantId: seltosHTK.id, specKey: 'mileage', specValue: '16.8', unit: 'kmpl' },
+      { variantId: seltosHTK.id, specKey: 'seating_capacity', specValue: '5', unit: 'persons' },
+      { variantId: seltosHTK.id, specKey: 'boot_space', specValue: '433', unit: 'L' },
+      { variantId: seltosHTK.id, specKey: 'display', specValue: '10.25 inch Touchscreen', unit: null },
+      // Seltos HTX specs (from Kia India website)
+      { variantId: seltosHTX.id, specKey: 'engine', specValue: '1.5L Smartstream Petrol / 1.5L T-GDi Turbo', unit: null },
+      { variantId: seltosHTX.id, specKey: 'power', specValue: '115-160', unit: 'PS' },
+      { variantId: seltosHTX.id, specKey: 'torque', specValue: '144-253', unit: 'Nm' },
+      { variantId: seltosHTX.id, specKey: 'transmission', specValue: '6-Speed Manual / IVT / 7-Speed DCT', unit: null },
+      { variantId: seltosHTX.id, specKey: 'fuel_type', specValue: 'Petrol / Diesel', unit: null },
+      { variantId: seltosHTX.id, specKey: 'mileage', specValue: '16.5-18.0', unit: 'kmpl' },
+      { variantId: seltosHTX.id, specKey: 'seating_capacity', specValue: '5', unit: 'persons' },
+      { variantId: seltosHTX.id, specKey: 'boot_space', specValue: '433', unit: 'L' },
+      { variantId: seltosHTX.id, specKey: 'display', specValue: '10.25 inch Touchscreen', unit: null },
+      { variantId: seltosHTX.id, specKey: 'sunroof', specValue: 'Single Pane', unit: null },
+      // Seltos GTX+ specs
       { variantId: seltosGTX.id, specKey: 'engine', specValue: '1.5L Turbo Petrol', unit: null },
       { variantId: seltosGTX.id, specKey: 'power', specValue: '160', unit: 'PS' },
       { variantId: seltosGTX.id, specKey: 'torque', specValue: '253', unit: 'Nm' },
@@ -245,7 +268,7 @@ async function main() {
       name: 'HTE',
       slug: 'sonet-hte',
       trimLevel: 'Base',
-      basePrice: 799000,
+      basePrice: 730138, // ₹7.30 Lakh (Dec 2025, post GST cut)
       isActive: true,
     },
   })
@@ -256,7 +279,7 @@ async function main() {
       name: 'HTK+',
       slug: 'sonet-htk-plus',
       trimLevel: 'Mid',
-      basePrice: 999000,
+      basePrice: 910125, // ₹9.10 Lakh (Dec 2025, post GST cut)
       isActive: true,
     },
   })
@@ -264,10 +287,10 @@ async function main() {
   const sonetHTX = await prisma.variant.create({
     data: {
       carModelId: sonet.id,
-      name: 'HTX+',
-      slug: 'sonet-htx-plus',
+      name: 'HTX',
+      slug: 'sonet-htx',
       trimLevel: 'Top',
-      basePrice: 1199000,
+      basePrice: 1080328, // ₹10.80 Lakh (Dec 2025, post GST cut)
       isActive: true,
     },
   })
@@ -278,25 +301,54 @@ async function main() {
       name: 'GTX+',
       slug: 'sonet-gtx-plus',
       trimLevel: 'Premium',
-      basePrice: 1499000,
+      basePrice: 1350652, // ₹13.50 Lakh (Dec 2025, post GST cut)
       isActive: true,
     },
   })
 
   await prisma.specification.createMany({
     data: [
+      // Sonet HTE specs
       { variantId: sonetHTE.id, specKey: 'engine', specValue: '1.2L Smartstream Petrol', unit: null },
       { variantId: sonetHTE.id, specKey: 'power', specValue: '83', unit: 'PS' },
       { variantId: sonetHTE.id, specKey: 'torque', specValue: '115', unit: 'Nm' },
       { variantId: sonetHTE.id, specKey: 'transmission', specValue: '5-Speed Manual', unit: null },
       { variantId: sonetHTE.id, specKey: 'fuel_type', specValue: 'Petrol', unit: null },
       { variantId: sonetHTE.id, specKey: 'mileage', specValue: '18.4', unit: 'kmpl' },
+      { variantId: sonetHTE.id, specKey: 'seating_capacity', specValue: '5', unit: 'persons' },
+      { variantId: sonetHTE.id, specKey: 'boot_space', specValue: '392', unit: 'L' },
+      // Sonet HTK+ specs (from Kia India website)
+      { variantId: sonetHTK.id, specKey: 'engine', specValue: '1.2L Smartstream Petrol / 1.5L Diesel', unit: null },
+      { variantId: sonetHTK.id, specKey: 'power', specValue: '83-116', unit: 'PS' },
+      { variantId: sonetHTK.id, specKey: 'torque', specValue: '115-250', unit: 'Nm' },
+      { variantId: sonetHTK.id, specKey: 'transmission', specValue: '5-Speed MT / 6-Speed MT / 6-Speed AT', unit: null },
+      { variantId: sonetHTK.id, specKey: 'fuel_type', specValue: 'Petrol / Diesel', unit: null },
+      { variantId: sonetHTK.id, specKey: 'mileage', specValue: '18.0-24.1', unit: 'kmpl' },
+      { variantId: sonetHTK.id, specKey: 'seating_capacity', specValue: '5', unit: 'persons' },
+      { variantId: sonetHTK.id, specKey: 'boot_space', specValue: '392', unit: 'L' },
+      { variantId: sonetHTK.id, specKey: 'display', specValue: '8 inch Touchscreen', unit: null },
+      // Sonet HTX specs (from Kia India website)
+      { variantId: sonetHTX.id, specKey: 'engine', specValue: '1.0L Turbo GDi / 1.5L Diesel', unit: null },
+      { variantId: sonetHTX.id, specKey: 'power', specValue: '100-116', unit: 'PS' },
+      { variantId: sonetHTX.id, specKey: 'torque', specValue: '172-250', unit: 'Nm' },
+      { variantId: sonetHTX.id, specKey: 'transmission', specValue: '6-Speed iMT / 6-Speed MT / 6-Speed AT', unit: null },
+      { variantId: sonetHTX.id, specKey: 'fuel_type', specValue: 'Petrol / Diesel', unit: null },
+      { variantId: sonetHTX.id, specKey: 'mileage', specValue: '18.2-24.1', unit: 'kmpl' },
+      { variantId: sonetHTX.id, specKey: 'seating_capacity', specValue: '5', unit: 'persons' },
+      { variantId: sonetHTX.id, specKey: 'boot_space', specValue: '392', unit: 'L' },
+      { variantId: sonetHTX.id, specKey: 'display', specValue: '10.25 inch Touchscreen', unit: null },
+      { variantId: sonetHTX.id, specKey: 'sunroof', specValue: 'Single Pane', unit: null },
+      // Sonet GTX+ specs
       { variantId: sonetGTX.id, specKey: 'engine', specValue: '1.0L Turbo GDi Petrol', unit: null },
       { variantId: sonetGTX.id, specKey: 'power', specValue: '120', unit: 'PS' },
       { variantId: sonetGTX.id, specKey: 'torque', specValue: '172', unit: 'Nm' },
       { variantId: sonetGTX.id, specKey: 'transmission', specValue: '7-Speed DCT', unit: null },
       { variantId: sonetGTX.id, specKey: 'fuel_type', specValue: 'Petrol', unit: null },
       { variantId: sonetGTX.id, specKey: 'mileage', specValue: '18.2', unit: 'kmpl' },
+      { variantId: sonetGTX.id, specKey: 'seating_capacity', specValue: '5', unit: 'persons' },
+      { variantId: sonetGTX.id, specKey: 'boot_space', specValue: '392', unit: 'L' },
+      { variantId: sonetGTX.id, specKey: 'display', specValue: '10.25 inch Touchscreen', unit: null },
+      { variantId: sonetGTX.id, specKey: 'sunroof', specValue: 'Single Pane', unit: null },
     ],
   })
 
@@ -318,7 +370,7 @@ async function main() {
       name: 'Premium',
       slug: 'carens-premium',
       trimLevel: 'Base',
-      basePrice: 1052000,
+      basePrice: 1099159, // ₹10.99 Lakh (Dec 2025, post GST cut)
       isActive: true,
     },
   })
@@ -329,7 +381,7 @@ async function main() {
       name: 'Prestige',
       slug: 'carens-prestige',
       trimLevel: 'Mid',
-      basePrice: 1299000,
+      basePrice: 1150000, // ₹11.50 Lakh approx
       isActive: true,
     },
   })
@@ -340,7 +392,7 @@ async function main() {
       name: 'Luxury',
       slug: 'carens-luxury',
       trimLevel: 'Top',
-      basePrice: 1599000,
+      basePrice: 1200000, // ₹12.00 Lakh approx
       isActive: true,
     },
   })
@@ -351,23 +403,49 @@ async function main() {
       name: 'Luxury Plus',
       slug: 'carens-luxury-plus',
       trimLevel: 'Premium',
-      basePrice: 1799000,
+      basePrice: 1277000, // ₹12.77 Lakh (Dec 2025, post GST cut - top variant)
       isActive: true,
     },
   })
 
   await prisma.specification.createMany({
     data: [
+      // Carens Premium specs
       { variantId: carensPremium.id, specKey: 'engine', specValue: '1.5L Smartstream Petrol', unit: null },
       { variantId: carensPremium.id, specKey: 'power', specValue: '115', unit: 'PS' },
       { variantId: carensPremium.id, specKey: 'torque', specValue: '144', unit: 'Nm' },
       { variantId: carensPremium.id, specKey: 'transmission', specValue: '6-Speed Manual', unit: null },
+      { variantId: carensPremium.id, specKey: 'fuel_type', specValue: 'Petrol', unit: null },
       { variantId: carensPremium.id, specKey: 'seating_capacity', specValue: '6', unit: 'persons' },
+      { variantId: carensPremium.id, specKey: 'boot_space', specValue: '216', unit: 'L' },
+      // Carens Prestige specs (from Kia India website)
+      { variantId: carensPrestige.id, specKey: 'engine', specValue: '1.5L Smartstream Petrol / 1.5L Diesel', unit: null },
+      { variantId: carensPrestige.id, specKey: 'power', specValue: '115-116', unit: 'PS' },
+      { variantId: carensPrestige.id, specKey: 'torque', specValue: '144-250', unit: 'Nm' },
+      { variantId: carensPrestige.id, specKey: 'transmission', specValue: '6-Speed Manual / IVT / 6-Speed AT', unit: null },
+      { variantId: carensPrestige.id, specKey: 'fuel_type', specValue: 'Petrol / Diesel', unit: null },
+      { variantId: carensPrestige.id, specKey: 'seating_capacity', specValue: '6/7', unit: 'persons' },
+      { variantId: carensPrestige.id, specKey: 'boot_space', specValue: '216', unit: 'L' },
+      { variantId: carensPrestige.id, specKey: 'display', specValue: '10.25 inch Touchscreen', unit: null },
+      // Carens Luxury specs (from Kia India website)
+      { variantId: carensLuxury.id, specKey: 'engine', specValue: '1.5L Smartstream Petrol / 1.5L Turbo / 1.5L Diesel', unit: null },
+      { variantId: carensLuxury.id, specKey: 'power', specValue: '115-160', unit: 'PS' },
+      { variantId: carensLuxury.id, specKey: 'torque', specValue: '144-253', unit: 'Nm' },
+      { variantId: carensLuxury.id, specKey: 'transmission', specValue: '6-Speed Manual / IVT / 7-Speed DCT / 6-Speed AT', unit: null },
+      { variantId: carensLuxury.id, specKey: 'fuel_type', specValue: 'Petrol / Diesel', unit: null },
+      { variantId: carensLuxury.id, specKey: 'seating_capacity', specValue: '6/7', unit: 'persons' },
+      { variantId: carensLuxury.id, specKey: 'boot_space', specValue: '216', unit: 'L' },
+      { variantId: carensLuxury.id, specKey: 'display', specValue: '10.25 inch Touchscreen', unit: null },
+      { variantId: carensLuxury.id, specKey: 'sunroof', specValue: 'Single Pane', unit: null },
+      // Carens Luxury Plus specs
       { variantId: carensLuxuryPlus.id, specKey: 'engine', specValue: '1.5L Turbo Petrol', unit: null },
       { variantId: carensLuxuryPlus.id, specKey: 'power', specValue: '160', unit: 'PS' },
       { variantId: carensLuxuryPlus.id, specKey: 'torque', specValue: '253', unit: 'Nm' },
       { variantId: carensLuxuryPlus.id, specKey: 'transmission', specValue: '7-Speed DCT', unit: null },
+      { variantId: carensLuxuryPlus.id, specKey: 'fuel_type', specValue: 'Petrol', unit: null },
       { variantId: carensLuxuryPlus.id, specKey: 'seating_capacity', specValue: '7', unit: 'persons' },
+      { variantId: carensLuxuryPlus.id, specKey: 'boot_space', specValue: '216', unit: 'L' },
+      { variantId: carensLuxuryPlus.id, specKey: 'display', specValue: '10.25 inch Touchscreen', unit: null },
       { variantId: carensLuxuryPlus.id, specKey: 'sunroof', specValue: 'Single Pane', unit: null },
     ],
   })
@@ -384,38 +462,27 @@ async function main() {
     },
   })
 
-  const carnivalLimousine = await prisma.variant.create({
-    data: {
-      carModelId: carnival.id,
-      name: 'Limousine',
-      slug: 'carnival-limousine',
-      trimLevel: 'Base',
-      basePrice: 6390000,
-      isActive: true,
-    },
-  })
-
   const carnivalLimousinePlus = await prisma.variant.create({
     data: {
       carModelId: carnival.id,
       name: 'Limousine Plus',
       slug: 'carnival-limousine-plus',
-      trimLevel: 'Top',
-      basePrice: 6490000,
+      trimLevel: 'Premium',
+      basePrice: 5942459, // ₹59.42 Lakh (Dec 2025, post GST cut)
       isActive: true,
     },
   })
 
   await prisma.specification.createMany({
     data: [
-      { variantId: carnivalLimousine.id, specKey: 'engine', specValue: '2.2L CRDi Diesel', unit: null },
-      { variantId: carnivalLimousine.id, specKey: 'power', specValue: '200', unit: 'PS' },
-      { variantId: carnivalLimousine.id, specKey: 'torque', specValue: '440', unit: 'Nm' },
-      { variantId: carnivalLimousine.id, specKey: 'transmission', specValue: '8-Speed AT', unit: null },
-      { variantId: carnivalLimousine.id, specKey: 'fuel_type', specValue: 'Diesel', unit: null },
-      { variantId: carnivalLimousine.id, specKey: 'seating_capacity', specValue: '7', unit: 'persons' },
-      { variantId: carnivalLimousine.id, specKey: 'sunroof', specValue: 'Dual Sunroof', unit: null },
-      { variantId: carnivalLimousine.id, specKey: 'display', specValue: '12.3 inch Dual Screens', unit: null },
+      { variantId: carnivalLimousinePlus.id, specKey: 'engine', specValue: '2.2L CRDi Diesel', unit: null },
+      { variantId: carnivalLimousinePlus.id, specKey: 'power', specValue: '190', unit: 'PS' },
+      { variantId: carnivalLimousinePlus.id, specKey: 'torque', specValue: '441', unit: 'Nm' },
+      { variantId: carnivalLimousinePlus.id, specKey: 'transmission', specValue: '8-Speed AT', unit: null },
+      { variantId: carnivalLimousinePlus.id, specKey: 'fuel_type', specValue: 'Diesel', unit: null },
+      { variantId: carnivalLimousinePlus.id, specKey: 'seating_capacity', specValue: '7', unit: 'persons' },
+      { variantId: carnivalLimousinePlus.id, specKey: 'sunroof', specValue: 'Dual Sunroof', unit: null },
+      { variantId: carnivalLimousinePlus.id, specKey: 'display', specValue: '12.3 inch Dual Screens', unit: null },
     ],
   })
 
@@ -437,7 +504,7 @@ async function main() {
       name: 'GT Line AWD',
       slug: 'ev6-gt-line-awd',
       trimLevel: 'Premium',
-      basePrice: 6095000,
+      basePrice: 6590000, // ₹65.90 Lakh (Dec 2025)
       isActive: true,
     },
   })
@@ -447,8 +514,8 @@ async function main() {
       { variantId: ev6GT.id, specKey: 'motor', specValue: 'Dual Motor AWD', unit: null },
       { variantId: ev6GT.id, specKey: 'power', specValue: '325', unit: 'PS' },
       { variantId: ev6GT.id, specKey: 'torque', specValue: '605', unit: 'Nm' },
-      { variantId: ev6GT.id, specKey: 'battery', specValue: '77.4', unit: 'kWh' },
-      { variantId: ev6GT.id, specKey: 'range', specValue: '528', unit: 'km' },
+      { variantId: ev6GT.id, specKey: 'battery', specValue: '84', unit: 'kWh' },
+      { variantId: ev6GT.id, specKey: 'range', specValue: '663', unit: 'km' },
       { variantId: ev6GT.id, specKey: 'charging_time', specValue: '18 min (10-80%)', unit: null },
       { variantId: ev6GT.id, specKey: '0_to_100', specValue: '5.2', unit: 'seconds' },
       { variantId: ev6GT.id, specKey: 'drive_type', specValue: 'All Wheel Drive', unit: null },
@@ -473,7 +540,7 @@ async function main() {
       name: 'GT Line AWD',
       slug: 'ev9-gt-line-awd',
       trimLevel: 'Premium',
-      basePrice: 13000000,
+      basePrice: 12990000, // ₹1.30 Crore (Dec 2025)
       isActive: true,
     },
   })
@@ -509,7 +576,7 @@ async function main() {
       name: 'HTK',
       slug: 'syros-htk',
       trimLevel: 'Base',
-      basePrice: null, // Coming soon
+      basePrice: 867053, // ₹8.67 Lakh (Dec 2025, post GST cut)
       isActive: true,
     },
   })
@@ -517,19 +584,55 @@ async function main() {
   const syrosHTX = await prisma.variant.create({
     data: {
       carModelId: syros.id,
+      name: 'HTX',
+      slug: 'syros-htx',
+      trimLevel: 'Mid',
+      basePrice: 1210484, // ₹12.10 Lakh (Dec 2025, post GST cut)
+      isActive: true,
+    },
+  })
+
+  const syrosHTXPlus = await prisma.variant.create({
+    data: {
+      carModelId: syros.id,
       name: 'HTX+',
       slug: 'syros-htx-plus',
       trimLevel: 'Top',
-      basePrice: null, // Coming soon
+      basePrice: 1456233, // ₹14.56 Lakh (Dec 2025, post GST cut)
       isActive: true,
     },
   })
 
   await prisma.specification.createMany({
     data: [
+      // Syros HTK specs
       { variantId: syrosHTK.id, specKey: 'engine', specValue: '1.0L Turbo GDi Petrol', unit: null },
+      { variantId: syrosHTK.id, specKey: 'power', specValue: '120', unit: 'PS' },
+      { variantId: syrosHTK.id, specKey: 'torque', specValue: '172', unit: 'Nm' },
       { variantId: syrosHTK.id, specKey: 'transmission', specValue: '6-Speed Manual / 7-Speed DCT', unit: null },
+      { variantId: syrosHTK.id, specKey: 'fuel_type', specValue: 'Petrol', unit: null },
       { variantId: syrosHTK.id, specKey: 'seating_capacity', specValue: '5', unit: 'persons' },
+      { variantId: syrosHTK.id, specKey: 'boot_space', specValue: '465', unit: 'L' },
+      // Syros HTX specs (from Kia India website)
+      { variantId: syrosHTX.id, specKey: 'engine', specValue: '1.0L Turbo GDi Petrol / 1.5L Diesel', unit: null },
+      { variantId: syrosHTX.id, specKey: 'power', specValue: '120-116', unit: 'PS' },
+      { variantId: syrosHTX.id, specKey: 'torque', specValue: '172-250', unit: 'Nm' },
+      { variantId: syrosHTX.id, specKey: 'transmission', specValue: '6-Speed Manual / 7-Speed DCT / 6-Speed AT', unit: null },
+      { variantId: syrosHTX.id, specKey: 'fuel_type', specValue: 'Petrol / Diesel', unit: null },
+      { variantId: syrosHTX.id, specKey: 'seating_capacity', specValue: '5', unit: 'persons' },
+      { variantId: syrosHTX.id, specKey: 'boot_space', specValue: '465', unit: 'L' },
+      { variantId: syrosHTX.id, specKey: 'display', specValue: '12.3 inch Touchscreen', unit: null },
+      // Syros HTX+ specs (from Kia India website)
+      { variantId: syrosHTXPlus.id, specKey: 'engine', specValue: '1.0L Turbo GDi Petrol / 1.5L Diesel', unit: null },
+      { variantId: syrosHTXPlus.id, specKey: 'power', specValue: '120-116', unit: 'PS' },
+      { variantId: syrosHTXPlus.id, specKey: 'torque', specValue: '172-250', unit: 'Nm' },
+      { variantId: syrosHTXPlus.id, specKey: 'transmission', specValue: '6-Speed Manual / 7-Speed DCT / 6-Speed AT', unit: null },
+      { variantId: syrosHTXPlus.id, specKey: 'fuel_type', specValue: 'Petrol / Diesel', unit: null },
+      { variantId: syrosHTXPlus.id, specKey: 'seating_capacity', specValue: '5', unit: 'persons' },
+      { variantId: syrosHTXPlus.id, specKey: 'boot_space', specValue: '465', unit: 'L' },
+      { variantId: syrosHTXPlus.id, specKey: 'display', specValue: '12.3 inch Touchscreen', unit: null },
+      { variantId: syrosHTXPlus.id, specKey: 'sunroof', specValue: 'Panoramic', unit: null },
+      { variantId: syrosHTXPlus.id, specKey: 'adas', specValue: 'Level 2 ADAS', unit: null },
     ],
   })
 
@@ -551,7 +654,7 @@ async function main() {
       name: 'HTK',
       slug: 'clavis-htk',
       trimLevel: 'Base',
-      basePrice: null, // Coming soon
+      basePrice: 1107829, // ₹11.07 Lakh (Dec 2025 - Carens Clavis starting price)
       isActive: true,
     },
   })
@@ -581,7 +684,7 @@ async function main() {
       name: 'Standard',
       slug: 'clavis-ev-standard',
       trimLevel: 'Base',
-      basePrice: null, // Coming soon
+      basePrice: 1799000, // ₹17.99 Lakh (Dec 2025 - Carens Clavis EV starting price)
       isActive: true,
     },
   })

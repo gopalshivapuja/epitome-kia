@@ -5,7 +5,7 @@ test.describe('Homepage', () => {
     await page.goto('/')
   })
 
-  test('should display the header with logo and navigation', async ({ page }) => {
+  test('should display the header with logo and navigation', async ({ page, viewport }) => {
     // Wait for page to be fully loaded
     await page.waitForLoadState('networkidle')
 
@@ -13,27 +13,29 @@ test.describe('Homepage', () => {
     const header = page.locator('header, [role="banner"]')
     await expect(header.first()).toBeVisible()
 
-    // Check logo is visible (link to home with image)
-    const logoLink = page.getByRole('link', { name: /Epitome/i }).first()
+    // Check logo is visible (link to home with EPITOME text)
+    const logoLink = page.getByRole('link', { name: /EPITOME/i }).first()
     await expect(logoLink).toBeVisible()
 
-    // Check navigation links in header
-    const nav = page.locator('nav, [role="navigation"]').first()
-    await expect(nav).toBeVisible()
+    // On desktop, check navigation links in header
+    if (viewport && viewport.width >= 768) {
+      const nav = page.locator('nav, [role="navigation"]').first()
+      await expect(nav).toBeVisible()
 
-    // Navigation should contain model links
-    await expect(nav.getByRole('link', { name: 'Seltos' })).toBeVisible()
-    await expect(nav.getByRole('link', { name: 'Sonet' })).toBeVisible()
+      // Navigation should contain model links
+      await expect(nav.getByRole('link', { name: 'Seltos' })).toBeVisible()
+      await expect(nav.getByRole('link', { name: 'Sonet' })).toBeVisible()
+    }
   })
 
   test('should display car sections', async ({ page }) => {
-    // Check Seltos section
-    await expect(page.getByRole('heading', { name: 'New Seltos' })).toBeVisible()
-    await expect(page.getByText('The Badass. Reborn.')).toBeVisible()
+    // Check Seltos section (updated hero)
+    await expect(page.getByRole('heading', { name: 'The All-New Seltos' })).toBeVisible()
+    await expect(page.getByText('Badass. Forever.')).toBeVisible()
 
-    // Check for Order Now and Test Drive buttons
-    const orderButtons = page.getByRole('link', { name: 'Order Now' })
-    expect(await orderButtons.count()).toBeGreaterThan(0)
+    // Check for Explore and Test Drive buttons (updated from Order Now)
+    const exploreButtons = page.getByRole('link', { name: 'Explore' })
+    expect(await exploreButtons.count()).toBeGreaterThan(0)
 
     const testDriveButtons = page.getByRole('button', { name: 'Test Drive' })
     expect(await testDriveButtons.count()).toBeGreaterThan(0)

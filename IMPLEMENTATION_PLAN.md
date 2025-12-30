@@ -43,6 +43,13 @@ This document outlines the implementation plan aligned with the PRD phases, stru
 | Security headers | ✅ | Middleware (CSP, X-Frame-Options) |
 | Rate limiting | ✅ | API routes |
 | Authentication (Admin) | ✅ | NextAuth.js v5 |
+| Newsletter subscription | ✅ | Footer + `/api/newsletter` |
+| FAQ page | ✅ | `/faq` with accordion UI |
+| Model comparison tool | ✅ | `/compare` page |
+| SEO sitemap & robots | ✅ | `sitemap.ts`, `robots.ts` |
+| E2E testing (Playwright) | ✅ | `tests/e2e/` |
+| Unit testing (Vitest) | ✅ | `tests/unit/` |
+| Tesla-inspired redesign | ✅ | White theme, fullscreen sections |
 
 ### Database & API Layer
 
@@ -63,6 +70,7 @@ This document outlines the implementation plan aligned with the PRD phases, stru
 | `/api/blog-posts` | GET, POST | ✅ |
 | `/api/blog-posts/[id]` | GET, PATCH, DELETE | ✅ |
 | `/api/emi` | POST | ✅ |
+| `/api/newsletter` | POST | ✅ |
 | `/api/health` | GET | ✅ |
 | `/api/auth/*` | NextAuth | ✅ |
 
@@ -198,6 +206,12 @@ After Phase 1 deployment, features will ship on a weekly cadence.
 | Placeholder phone numbers | Updated with real numbers | Dec 2024 |
 | GA not rendered in layout | Added to JSX | Dec 2024 |
 | Non-functional admin buttons | Wired to API endpoints | Dec 2024 |
+| E2E tests missing | Added Playwright test suite | Dec 2024 |
+| Unit tests missing | Added Vitest with component tests | Dec 2024 |
+| Missing sitemap | Added `src/app/sitemap.ts` | Dec 2024 |
+| Missing robots.txt | Added `src/app/robots.ts` | Dec 2024 |
+| Google Maps API key exposed | Moved to environment variable | Dec 2024 |
+| Missing .env.example | Created with all required vars | Dec 2024 |
 
 ### Outstanding
 
@@ -208,7 +222,6 @@ After Phase 1 deployment, features will ship on a weekly cadence.
 | Rich text editor | HIGH | Needed for content management |
 | Image upload to cloud | MEDIUM | S3/Cloudinary setup |
 | Accessibility audit | MEDIUM | WCAG 2.1 AA compliance |
-| E2E tests | LOW | Playwright test suite |
 
 ---
 
@@ -251,3 +264,6 @@ After Phase 1 deployment, features will ship on a weekly cadence.
 | Dec 2024 | Aligned with PRD phases |
 | Dec 2024 | Added Google Maps URLs for all locations |
 | Dec 2024 | Created ARCHITECTURE.md |
+| Dec 2024 | Added newsletter, FAQ, compare, E2E tests, unit tests |
+| Dec 2024 | Fixed Google Maps API key exposure, added sitemap/robots |
+| Dec 2024 | Updated all documentation for Phase 2 readiness |

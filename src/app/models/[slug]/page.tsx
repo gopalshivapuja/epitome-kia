@@ -6,10 +6,10 @@ import { notFound } from 'next/navigation'
 
 // Force dynamic rendering - no static generation at build time
 export const dynamic = 'force-dynamic'
-import { ArrowLeft, Calendar, Wrench, Calculator, Tag, ChevronRight } from 'lucide-react'
+import { ArrowLeft, Calendar, Wrench, Calculator, Tag, ChevronRight, Download } from 'lucide-react'
 import { getModelBySlug, getModels } from '@/lib/data'
 import { EMICalculator } from '@/components/features/emi-calculator'
-import { formatPrice } from '@/lib/utils'
+import { formatPriceLakh, getKiaBrochureUrl } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -107,7 +107,7 @@ async function ModelDetail({ slug }: { slug: string }) {
                 <div>
                   <span className="text-sm text-muted-foreground">Starting from</span>
                   <p className="text-3xl font-bold text-kia-red">
-                    {formatPrice(model.startingPrice)}*
+                    {formatPriceLakh(model.startingPrice)}*
                   </p>
                 </div>
               ) : (
@@ -127,6 +127,16 @@ async function ModelDetail({ slug }: { slug: string }) {
                   <Calculator className="mr-2 h-5 w-5" />
                   Calculate EMI
                 </Link>
+              </Button>
+              <Button variant="outline" size="lg" asChild>
+                <a
+                  href={getKiaBrochureUrl(model.slug)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Download className="mr-2 h-5 w-5" />
+                  Download Brochure
+                </a>
               </Button>
               <Button variant="outline" size="lg" asChild>
                 <Link href="/service">
@@ -186,7 +196,7 @@ async function ModelDetail({ slug }: { slug: string }) {
                     <span className="font-medium">{variant.name}</span>
                     {variant.basePrice && (
                       <span className="text-xs text-muted-foreground">
-                        {formatPrice(variant.basePrice)}
+                        {formatPriceLakh(variant.basePrice)}
                       </span>
                     )}
                   </TabsTrigger>
@@ -212,7 +222,7 @@ async function ModelDetail({ slug }: { slug: string }) {
                           <div className="text-right">
                             <span className="text-sm text-muted-foreground">Ex-showroom</span>
                             <p className="text-2xl font-bold text-kia-red">
-                              {formatPrice(variant.basePrice)}
+                              {formatPriceLakh(variant.basePrice)}
                             </p>
                           </div>
                         )}
