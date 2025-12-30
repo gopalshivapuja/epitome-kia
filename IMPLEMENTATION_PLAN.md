@@ -6,13 +6,13 @@ This document outlines the implementation plan aligned with the PRD phases, stru
 
 ---
 
-## Current Status: Phase 1 Complete
+## Current Status: Phase 2 Complete
 
 | PRD Phase | Status | Description |
 |-----------|--------|-------------|
 | **Phase 1: Foundation** | ✅ **COMPLETE** | Core website, lead capture, admin dashboard |
-| Phase 2: AI & Engagement | 🔜 Next | Chatbot, 360° viewer, content sync |
-| Phase 3: Self-Service & DMS | ⏳ Planned | Customer portal, DMS integration |
+| **Phase 2: AI & Engagement** | ✅ **COMPLETE** | Chatbot, 360° viewer, configurator, recommendations |
+| Phase 3: Self-Service & DMS | 🔜 Next | Customer portal, DMS integration |
 | Phase 4: Commerce & Insurance | ⏳ Planned | Accessories store, insurance |
 | Phase 5: Advanced Experience | ⏳ Future | Mobile app, AR features |
 
@@ -51,108 +51,67 @@ This document outlines the implementation plan aligned with the PRD phases, stru
 | Unit testing (Vitest) | ✅ | `tests/unit/` |
 | Tesla-inspired redesign | ✅ | White theme, fullscreen sections |
 
-### Database & API Layer
-
-| Endpoint | Methods | Status |
-|----------|---------|--------|
-| `/api/models` | GET | ✅ |
-| `/api/models/[slug]` | GET | ✅ |
-| `/api/leads` | GET, POST | ✅ |
-| `/api/leads/[id]` | GET, PATCH, DELETE | ✅ |
-| `/api/test-drive` | GET, POST | ✅ |
-| `/api/test-drive/[id]` | GET, PATCH, DELETE | ✅ |
-| `/api/service-booking` | GET, POST | ✅ |
-| `/api/service-booking/[id]` | GET, PATCH, DELETE | ✅ |
-| `/api/offers` | GET, POST | ✅ |
-| `/api/offers/[id]` | GET, PATCH, DELETE | ✅ |
-| `/api/pages` | GET, POST | ✅ |
-| `/api/pages/[id]` | GET, PATCH, DELETE | ✅ |
-| `/api/blog-posts` | GET, POST | ✅ |
-| `/api/blog-posts/[id]` | GET, PATCH, DELETE | ✅ |
-| `/api/emi` | POST | ✅ |
-| `/api/newsletter` | POST | ✅ |
-| `/api/health` | GET | ✅ |
-| `/api/auth/*` | NextAuth | ✅ |
-
 ---
 
-## Weekly Shipping Schedule
+## Phase 2: AI & Engagement ✅ COMPLETED (Dec 2024)
 
-After Phase 1 deployment, features will ship on a weekly cadence.
+**Goal**: AI-powered features, engagement tools, and content management.
 
-### Week 1: Production Deployment
-**Target**: Deploy Phase 1 to Railway
+### Completed Features
 
-| Task | Description | Status |
-|------|-------------|--------|
-| Railway setup | Create project, add PostgreSQL | ⏳ |
-| Environment variables | NEXTAUTH_SECRET, RESEND_API_KEY | ⏳ |
-| Database migration | Run `prisma migrate deploy` | ⏳ |
-| Seed data | Run `prisma db seed` | ⏳ |
-| Verify health check | GET /api/health returns 200 | ⏳ |
-| Test all forms | Test drive, service, contact | ⏳ |
-| Admin login test | Verify auth flow | ⏳ |
-| Custom domain | Configure DNS (optional) | ⏳ |
+| Feature | Status | Location | Description |
+|---------|--------|----------|-------------|
+| AI Chatbot (RAG-based) | ✅ | `/components/features/AIChat` | OpenAI GPT-4 with Kia knowledge base |
+| Customer Reviews Integration | ✅ | `/components/features/GoogleReviews` | Google Places API integration |
+| AI Blog Curation | ✅ | `/blog`, `/admin/blog` | AI-curated external articles |
+| Google Sign-On | ✅ | `/login`, `/profile` | Google OAuth for customers |
+| Price/Availability Alerts | ✅ | `/api/alerts`, `PriceAlertButton` | Email notification subscriptions |
+| Competitor Comparison Tool | ✅ | `/compare` | Compare Kia vs competitors |
+| 360° Vehicle Viewer | ✅ | `Vehicle360Viewer` component | Drag-to-rotate, fullscreen gallery |
+| Vehicle Configurator | ✅ | `/configure/[slug]` | Model → Variant → Color → Accessories |
+| Personalized Recommendations | ✅ | `lib/tracking/`, `SmartNudge` | Behavior tracking, AI suggestions |
+| Kia India Auto-Sync | ✅ | `/api/admin/sync`, `SyncDashboard` | Scraper for kia.com/in data |
 
-### Week 2: Content Management UI
-**Target**: Admin can create/edit content without code
+### New API Endpoints (Phase 2)
 
-| Task | Description | Priority |
-|------|-------------|----------|
-| Rich text editor | Install Tiptap or TinyMCE | HIGH |
-| Offer create/edit form | Admin UI for offers | HIGH |
-| Page create/edit form | Admin UI for static pages | HIGH |
-| Blog post editor | Admin UI for blog posts | MEDIUM |
-| Image upload | S3/Cloudinary integration | MEDIUM |
+| Endpoint | Methods | Purpose |
+|----------|---------|---------|
+| `/api/chat` | POST | AI chatbot with RAG |
+| `/api/auth/customer/[...nextauth]` | * | Customer Google OAuth |
+| `/api/customer` | GET, PATCH | Customer profile management |
+| `/api/alerts` | GET, POST, PATCH, DELETE | Price/availability alerts |
+| `/api/recommendations` | POST | AI-powered recommendations |
+| `/api/configure` | GET, POST | Save/load vehicle configurations |
+| `/api/admin/sync` | POST | Trigger Kia India sync |
+| `/api/admin/sync/status` | GET | Get sync logs and status |
+| `/api/competitors` | GET | Competitor model data |
 
-### Week 3: Performance & Images
-**Target**: Production-ready performance
+### New Components (Phase 2)
 
-| Task | Description | Priority |
-|------|-------------|----------|
-| Real model images | Upload Kia vehicle images | HIGH |
-| Image optimization | WebP conversion, sizing | HIGH |
-| Lighthouse audit | Target 90+ score | HIGH |
-| Core Web Vitals | LCP < 2.5s, CLS < 0.1 | HIGH |
-| Error tracking | Sentry integration | MEDIUM |
+| Component | Location | Purpose |
+|-----------|----------|---------|
+| `AIChat` | `components/features/AIChat.tsx` | Floating AI chatbot |
+| `GoogleReviews` | `components/features/GoogleReviews.tsx` | Display Google reviews |
+| `Vehicle360Viewer` | `components/features/Vehicle360Viewer.tsx` | 360° image viewer |
+| `PriceAlertButton` | `components/features/PriceAlertButton.tsx` | Alert subscription modal |
+| `SmartNudge` | `components/features/SmartNudge.tsx` | Context-aware prompts |
+| `RecentlyViewed` | `components/features/RecentlyViewed.tsx` | Browsing history bar |
+| `RecommendationBar` | `components/features/RecommendationBar.tsx` | AI recommendations |
+| `SyncDashboard` | `components/admin/SyncDashboard.tsx` | Admin sync management |
+| `GoogleSignInButton` | `components/auth/GoogleSignInButton.tsx` | OAuth login button |
+| `UserMenu` | `components/auth/UserMenu.tsx` | Customer account dropdown |
 
-### Week 4: Notifications & Email
-**Target**: Full email notification system
+### New Database Models (Phase 2)
 
-| Task | Description | Priority |
-|------|-------------|----------|
-| Email templates | Styled HTML emails | HIGH |
-| Lead notifications | Email to sales team | HIGH |
-| Customer confirmations | Booking confirmation emails | HIGH |
-| SMS integration | Twilio for SMS (optional) | LOW |
-
-### Week 5+: Phase 2 Features
-**Target**: Begin AI & Engagement phase
-
-| Feature | Description | Priority |
-|---------|-------------|----------|
-| AI Chatbot | Vercel AI SDK + Claude | HIGH |
-| 360° Vehicle Viewer | Pannellum integration | HIGH |
-| Competitor comparison | Side-by-side specs | MEDIUM |
-| Personalized recommendations | Based on browsing | MEDIUM |
-
----
-
-## Phase 2: AI & Engagement (Weeks 5-10)
-
-**PRD Alignment**: Phase 2 features from PRD.md
-
-| Feature | PRD Priority | Status |
-|---------|--------------|--------|
-| AI Chatbot (text-based) | P1 | ⏳ Week 5-6 |
-| 360° Vehicle Viewer | P1 | ⏳ Week 6-7 |
-| Personalized recommendations | P1 | ⏳ Week 7-8 |
-| Kia India content auto-sync | P1 | ⏳ Week 8-9 |
-| Competitor comparison tool | P1 | ⏳ Week 9-10 |
-| AI Blog content generation | P2 | ⏳ Week 10+ |
-| RAG-based manual query | P2 | ⏳ Future |
-| Google Sign-On | P2 | ⏳ Future |
-| Customer reviews integration | P2 | ⏳ Future |
+```prisma
+- Customer (Google OAuth users)
+- AlertSubscription (price/availability alerts)
+- VehicleConfiguration (saved configurations)
+- CompetitorModel (competitor data)
+- UserPreference (tracking data)
+- SyncLog (sync audit trail)
+- CarModelImage (360° images)
+```
 
 ---
 
@@ -212,6 +171,7 @@ After Phase 1 deployment, features will ship on a weekly cadence.
 | Missing robots.txt | Added `src/app/robots.ts` | Dec 2024 |
 | Google Maps API key exposed | Moved to environment variable | Dec 2024 |
 | Missing .env.example | Created with all required vars | Dec 2024 |
+| ESLint conditional hooks error | Moved useMemo before early return | Dec 2024 |
 
 ### Outstanding
 
@@ -222,6 +182,7 @@ After Phase 1 deployment, features will ship on a weekly cadence.
 | Rich text editor | HIGH | Needed for content management |
 | Image upload to cloud | MEDIUM | S3/Cloudinary setup |
 | Accessibility audit | MEDIUM | WCAG 2.1 AA compliance |
+| 360° images for viewer | MEDIUM | Need multi-angle photos per model |
 
 ---
 
@@ -236,23 +197,36 @@ After Phase 1 deployment, features will ship on a weekly cadence.
 | Form submission rate | > 5% | GA4 conversions |
 | Admin response time | < 24h | Internal SLA |
 
-### Weekly Review Checklist
+### Phase 2 KPIs
 
-- [ ] All forms working in production
-- [ ] No critical errors in logs
-- [ ] Lighthouse score maintained
-- [ ] New features documented
-- [ ] User feedback reviewed
+| Metric | Target | Measurement |
+|--------|--------|-------------|
+| Chatbot engagement | > 10% visitors | Analytics |
+| Configurator completions | > 5% | Conversion tracking |
+| Alert subscriptions | > 100/month | Database count |
+| Recommendation click rate | > 3% | Tracking events |
 
 ---
 
-## How to Use This Plan
+## Environment Variables Required
 
-1. **Week 1**: Deploy to Railway following DEPLOYMENT.md
-2. **Weekly**: Pick tasks from current week's section
-3. **Review**: Update status after each feature ships
-4. **Adapt**: Reprioritize based on user feedback
-5. **Document**: Update CLAUDE.md with new patterns
+### Phase 1
+```env
+DATABASE_URL
+NEXTAUTH_SECRET
+NEXTAUTH_URL
+RESEND_API_KEY
+NEXT_PUBLIC_GA_ID
+NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
+```
+
+### Phase 2 (Additional)
+```env
+OPENAI_API_KEY
+GOOGLE_CLIENT_ID
+GOOGLE_CLIENT_SECRET
+GOOGLE_PLACES_API_KEY
+```
 
 ---
 
@@ -260,10 +234,10 @@ After Phase 1 deployment, features will ship on a weekly cadence.
 
 | Date | Update |
 |------|--------|
-| Dec 2024 | Phase 1 marked complete, added weekly shipping structure |
-| Dec 2024 | Aligned with PRD phases |
-| Dec 2024 | Added Google Maps URLs for all locations |
-| Dec 2024 | Created ARCHITECTURE.md |
-| Dec 2024 | Added newsletter, FAQ, compare, E2E tests, unit tests |
-| Dec 2024 | Fixed Google Maps API key exposure, added sitemap/robots |
-| Dec 2024 | Updated all documentation for Phase 2 readiness |
+| Dec 2024 | Phase 1 marked complete |
+| Dec 2024 | Phase 2 started - AI features, engagement tools |
+| Dec 30, 2024 | **Phase 2 COMPLETE** - All features implemented |
+| Dec 30, 2024 | Added: AI Chatbot, Google Sign-On, Vehicle Configurator |
+| Dec 30, 2024 | Added: Price Alerts, Competitor Comparison, 360° Viewer |
+| Dec 30, 2024 | Added: Personalized Recommendations, Kia India Auto-Sync |
+| Dec 30, 2024 | Fixed ESLint errors for CI deployment |

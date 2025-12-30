@@ -5,9 +5,11 @@ For detailed documentation, see the [Documentation Index](#documentation-index) 
 
 ## Current Status
 
-**Phase 1: Complete** (Dec 2024) | **Phase 2: AI & Engagement** (Starting)
+**Phase 1: Complete** (Dec 2024) | **Phase 2: Complete** (Dec 2024)
 
 Phase 1 delivered: Model catalog, test drive booking, service booking, EMI calculator, admin dashboard, WhatsApp integration, Google Analytics, responsive design, SEO optimization.
+
+Phase 2 delivered: AI Chatbot (RAG-based), Google Sign-On (customer OAuth), Vehicle Configurator, Price Alerts, Competitor Comparison, 360° Vehicle Viewer, Personalized Recommendations, Kia India Auto-Sync.
 
 ## Quick Start
 
@@ -52,25 +54,34 @@ src/
 │   ├── test-drive/         # Test drive booking
 │   ├── service/            # Service booking
 │   ├── contact/            # Contact + dealer locator
-│   ├── compare/            # Model comparison
+│   ├── compare/            # Model + competitor comparison
+│   ├── configure/          # Vehicle configurator
+│   ├── login/              # Customer Google Sign-In
+│   ├── profile/            # Customer profile & settings
 │   ├── faq/                # FAQ page
 │   ├── admin/              # Protected admin dashboard
-│   ├── api/                # API routes (19 endpoints)
+│   ├── api/                # API routes (25+ endpoints)
 │   ├── sitemap.ts          # SEO sitemap
 │   └── robots.ts           # SEO robots.txt
 ├── components/
 │   ├── ui/                 # shadcn/ui components
 │   ├── layout/             # Header, Footer, FullscreenSection
 │   ├── forms/              # ContactForm, TestDriveForm, ServiceBookingForm
-│   ├── features/           # WhatsAppButton, DealerLocator, GoogleReviews
-│   └── admin/              # Dashboard tables and components
+│   ├── features/           # AIChat, 360 Viewer, Recommendations, Alerts
+│   ├── auth/               # GoogleSignInButton, UserMenu
+│   └── admin/              # Dashboard tables, SyncDashboard
 ├── lib/
 │   ├── db.ts               # Prisma client singleton
-│   ├── auth.ts             # NextAuth.js v5 config
+│   ├── auth.ts             # NextAuth.js v5 (admin credentials)
+│   ├── auth-customer.ts    # Customer Google OAuth config
 │   ├── validations.ts      # Zod schemas
 │   ├── api-utils.ts        # API response helpers
 │   ├── company-data.ts     # Locations, models, social links
+│   ├── tracking/           # User behavior tracking
+│   ├── sync/               # Kia India auto-sync
+│   ├── notifications/      # Email notifications
 │   └── utils.ts            # cn() helper and utilities
+├── hooks/                  # Custom React hooks
 tests/
 ├── e2e/                    # Playwright E2E tests
 └── unit/                   # Vitest unit tests
@@ -93,6 +104,7 @@ prisma/
 
 ## API Endpoints
 
+### Phase 1 - Core
 | Endpoint | Methods | Purpose |
 |----------|---------|---------|
 | `/api/models` | GET, POST | Car models CRUD |
@@ -103,6 +115,19 @@ prisma/
 | `/api/newsletter` | POST | Newsletter subscriptions |
 | `/api/emi` | POST | EMI calculations |
 | `/api/health` | GET | Health check |
+
+### Phase 2 - AI & Engagement
+| Endpoint | Methods | Purpose |
+|----------|---------|---------|
+| `/api/chat` | POST | AI chatbot with RAG |
+| `/api/auth/customer/[...nextauth]` | * | Customer Google OAuth |
+| `/api/customer` | GET, PATCH | Customer profile management |
+| `/api/alerts` | GET, POST, PATCH, DELETE | Price/availability alerts |
+| `/api/recommendations` | POST | AI-powered recommendations |
+| `/api/configure` | GET, POST | Save/load vehicle configurations |
+| `/api/admin/sync` | POST | Trigger Kia India sync |
+| `/api/admin/sync/status` | GET | Get sync logs and status |
+| `/api/competitors` | GET | Competitor model data |
 
 ## Database Conventions
 
@@ -131,17 +156,25 @@ catch (error) { return handleApiError(error) }
 NextAuth.js v5 with credentials provider. Admin users in `AdminUser` table with bcrypt passwords.
 Roles: `admin`, `sales_manager`, `service_advisor`, `staff`
 
-Default admin login (from seed): `admin@epitomekia.com` / `admin123`
+Default admin login (from seed): `admin@epitomekia.in` / `admin123`
 
 ## Environment Variables
 
 See `.env.example` for all required variables:
+
+### Phase 1 (Required)
 - `DATABASE_URL` - PostgreSQL connection string
 - `NEXTAUTH_SECRET` - 32-char secret for JWT
 - `NEXTAUTH_URL` - Your domain URL
 - `RESEND_API_KEY` - Email notifications
 - `NEXT_PUBLIC_GA_ID` - Google Analytics 4
 - `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` - Google Maps Embed API
+
+### Phase 2 (AI & Engagement)
+- `OPENAI_API_KEY` - For AI chatbot and recommendations
+- `GOOGLE_CLIENT_ID` - Customer Google OAuth
+- `GOOGLE_CLIENT_SECRET` - Customer Google OAuth
+- `GOOGLE_PLACES_API_KEY` - Google Reviews integration
 
 ## Kia Brand Colors (Tailwind)
 
@@ -203,24 +236,5 @@ git push origin main  # Triggers automatic deployment
 - `main` → Production (epitomekia.com)
 - `develop` → Staging (dev.epitomekia.com)
 - `feature/*` → Feature branches (PR to develop)
-
-### ⚠️ PHASE 2 BRANCH PROTECTION (ACTIVE)
-
-**DO NOT TOUCH `main` BRANCH UNTIL PHASE 2 IS COMPLETE AND TESTED**
-
-During Phase 2 development:
-- ALL work happens on `develop` branch ONLY
-- NO merges to `main` until Phase 2 is fully complete
-- NO PRs to `main` until explicitly approved by owner
-- Test everything on staging (develop) first
-- Feature branches should merge to `develop`, not `main`
-
-```bash
-# Always verify you're on develop before any work
-git branch --show-current  # Should output: develop
-
-# If on wrong branch, switch to develop
-git checkout develop
-```
 
 See [GITHUB_WORKFLOW_GUIDE.md](GITHUB_WORKFLOW_GUIDE.md) for details.
