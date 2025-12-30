@@ -31,6 +31,7 @@ export async function POST(request: Request) {
     // Create a new customer lead with newsletter source
     await prisma.customerLead.create({
       data: {
+        fullName: 'Newsletter Subscriber',
         email,
         source: 'newsletter',
         notes: 'Newsletter subscription from website footer',
