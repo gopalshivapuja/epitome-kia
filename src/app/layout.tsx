@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { Inter, Outfit, Montserrat } from 'next/font/google'
 import './globals.css'
 import { cn } from '@/lib/utils'
-import { GlassHeader } from '@/components/layout/GlassHeader'
+import { ModernHeader } from '@/components/layout/ModernHeader'
 import { WhatsAppButton } from '@/components/features/WhatsAppButton'
 import { Footer } from '@/components/layout/footer'
 import { GoogleAnalytics } from '@/components/analytics/google-analytics'
@@ -31,7 +31,7 @@ export default function RootLayout({
       <body className={cn(inter.variable, outfit.variable, montserrat.variable, 'font-sans antialiased')}>
         <GoogleAnalytics />
         <div className="flex min-h-screen flex-col">
-          <GlassHeader />
+          <ModernHeader />
           <WhatsAppButton />
           <main className="flex-1">{children}</main>
         </div>

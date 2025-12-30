@@ -22,6 +22,7 @@
 │  ├── /api/test-drive      - Test drive requests                             │
 │  ├── /api/service-booking - Service appointments                            │
 │  ├── /api/offers          - Promotional offers                              │
+│  ├── /api/newsletter      - Newsletter subscriptions                        │
 │  ├── /api/emi             - EMI calculations                                │
 │  ├── /api/auth/*          - NextAuth.js authentication                      │
 │  └── /api/health          - Health check endpoint                           │
@@ -45,6 +46,7 @@
 ├─────────────────────────────────────────────────────────────────────────────┤
 │  ├── Resend        - Email notifications (leads, confirmations)             │
 │  ├── Google Analytics 4 - User tracking & conversion events                 │
+│  ├── Google Maps   - Dealer locator with embedded maps                      │
 │  └── WhatsApp      - Click-to-chat (direct links)                           │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
@@ -296,6 +298,9 @@ RESEND_API_KEY=re_xxxxxxxxxxxx
 # Analytics (optional but recommended)
 NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX
 
+# Google Maps (required for dealer locator)
+NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your-api-key
+
 # Environment
 NODE_ENV=production
 ```
@@ -349,6 +354,11 @@ All API endpoints return consistent JSON responses:
 - **Method**: Direct `wa.me` links with pre-filled message
 - **Number**: +91-8047363737
 
+### 4. Google Maps
+- **File**: `src/components/features/DealerLocator.tsx`
+- **Usage**: Embedded maps for 5 dealership locations
+- **Env**: `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY`
+
 ---
 
 ## Performance Considerations
@@ -386,11 +396,68 @@ All API endpoints return consistent JSON responses:
 
 ---
 
+## Testing Infrastructure
+
+### Test Stack
+
+| Layer | Technology | Purpose |
+|-------|------------|---------|
+| **E2E Testing** | Playwright | Browser automation, user flows |
+| **Unit Testing** | Vitest | Fast unit tests, component tests |
+| **Test Runner** | GitHub Actions | CI pipeline, automated testing |
+
+### Test Commands
+
+```bash
+npm run test         # Run unit tests (Vitest)
+npm run test:e2e     # Run E2E tests (Playwright)
+npm run test:all     # Run all tests
+```
+
+### E2E Test Coverage
+
+```
+tests/e2e/
+├── homepage.spec.ts      # Homepage loads, navigation works
+├── header.spec.ts        # Header links, navigation
+├── newsletter.spec.ts    # Newsletter signup form
+├── compare.spec.ts       # Model comparison tool
+├── faq.spec.ts           # FAQ accordion functionality
+└── brochure.spec.ts      # Brochure download flow
+```
+
+### Unit Test Coverage
+
+```
+tests/unit/
+├── api/
+│   └── leads.test.ts     # Lead API validation
+├── components/
+│   ├── Button.test.tsx   # Button component
+│   └── EMICalculator.test.tsx
+└── utils.test.ts         # Utility functions
+```
+
+### CI/CD Pipeline
+
+```yaml
+# .github/workflows/ci.yml
+on: [push, pull_request]
+jobs:
+  test:
+    - npm run lint
+    - npm run type-check
+    - npm run test
+    - npm run build
+```
+
+---
+
 ## Future Enhancements (from PRD)
 
 | Phase | Features | Status |
 |-------|----------|--------|
-| Phase 1 | Core website, lead capture, admin | ✅ Complete |
+| Phase 1 | Core website, lead capture, admin | ✅ Complete (Dec 2024) |
 | Phase 2 | AI Chatbot, 360° viewer, content sync | Planned |
 | Phase 3 | DMS integration, customer portal | Future |
 | Phase 4 | Accessories store, insurance | Future |

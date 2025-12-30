@@ -1,121 +1,207 @@
-# CLAUDE.md
+# CLAUDE.md - Epitome Kia Developer Guide
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+AI assistant context file for Claude Code. This provides essential project context in ~200 lines.
+For detailed documentation, see the [Documentation Index](#documentation-index) below.
 
-## Build and Development Commands
+## Current Status
+
+**Phase 1: Complete** (Dec 2024) | **Phase 2: AI & Engagement** (Starting)
+
+Phase 1 delivered: Model catalog, test drive booking, service booking, EMI calculator, admin dashboard, WhatsApp integration, Google Analytics, responsive design, SEO optimization.
+
+## Quick Start
 
 ```bash
+# First-time setup
+npm run setup              # Install + generate Prisma + push schema + seed
+
 # Development
-npm run dev              # Start dev server at http://localhost:3000
-npm run build            # Production build
-npm run lint             # ESLint
-npm run type-check       # TypeScript type checking
+npm run dev                # Start dev server at localhost:3000
+npm run build              # Production build
+npm run lint               # ESLint
+npm run type-check         # TypeScript check
 
-# Database (Prisma)
-npm run db:generate      # Generate Prisma client
-npm run db:push          # Push schema changes (dev)
-npm run db:migrate       # Create and apply migrations
-npm run db:seed          # Seed with sample data
-npm run db:studio        # Open Prisma Studio GUI
-npm run db:reset         # Reset database (dev only)
+# Database
+npm run db:push            # Push schema changes
+npm run db:seed            # Seed sample data
+npm run db:studio          # Open Prisma Studio GUI
 
-# Full setup from scratch
-npm run setup            # install + prisma generate + db push + seed
+# Testing
+npm run test               # Unit tests (Vitest)
+npm run test:e2e           # E2E tests (Playwright)
+npm run test:all           # Run all tests
 
-# Pre-deployment verification
-npm run deploy:check     # lint + type-check + build
+# Deployment
+npm run deploy:check       # Lint + type-check + build
 ```
 
-## Architecture Overview
+## Tech Stack
 
-**Stack**: Next.js 14 (App Router) + Prisma ORM + PostgreSQL + NextAuth.js v5 + Tailwind CSS + shadcn/ui
+**Frontend**: Next.js 14 (App Router) + React 18 + TypeScript + Tailwind CSS + shadcn/ui + Framer Motion
+**Backend**: Next.js API Routes + Prisma ORM + PostgreSQL + NextAuth.js v5
+**Testing**: Vitest (unit) + Playwright (E2E)
+**Deployment**: Railway (hosting + PostgreSQL) + GitHub Actions (CI/CD)
 
-### Route Structure
+## Project Structure
 
 ```
-src/app/
-├── (public)/            # Public pages (models, offers, test-drive, service, emi-calculator)
-├── admin/               # Protected admin routes
-│   ├── login/           # Admin login (public)
-│   └── (dashboard)/     # Dashboard pages (leads, offers, test-drives, service-bookings)
-└── api/                 # API routes
-    ├── models/          # GET /api/models, GET /api/models/[slug]
-    ├── leads/           # POST /api/leads, GET/PATCH/DELETE /api/leads/[id]
-    ├── test-drive/      # POST /api/test-drive, PATCH/DELETE /api/test-drive/[id]
-    ├── service-booking/ # POST /api/service-booking, PATCH/DELETE /api/service-booking/[id]
-    ├── offers/          # GET/POST /api/offers, PATCH/DELETE /api/offers/[id]
-    ├── blog-posts/      # GET/POST /api/blog-posts, PATCH/DELETE /api/blog-posts/[id]
-    ├── pages/           # GET/POST /api/pages, PATCH/DELETE /api/pages/[id]
-    ├── emi/             # POST /api/emi
-    ├── admin/sync/      # POST - sync data from Kia India
-    ├── health/          # GET - health check endpoint
-    └── auth/[...nextauth]/
+src/
+├── app/                    # Next.js App Router
+│   ├── page.tsx            # Homepage (Tesla-style sections)
+│   ├── models/             # /models, /models/[slug]
+│   ├── test-drive/         # Test drive booking
+│   ├── service/            # Service booking
+│   ├── contact/            # Contact + dealer locator
+│   ├── compare/            # Model comparison
+│   ├── faq/                # FAQ page
+│   ├── admin/              # Protected admin dashboard
+│   ├── api/                # API routes (19 endpoints)
+│   ├── sitemap.ts          # SEO sitemap
+│   └── robots.ts           # SEO robots.txt
+├── components/
+│   ├── ui/                 # shadcn/ui components
+│   ├── layout/             # Header, Footer, FullscreenSection
+│   ├── forms/              # ContactForm, TestDriveForm, ServiceBookingForm
+│   ├── features/           # WhatsAppButton, DealerLocator, GoogleReviews
+│   └── admin/              # Dashboard tables and components
+├── lib/
+│   ├── db.ts               # Prisma client singleton
+│   ├── auth.ts             # NextAuth.js v5 config
+│   ├── validations.ts      # Zod schemas
+│   ├── api-utils.ts        # API response helpers
+│   ├── company-data.ts     # Locations, models, social links
+│   └── utils.ts            # cn() helper and utilities
+tests/
+├── e2e/                    # Playwright E2E tests
+└── unit/                   # Vitest unit tests
+prisma/
+├── schema.prisma           # Database schema
+└── seed.ts                 # Seed data
 ```
 
-### Key Files
+## Key Files
 
-- `src/lib/db.ts` - Prisma client singleton
-- `src/lib/auth.ts` - NextAuth.js v5 config with credentials provider and type augmentation
-- `src/lib/validations.ts` - Zod schemas for all form inputs
-- `src/lib/api-utils.ts` - API response helpers (`successResponse`, `errorResponse`, `handleApiError`)
-- `src/middleware.ts` - Auth protection for `/admin/*` routes with security headers (CSP, X-Frame-Options, etc.)
-- `prisma/schema.prisma` - Database schema (source of truth)
-- `prisma/seed.ts` - Seed data for development
+| File | Purpose |
+|------|---------|
+| `src/lib/db.ts` | Prisma client singleton |
+| `src/lib/auth.ts` | NextAuth.js v5 config with credentials provider |
+| `src/lib/validations.ts` | Zod schemas for all form inputs |
+| `src/lib/api-utils.ts` | `successResponse()`, `errorResponse()`, `handleApiError()` |
+| `src/middleware.ts` | Auth protection + security headers (CSP, X-Frame-Options) |
+| `prisma/schema.prisma` | Database schema (source of truth) |
+| `.env.example` | Environment variables template |
 
-### Authentication
+## API Endpoints
 
-NextAuth.js v5 (beta) with credentials provider. Admin users stored in `AdminUser` table with bcrypt-hashed passwords. JWT session strategy (24h expiry). Roles: `admin`, `sales_manager`, `service_advisor`, `staff`. Only `admin` role can access `/admin/settings`.
-
-### API Response Pattern
-
-All API routes use consistent response helpers from `src/lib/api-utils.ts`:
-```typescript
-successResponse(data, status?)     // { success: true, data }
-errorResponse(message, status?)    // { success: false, error }
-handleApiError(error)              // Handles ZodError, Error, and unknown
-```
-
-### Component Organization
-
-- `src/components/ui/` - shadcn/ui base components
-- `src/components/layout/` - Header variants, Footer, FullscreenSection
-- `src/components/forms/` - Form components with React Hook Form + Zod
-- `src/components/admin/` - Admin dashboard components
-- `src/components/features/` - Feature-specific components (CookieConsent, etc.)
+| Endpoint | Methods | Purpose |
+|----------|---------|---------|
+| `/api/models` | GET, POST | Car models CRUD |
+| `/api/leads` | GET, POST | Customer leads |
+| `/api/test-drive` | GET, POST | Test drive bookings |
+| `/api/service-booking` | GET, POST | Service appointments |
+| `/api/offers` | GET, POST | Promotional offers |
+| `/api/newsletter` | POST | Newsletter subscriptions |
+| `/api/emi` | POST | EMI calculations |
+| `/api/health` | GET | Health check |
 
 ## Database Conventions
 
 - **Primary Keys**: UUID with `@default(uuid())` and `@db.Uuid`
-- **Soft Deletes**: All tables have `deletedAt` field - always filter with `deletedAt: null`
+- **Soft Deletes**: All tables have `deletedAt` - filter with `{ deletedAt: null }`
 - **Audit Fields**: `createdAt`, `updatedAt` on all tables
-- **Naming**: Prisma uses camelCase, DB tables use snake_case via `@@map()`
 - **Timestamps**: Use `@db.Timestamptz` for timezone-aware timestamps
 
-### Core Models
+## API Response Pattern
 
-- `CarModel` → `Variant` → `Specification` (hierarchical vehicle data)
-- `CustomerLead` → links to `TestDriveRequest`, `ServiceBooking`, `PickupRequest`
-- `Offer` → optional links to `CarModel` or `Variant`
-- `Page`, `BlogPost`, `FAQ` (content management)
-- `AdminUser` (authentication)
+```typescript
+import { successResponse, errorResponse, handleApiError } from '@/lib/api-utils'
 
-## Key Business Rules
+// Success: { success: true, data: {...} }
+return successResponse(data, 200)
 
-1. **Lead Capture**: `CustomerLead` requires either email OR phone (Zod refinement in validations.ts)
-2. **Offers**: Can be linked to either a `CarModel` or `Variant` (both optional)
-3. **Publishing**: Pages/BlogPosts require `publishedAt` when `isPublished = true`
-4. **Status Values**: `pending`, `scheduled`, `completed`, `cancelled` for requests
-5. **Date Validation**: Test drives and service bookings require dates today or in the future
+// Error: { success: false, error: "message" }
+return errorResponse("Not found", 404)
+
+// Catch-all error handler (handles ZodError, etc.)
+catch (error) { return handleApiError(error) }
+```
+
+## Authentication
+
+NextAuth.js v5 with credentials provider. Admin users in `AdminUser` table with bcrypt passwords.
+Roles: `admin`, `sales_manager`, `service_advisor`, `staff`
+
+Default admin login (from seed): `admin@epitomekia.com` / `admin123`
 
 ## Environment Variables
 
-```
-DATABASE_URL=postgresql://...
-NEXTAUTH_SECRET=<32-char-base64>
-NEXTAUTH_URL=https://your-domain.com
-RESEND_API_KEY=re_...  # Email notifications
-```
+See `.env.example` for all required variables:
+- `DATABASE_URL` - PostgreSQL connection string
+- `NEXTAUTH_SECRET` - 32-char secret for JWT
+- `NEXTAUTH_URL` - Your domain URL
+- `RESEND_API_KEY` - Email notifications
+- `NEXT_PUBLIC_GA_ID` - Google Analytics 4
+- `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` - Google Maps Embed API
 
 ## Kia Brand Colors (Tailwind)
 
-Use `kia-*` color utilities: `kia-red` (#BB162B), `kia-red-dark` (#8B1120), `kia-black` (#05141F), `kia-graphite`, `kia-silver`
+```
+kia-red: #BB162B       kia-red-dark: #8B1120
+kia-black: #05141F     kia-graphite: #58595B
+kia-silver: #C4C4C4
+```
+
+## Business Rules
+
+1. **Lead Capture**: `CustomerLead` requires email OR phone
+2. **Offers**: Can link to `CarModel` or `Variant` (both optional)
+3. **Publishing**: Pages/BlogPosts need `publishedAt` when `isPublished = true`
+4. **Status Values**: `pending`, `scheduled`, `completed`, `cancelled`
+5. **Date Validation**: Test drives/service require future dates
+
+## Documentation Index
+
+| Document | Description |
+|----------|-------------|
+| **[PRD.md](PRD.md)** | Product requirements, phases, features, KPIs |
+| **[ARCHITECTURE.md](ARCHITECTURE.md)** | System design, data flows, security |
+| **[DEPLOYMENT.md](DEPLOYMENT.md)** | Railway deployment guide |
+| **[TECH_STACK.md](TECH_STACK.md)** | Technology choices and rationale |
+| **[IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md)** | Phase tracking, feature status |
+| **[GITHUB_WORKFLOW_GUIDE.md](GITHUB_WORKFLOW_GUIDE.md)** | CI/CD, branching strategy |
+
+## Common Tasks
+
+### Add a new API endpoint
+1. Create route file: `src/app/api/[resource]/route.ts`
+2. Add Zod schema in `src/lib/validations.ts`
+3. Use `successResponse`/`errorResponse` helpers
+
+### Add a new page
+1. Create page: `src/app/[route]/page.tsx`
+2. Add metadata export for SEO
+3. Update `src/app/sitemap.ts` if public
+
+### Add a form component
+1. Create in `src/components/forms/`
+2. Use React Hook Form + Zod resolver
+3. Submit to corresponding API endpoint
+
+### Run database migrations
+```bash
+npm run db:push      # Development (direct push)
+npm run db:migrate   # Production (create migration)
+```
+
+### Deploy to Railway
+```bash
+git push origin main  # Triggers automatic deployment
+```
+
+## Git Workflow
+
+- `main` → Production (epitomekia.com)
+- `develop` → Staging (dev.epitomekia.com)
+- `feature/*` → Feature branches (PR to develop)
+
+See [GITHUB_WORKFLOW_GUIDE.md](GITHUB_WORKFLOW_GUIDE.md) for details.

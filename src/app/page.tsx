@@ -15,7 +15,7 @@ const SECTIONS = [
     imageSrc: '/models/seltos.png',
     isFirst: true,
     buttons: [
-      { label: 'Order Now', href: '/models/seltos', variant: 'primary' as const },
+      { label: 'Explore', href: '/models/seltos', variant: 'primary' as const },
       { label: 'Test Drive', variant: 'outline' as const, action: 'test-drive' as const }
     ]
   },
@@ -39,7 +39,7 @@ const SECTIONS = [
     price: 'Starting from ₹7.30 Lakh*',
     imageSrc: '/models/sonet.png',
     buttons: [
-      { label: 'Order Now', href: '/models/sonet', variant: 'primary' as const },
+      { label: 'Explore', href: '/models/sonet', variant: 'primary' as const },
       { label: 'Test Drive', variant: 'outline' as const, action: 'test-drive' as const }
     ]
   },
@@ -51,7 +51,7 @@ const SECTIONS = [
     price: 'Starting from ₹10.99 Lakh*',
     imageSrc: '/models/carens.png',
     buttons: [
-      { label: 'Order Now', href: '/models/carens', variant: 'primary' as const },
+      { label: 'Explore', href: '/models/carens', variant: 'primary' as const },
       { label: 'Test Drive', variant: 'outline' as const, action: 'test-drive' as const }
     ]
   },
@@ -63,7 +63,7 @@ const SECTIONS = [
     price: 'Starting from ₹65.90 Lakh*',
     imageSrc: '/models/ev6.png',
     buttons: [
-      { label: 'Order Now', href: '/models/ev6', variant: 'primary' as const },
+      { label: 'Explore', href: '/models/ev6', variant: 'primary' as const },
       { label: 'Test Drive', variant: 'outline' as const, action: 'test-drive' as const }
     ]
   },
@@ -75,7 +75,7 @@ const SECTIONS = [
     price: 'Starting from ₹1.30 Crore*',
     imageSrc: '/models/ev9.png',
     buttons: [
-      { label: 'Order Now', href: '/models/ev9', variant: 'primary' as const },
+      { label: 'Explore', href: '/models/ev9', variant: 'primary' as const },
       { label: 'Test Drive', variant: 'outline' as const, action: 'test-drive' as const }
     ]
   },
@@ -87,7 +87,7 @@ const SECTIONS = [
     price: 'Starting from ₹59.42 Lakh*',
     imageSrc: '/models/carnival.png',
     buttons: [
-      { label: 'Order Now', href: '/models/carnival', variant: 'primary' as const },
+      { label: 'Explore', href: '/models/carnival', variant: 'primary' as const },
       { label: 'Test Drive', variant: 'outline' as const, action: 'test-drive' as const }
     ]
   },
