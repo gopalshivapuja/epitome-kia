@@ -24,8 +24,13 @@ import {
   Eye,
   EyeOff,
   Calendar,
+  ExternalLink,
+  Link2,
+  Check,
+  X,
 } from 'lucide-react'
 import Link from 'next/link'
+import { ArticleCurationForm } from '@/components/admin/ArticleCurationForm'
 
 async function getBlogPosts() {
   try {
@@ -54,9 +59,23 @@ async function getPages() {
   }
 }
 
+async function getCuratedArticles() {
+  try {
+    const articles = await prisma.curatedArticle.findMany({
+      where: { deletedAt: null },
+      orderBy: { createdAt: 'desc' },
+      take: 50,
+    })
+    return articles
+  } catch (error) {
+    console.error('Error fetching curated articles:', error)
+    return []
+  }
+}
+
 async function getContentStats() {
   try {
-    const [totalPosts, publishedPosts, draftPosts, totalPages] =
+    const [totalPosts, publishedPosts, draftPosts, totalPages, totalArticles, approvedArticles, pendingArticles] =
       await Promise.all([
         prisma.blogPost.count({ where: { deletedAt: null } }),
         prisma.blogPost.count({
@@ -66,11 +85,14 @@ async function getContentStats() {
           where: { deletedAt: null, isPublished: false },
         }),
         prisma.page.count({ where: { deletedAt: null } }),
+        prisma.curatedArticle.count({ where: { deletedAt: null } }),
+        prisma.curatedArticle.count({ where: { deletedAt: null, isApproved: true } }),
+        prisma.curatedArticle.count({ where: { deletedAt: null, isApproved: false } }),
       ])
-    return { totalPosts, publishedPosts, draftPosts, totalPages }
+    return { totalPosts, publishedPosts, draftPosts, totalPages, totalArticles, approvedArticles, pendingArticles }
   } catch (error) {
     console.error('Error fetching content stats:', error)
-    return { totalPosts: 0, publishedPosts: 0, draftPosts: 0, totalPages: 0 }
+    return { totalPosts: 0, publishedPosts: 0, draftPosts: 0, totalPages: 0, totalArticles: 0, approvedArticles: 0, pendingArticles: 0 }
   }
 }
 
@@ -228,40 +250,116 @@ async function PagesTable() {
   )
 }
 
+async function CuratedArticlesTable() {
+  const articles = await getCuratedArticles()
+
+  if (articles.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-12 text-center">
+        <Link2 className="h-12 w-12 text-muted-foreground mb-4" />
+        <h3 className="text-lg font-medium">No curated articles yet</h3>
+        <p className="text-muted-foreground mb-4">
+          Add articles from Autocar India, Team-BHP, and other automotive publications.
+        </p>
+      </div>
+    )
+  }
+
+  return (
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead>Title</TableHead>
+          <TableHead>Source</TableHead>
+          <TableHead>Tags</TableHead>
+          <TableHead>Status</TableHead>
+          <TableHead>Added</TableHead>
+          <TableHead className="text-right">Actions</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {articles.map((article) => (
+          <TableRow key={article.id}>
+            <TableCell>
+              <div className="flex flex-col max-w-[300px]">
+                <span className="font-medium truncate">{article.title}</span>
+                {article.summary && (
+                  <span className="text-sm text-muted-foreground line-clamp-1">
+                    {article.summary}
+                  </span>
+                )}
+              </div>
+            </TableCell>
+            <TableCell>
+              <Badge variant="outline">{article.source}</Badge>
+            </TableCell>
+            <TableCell>
+              <div className="flex flex-wrap gap-1">
+                {article.kiaTags.slice(0, 3).map((tag) => (
+                  <Badge key={tag} variant="secondary" className="text-xs capitalize">
+                    {tag}
+                  </Badge>
+                ))}
+                {article.kiaTags.length > 3 && (
+                  <Badge variant="secondary" className="text-xs">
+                    +{article.kiaTags.length - 3}
+                  </Badge>
+                )}
+              </div>
+            </TableCell>
+            <TableCell>
+              {article.isApproved ? (
+                <Badge className="bg-green-100 text-green-800">
+                  <Check className="h-3 w-3 mr-1" />
+                  Approved
+                </Badge>
+              ) : (
+                <Badge className="bg-yellow-100 text-yellow-800">
+                  <Calendar className="h-3 w-3 mr-1" />
+                  Pending
+                </Badge>
+              )}
+            </TableCell>
+            <TableCell className="text-sm text-muted-foreground">
+              {formatDate(article.createdAt)}
+            </TableCell>
+            <TableCell className="text-right">
+              <div className="flex justify-end gap-1">
+                <a href={article.sourceUrl} target="_blank" rel="noopener noreferrer">
+                  <Button variant="ghost" size="sm">
+                    <ExternalLink className="h-4 w-4" />
+                  </Button>
+                </a>
+                <Button variant="ghost" size="sm">
+                  <Edit className="h-4 w-4" />
+                </Button>
+                <Button variant="ghost" size="sm" className="text-red-600">
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </div>
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  )
+}
+
 async function ContentStats() {
   const stats = await getContentStats()
 
   return (
-    <div className="grid gap-4 md:grid-cols-4">
+    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Total Posts</CardTitle>
+          <CardTitle className="text-sm font-medium">Blog Posts</CardTitle>
           <Newspaper className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">{stats.totalPosts}</div>
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Published</CardTitle>
-          <Eye className="h-4 w-4 text-green-500" />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold text-green-600">
-            {stats.publishedPosts}
-          </div>
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Drafts</CardTitle>
-          <EyeOff className="h-4 w-4 text-yellow-500" />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold text-yellow-600">
-            {stats.draftPosts}
-          </div>
+          <p className="text-xs text-muted-foreground">
+            {stats.publishedPosts} published, {stats.draftPosts} drafts
+          </p>
         </CardContent>
       </Card>
       <Card>
@@ -272,6 +370,40 @@ async function ContentStats() {
         <CardContent>
           <div className="text-2xl font-bold text-blue-600">
             {stats.totalPages}
+          </div>
+        </CardContent>
+      </Card>
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle className="text-sm font-medium">Curated Articles</CardTitle>
+          <Link2 className="h-4 w-4 text-purple-500" />
+        </CardHeader>
+        <CardContent>
+          <div className="text-2xl font-bold text-purple-600">{stats.totalArticles}</div>
+          <p className="text-xs text-muted-foreground">
+            {stats.approvedArticles} approved, {stats.pendingArticles} pending
+          </p>
+        </CardContent>
+      </Card>
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle className="text-sm font-medium">Approved</CardTitle>
+          <Check className="h-4 w-4 text-green-500" />
+        </CardHeader>
+        <CardContent>
+          <div className="text-2xl font-bold text-green-600">
+            {stats.approvedArticles}
+          </div>
+        </CardContent>
+      </Card>
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle className="text-sm font-medium">Pending Review</CardTitle>
+          <EyeOff className="h-4 w-4 text-yellow-500" />
+        </CardHeader>
+        <CardContent>
+          <div className="text-2xl font-bold text-yellow-600">
+            {stats.pendingArticles}
           </div>
         </CardContent>
       </Card>
@@ -299,11 +431,41 @@ export default function ContentPage() {
         <ContentStats />
       </Suspense>
 
-      <Tabs defaultValue="posts" className="space-y-4">
+      <Tabs defaultValue="articles" className="space-y-4">
         <TabsList>
+          <TabsTrigger value="articles">Curated Articles</TabsTrigger>
           <TabsTrigger value="posts">Blog Posts</TabsTrigger>
           <TabsTrigger value="pages">Pages</TabsTrigger>
         </TabsList>
+
+        <TabsContent value="articles">
+          <div className="space-y-6">
+            {/* Article Curation Form */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Add New Article</CardTitle>
+                <p className="text-sm text-muted-foreground">
+                  Paste a URL from Autocar India, Team-BHP, CarDekho, or other automotive sites
+                </p>
+              </CardHeader>
+              <CardContent>
+                <ArticleCurationForm />
+              </CardContent>
+            </Card>
+
+            {/* Articles List */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Curated Articles</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Suspense fallback={<div>Loading articles...</div>}>
+                  <CuratedArticlesTable />
+                </Suspense>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
 
         <TabsContent value="posts">
           <Card>

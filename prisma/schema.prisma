@@ -354,3 +354,27 @@ model AdminUser {
   @@index([role], name: "admin_users_role_idx")
   @@map("admin_users")
 }
+
+// Curated external articles from automotive publications
+model CuratedArticle {
+  id            String    @id @default(uuid()) @db.Uuid
+  title         String
+  source        String    // "Autocar India", "Team-BHP", "CarDekho", etc.
+  sourceUrl     String    @unique @map("source_url")
+  summary       String?   // AI-generated brief (2-3 sentences)
+  thumbnailUrl  String?   @map("thumbnail_url")
+  publishedDate DateTime? @map("published_date") @db.Date
+  kiaTags       String[]  @map("kia_tags") // ["seltos", "sonet", "ev6"]
+  sentiment     String    @default("positive") // "positive", "neutral"
+  isApproved    Boolean   @default(false) @map("is_approved")
+  approvedBy    String?   @map("approved_by")
+  approvedAt    DateTime? @map("approved_at") @db.Timestamptz
+  createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt     DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt     DateTime? @map("deleted_at") @db.Timestamptz
+
+  @@index([source], name: "curated_articles_source_idx")
+  @@index([isApproved], name: "curated_articles_approved_idx")
+  @@index([kiaTags], name: "curated_articles_tags_idx")
+  @@map("curated_articles")
+}

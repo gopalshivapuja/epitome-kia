@@ -148,7 +148,7 @@ export function Footer() {
       <div className="border-t border-gray-800">
         <div className="container py-5 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-xs text-gray-500">
-            {COMPANY_INFO.copyright}
+            &copy; {new Date().getFullYear()} {COMPANY_INFO.copyrightTemplate}
           </p>
           <div className="flex gap-6 text-xs text-gray-500">
             <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
