@@ -10,10 +10,11 @@ import { COMPANY_INFO } from '@/lib/company-data'
 
 const navigation = [
   { name: 'Models', href: '/models' },
+  { name: 'Configure', href: '/configure' },
+  { name: 'Compare', href: '/compare' },
   { name: 'Offers', href: '/offers' },
   { name: 'Test Drive', href: '/test-drive' },
   { name: 'Service', href: '/service' },
-  { name: 'EMI Calculator', href: '/emi-calculator' },
   { name: 'Contact', href: '/contact' },
 ]
 

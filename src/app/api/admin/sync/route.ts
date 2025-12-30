@@ -1,41 +1,93 @@
 import { NextRequest } from 'next/server'
+import { z } from 'zod'
 import { auth } from '@/lib/auth'
-import { successResponse, handleApiError, errorResponse } from '@/lib/api-utils'
+import { successResponse, errorResponse, handleApiError } from '@/lib/api-utils'
+import {
+  checkForUpdates,
+  applyChanges,
+  syncSingleModel,
+} from '@/lib/sync/sync-manager'
+import { summarizeChanges, type DiffResult } from '@/lib/sync/diff-checker'
 
-/**
- * POST /api/admin/sync
- * 
- * Triggers a content synchronization job.
- * In production, this would queue a background job using a service like:
- * - Vercel Cron Jobs
- * - Railway scheduled tasks
- * - An external job queue (Bull, BullMQ, etc.)
- * 
- * For now, this logs the request and returns a success response.
- * The actual sync can be triggered manually via `npm run scripts:sync`.
- */
+// POST - Trigger a sync check or apply changes
 export async function POST(request: NextRequest) {
-    try {
-        // Verify admin authentication
-        const session = await auth()
-        
-        if (!session?.user) {
-            return errorResponse('Unauthorized', 401)
-        }
+  try {
+    // Verify admin authentication
+    const session = await auth()
+    if (!session?.user?.role) {
+      return errorResponse('Unauthorized', 401)
+    }
 
-        // Log the sync trigger for debugging/audit
-        console.log(`[${new Date().toISOString()}] Content sync triggered by: ${session.user.email}`)
+    const body = await request.json().catch(() => ({}))
+    const action = body.action || 'check'
 
-        // In production, you would queue the job here:
-        // await jobQueue.add('sync-content', { triggeredBy: session.user.email })
+    switch (action) {
+      case 'check': {
+        // Run sync check for all models
+        console.log(`[${new Date().toISOString()}] Sync check triggered by: ${session.user.email}`)
+
+        const result = await checkForUpdates()
+        const summary = summarizeChanges(result.diffs)
 
         return successResponse({
-            message: 'Content sync initiated. The sync will run in the background. Check server logs for progress.',
-            status: 'queued',
-            triggeredBy: session.user.email,
-            timestamp: new Date().toISOString(),
+          status: result.status,
+          startedAt: result.startedAt,
+          completedAt: result.completedAt,
+          modelsScraped: result.modelsScraped,
+          summary,
+          diffs: result.diffs,
+          errors: result.errors,
         })
-    } catch (error) {
-        return handleApiError(error)
+      }
+
+      case 'check-single': {
+        // Check a single model
+        const modelSlug = z.string().min(1).parse(body.modelSlug)
+        console.log(`[${new Date().toISOString()}] Single model sync check for ${modelSlug} by: ${session.user.email}`)
+
+        const diff = await syncSingleModel(modelSlug)
+
+        if (!diff) {
+          return errorResponse('Failed to sync model', 500)
+        }
+
+        return successResponse({
+          modelSlug,
+          hasChanges: diff.hasChanges,
+          changes: diff.changes,
+        })
+      }
+
+      case 'apply': {
+        // Apply approved changes
+        const diffsSchema = z.array(
+          z.object({
+            modelSlug: z.string(),
+            hasChanges: z.boolean(),
+            changes: z.array(z.unknown()),
+          })
+        )
+
+        const diffs = diffsSchema.parse(body.diffs) as DiffResult[]
+        const approvedBy = session.user.email || 'unknown'
+
+        console.log(`[${new Date().toISOString()}] Applying sync changes by: ${approvedBy}`)
+
+        const result = await applyChanges(diffs, approvedBy)
+
+        return successResponse({
+          applied: result.applied,
+          errors: result.errors,
+          message: result.applied > 0
+            ? `Successfully applied ${result.applied} change(s)`
+            : 'No changes applied',
+        })
+      }
+
+      default:
+        return errorResponse('Invalid action. Use: check, check-single, or apply', 400)
     }
+  } catch (error) {
+    return handleApiError(error)
+  }
 }
