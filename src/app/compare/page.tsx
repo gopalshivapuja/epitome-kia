@@ -7,7 +7,7 @@ import Image from 'next/image'
 import { ChevronRight, Plus, X, ArrowRight, Calendar } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { formatPrice } from '@/lib/utils'
+import { formatPriceLakh } from '@/lib/utils'
 
 type Model = {
   id: string
@@ -107,7 +107,7 @@ export default function ComparePage() {
         const response = await fetch('/api/models')
         const data = await response.json()
         if (data.success) {
-          setModels(data.data)
+          setModels(data.data?.models || [])
         }
       } catch (error) {
         console.error('Failed to fetch models:', error)
@@ -128,13 +128,13 @@ export default function ComparePage() {
     setSelectedModels(selectedModels.filter((m) => m.id !== modelId))
   }
 
-  const availableModels = models.filter(
+  const availableModels = (models || []).filter(
     (model) => !selectedModels.find((m) => m.id === model.id)
   )
 
   const getSpecValue = (model: Model, specKey: string): string => {
     if (specKey === 'startingPrice') {
-      return model.startingPrice ? formatPrice(model.startingPrice) + '*' : 'Price on request'
+      return model.startingPrice ? formatPriceLakh(model.startingPrice) + '*' : 'Price on request'
     }
     if (specKey === 'modelYear') {
       return model.modelYear.toString()
@@ -185,7 +185,7 @@ export default function ComparePage() {
                 </div>
                 <h3 className="text-center font-semibold">{model.name}</h3>
                 <p className="text-center text-sm text-muted-foreground">
-                  {model.startingPrice ? formatPrice(model.startingPrice) + '*' : 'Price on request'}
+                  {model.startingPrice ? formatPriceLakh(model.startingPrice) + '*' : 'Price on request'}
                 </p>
               </CardContent>
             </Card>

@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic'
 import { ArrowLeft, Calendar, Wrench, Calculator, Tag, ChevronRight, Download } from 'lucide-react'
 import { getModelBySlug, getModels } from '@/lib/data'
 import { EMICalculator } from '@/components/features/emi-calculator'
-import { formatPrice, getKiaBrochureUrl } from '@/lib/utils'
+import { formatPriceLakh, getKiaBrochureUrl } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -107,7 +107,7 @@ async function ModelDetail({ slug }: { slug: string }) {
                 <div>
                   <span className="text-sm text-muted-foreground">Starting from</span>
                   <p className="text-3xl font-bold text-kia-red">
-                    {formatPrice(model.startingPrice)}*
+                    {formatPriceLakh(model.startingPrice)}*
                   </p>
                 </div>
               ) : (
@@ -196,7 +196,7 @@ async function ModelDetail({ slug }: { slug: string }) {
                     <span className="font-medium">{variant.name}</span>
                     {variant.basePrice && (
                       <span className="text-xs text-muted-foreground">
-                        {formatPrice(variant.basePrice)}
+                        {formatPriceLakh(variant.basePrice)}
                       </span>
                     )}
                   </TabsTrigger>
@@ -222,7 +222,7 @@ async function ModelDetail({ slug }: { slug: string }) {
                           <div className="text-right">
                             <span className="text-sm text-muted-foreground">Ex-showroom</span>
                             <p className="text-2xl font-bold text-kia-red">
-                              {formatPrice(variant.basePrice)}
+                              {formatPriceLakh(variant.basePrice)}
                             </p>
                           </div>
                         )}
