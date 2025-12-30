@@ -204,4 +204,23 @@ git push origin main  # Triggers automatic deployment
 - `develop` → Staging (dev.epitomekia.com)
 - `feature/*` → Feature branches (PR to develop)
 
+### ⚠️ PHASE 2 BRANCH PROTECTION (ACTIVE)
+
+**DO NOT TOUCH `main` BRANCH UNTIL PHASE 2 IS COMPLETE AND TESTED**
+
+During Phase 2 development:
+- ALL work happens on `develop` branch ONLY
+- NO merges to `main` until Phase 2 is fully complete
+- NO PRs to `main` until explicitly approved by owner
+- Test everything on staging (develop) first
+- Feature branches should merge to `develop`, not `main`
+
+```bash
+# Always verify you're on develop before any work
+git branch --show-current  # Should output: develop
+
+# If on wrong branch, switch to develop
+git checkout develop
+```
+
 See [GITHUB_WORKFLOW_GUIDE.md](GITHUB_WORKFLOW_GUIDE.md) for details.

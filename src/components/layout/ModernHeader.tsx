@@ -2,15 +2,16 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import { cn } from '@/lib/utils'
-import { Logo } from '@/components/ui/logo'
+import { Button } from '@/components/ui/button'
+import { COMPANY_INFO } from '@/lib/company-data'
 
 const HEADER_LINKS = [
     { name: 'Models', href: '/models' },
-    { name: 'Compare', href: '/compare' },
     { name: 'Offers', href: '/offers' },
-    { name: 'Service', href: '/service' },
+    { name: 'Services', href: '/service' },
     { name: 'Contact', href: '/contact' },
 ]
 
@@ -27,25 +28,30 @@ export function ModernHeader() {
     }, [])
 
     return (
-        <header className="fixed top-0 left-0 right-0 z-50">
+        <header className="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
             <div className={cn(
-                "flex items-center justify-between px-6 transition-all duration-300",
-                isScrolled
-                    ? "py-3 bg-white shadow-md"
-                    : "py-4 bg-white shadow-sm"
+                "flex items-center justify-between px-6 py-4 transition-all duration-500",
+                isScrolled ? "bg-white/90 backdrop-blur-md text-black shadow-sm" : "bg-transparent text-white"
             )}>
                 {/* Logo */}
-                <div className="z-50">
-                    <Logo variant="dark" size="lg" />
-                </div>
+                <Link href="/" className="z-50 flex items-center">
+                    <Image
+                        src={COMPANY_INFO.logo}
+                        alt={COMPANY_INFO.brand}
+                        width={140}
+                        height={45}
+                        className={cn("h-10 w-auto transition-all duration-300", isScrolled ? "invert-0" : "invert")}
+                        priority
+                    />
+                </Link>
 
-                {/* Desktop Center Nav */}
-                <nav className="hidden lg:flex items-center gap-6 absolute left-1/2 -translate-x-1/2">
+                {/* Desktop Center Nav (Tesla Style) */}
+                <nav className="hidden lg:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
                     {HEADER_LINKS.map((link) => (
                         <Link
                             key={link.name}
                             href={link.href}
-                            className="text-sm font-medium text-gray-700 hover:text-gray-900 px-3 py-2 rounded transition-colors hover:bg-gray-100"
+                            className="text-sm font-medium tracking-wide hover:bg-black/5 dark:hover:bg-white/10 px-3 py-2 rounded transition-colors"
                         >
                             {link.name}
                         </Link>
@@ -53,17 +59,16 @@ export function ModernHeader() {
                 </nav>
 
                 {/* Right Actions */}
-                <div className="flex items-center gap-3 z-50">
-                    <Link
-                        href="/test-drive"
-                        className="hidden sm:inline-flex items-center justify-center bg-kia-red text-white hover:bg-kia-red-dark px-4 py-2 rounded text-sm font-medium transition-colors"
-                    >
-                        Book Test Drive
+                <div className="flex items-center gap-4 z-50">
+                    <Link href="/test-drive" className="hidden sm:block">
+                        <span className="text-sm font-medium hover:bg-black/5 px-3 py-2 rounded transition-colors">
+                            Test Drive
+                        </span>
                     </Link>
 
                     <button
                         onClick={() => setIsMenuOpen(!isMenuOpen)}
-                        className="text-sm font-medium px-4 py-2 rounded bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors lg:hidden"
+                        className="text-sm font-medium bg-black/5 dark:bg-white/10 px-4 py-2 rounded backdrop-blur-sm transition-colors hover:bg-black/10"
                     >
                         {isMenuOpen ? 'Close' : 'Menu'}
                     </button>

@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { Facebook, Instagram, Youtube, Linkedin, Twitter, Send, Loader2 } from 'lucide-react'
-import { COMPANY_INFO, LOCATIONS, SOCIAL_LINKS, CAR_MODELS } from '@/lib/company-data'
+import { COMPANY_INFO, LOCATIONS, SOCIAL_LINKS } from '@/lib/company-data'
 import { Logo } from '@/components/ui/logo'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -61,7 +61,7 @@ export function Footer() {
                 className="bg-gray-800 border-gray-700 text-white placeholder:text-gray-500"
                 required
               />
-              <Button type="submit" variant="kia" disabled={isLoading} aria-label="Subscribe to newsletter">
+              <Button type="submit" variant="kia" disabled={isLoading}>
                 {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
               </Button>
             </form>
@@ -85,68 +85,33 @@ export function Footer() {
             </p>
             {/* Social Icons */}
             <div className="flex gap-4">
-              <a href={SOCIAL_LINKS.facebook} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-white transition-colors" aria-label="Follow us on Facebook">
+              <a href={SOCIAL_LINKS.facebook} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-white transition-colors">
                 <Facebook className="h-5 w-5" />
               </a>
-              <a href={SOCIAL_LINKS.instagram} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-white transition-colors" aria-label="Follow us on Instagram">
+              <a href={SOCIAL_LINKS.instagram} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-white transition-colors">
                 <Instagram className="h-5 w-5" />
               </a>
-              <a href={SOCIAL_LINKS.youtube} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-white transition-colors" aria-label="Subscribe on YouTube">
+              <a href={SOCIAL_LINKS.youtube} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-white transition-colors">
                 <Youtube className="h-5 w-5" />
               </a>
-              <a href={SOCIAL_LINKS.linkedin} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-white transition-colors" aria-label="Connect on LinkedIn">
+              <a href={SOCIAL_LINKS.linkedin} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-white transition-colors">
                 <Linkedin className="h-5 w-5" />
               </a>
-              <a href={SOCIAL_LINKS.twitter} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-white transition-colors" aria-label="Follow us on Twitter">
+              <a href={SOCIAL_LINKS.twitter} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-white transition-colors">
                 <Twitter className="h-5 w-5" />
               </a>
             </div>
           </div>
 
-          {/* Models - Grouped by Category */}
+          {/* Models */}
           <div>
             <h3 className="text-xs font-semibold uppercase tracking-widest text-gray-500 mb-5">Models</h3>
-            <div className="space-y-4">
-              {/* Popular */}
-              <div>
-                <p className="text-xs text-gray-600 mb-2">Popular</p>
-                <ul className="space-y-2">
-                  {CAR_MODELS.filter(m => ['seltos', 'sonet', 'carens'].includes(m.slug)).map(model => (
-                    <li key={model.slug}>
-                      <Link href={`/models/${model.slug}`} className="text-gray-400 hover:text-white transition-colors text-sm">
-                        {model.name}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              {/* Premium & Electric */}
-              <div>
-                <p className="text-xs text-gray-600 mb-2">Premium & Electric</p>
-                <ul className="space-y-2">
-                  {CAR_MODELS.filter(m => m.isElectric || m.isPremium).filter(m => !m.isComingSoon).map(model => (
-                    <li key={model.slug}>
-                      <Link href={`/models/${model.slug}`} className="text-gray-400 hover:text-white transition-colors text-sm">
-                        {model.name}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              {/* Coming Soon */}
-              <div>
-                <p className="text-xs text-gray-600 mb-2">Coming Soon</p>
-                <ul className="space-y-2">
-                  {CAR_MODELS.filter(m => m.isComingSoon).map(model => (
-                    <li key={model.slug}>
-                      <Link href={`/models/${model.slug}`} className="text-gray-400 hover:text-white transition-colors text-sm">
-                        {model.name}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
+            <ul className="space-y-3">
+              <li><Link href="/models/seltos" className="text-gray-400 hover:text-white transition-colors text-sm">Kia Seltos</Link></li>
+              <li><Link href="/models/sonet" className="text-gray-400 hover:text-white transition-colors text-sm">Kia Sonet</Link></li>
+              <li><Link href="/models/carens" className="text-gray-400 hover:text-white transition-colors text-sm">Kia Carens</Link></li>
+              <li><Link href="/models/ev6" className="text-gray-400 hover:text-white transition-colors text-sm">Kia EV6</Link></li>
+            </ul>
           </div>
 
           {/* Quick Links */}
@@ -163,31 +128,17 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Locations */}
+          {/* Contact */}
           <div>
-            <h3 className="text-xs font-semibold uppercase tracking-widest text-gray-500 mb-5">Our Locations</h3>
+            <h3 className="text-xs font-semibold uppercase tracking-widest text-gray-500 mb-5">Contact</h3>
             <div className="space-y-3 text-sm">
-              {LOCATIONS.map((location) => (
-                <div key={location.id} className="group">
-                  <a
-                    href={location.mapUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-gray-400 hover:text-white transition-colors flex items-start gap-2"
-                  >
-                    <span className="font-medium">{location.name}</span>
-                    {location.label && (
-                      <span className="text-xs text-gray-600">({location.label})</span>
-                    )}
-                  </a>
-                </div>
-              ))}
-              <Link
-                href="/contact"
-                className="inline-block mt-3 text-kia-red hover:text-kia-red-dark transition-colors text-sm font-medium"
-              >
-                View All Locations →
-              </Link>
+              <p className="text-gray-400">{LOCATIONS[0].address}</p>
+              <a href={`tel:${LOCATIONS[0].salesPhone[0]}`} className="block text-gray-400 hover:text-white transition-colors">
+                {LOCATIONS[0].salesPhone[0]}
+              </a>
+              <a href={`mailto:${LOCATIONS[0].email}`} className="block text-gray-400 hover:text-white transition-colors">
+                {LOCATIONS[0].email}
+              </a>
             </div>
           </div>
         </div>
@@ -197,7 +148,7 @@ export function Footer() {
       <div className="border-t border-gray-800">
         <div className="container py-5 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-xs text-gray-500">
-            © {new Date().getFullYear()} {COMPANY_INFO.copyrightTemplate}
+            {COMPANY_INFO.copyright}
           </p>
           <div className="flex gap-6 text-xs text-gray-500">
             <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
