@@ -1,0 +1,46 @@
+name: Production Deploy Check
+
+on:
+  pull_request:
+    branches: [main]
+
+env:
+  DATABASE_URL: "postgresql://user:pass@localhost:5432/db"
+  NEXTAUTH_SECRET: "ci-build-secret-not-used-in-production"
+  NEXTAUTH_URL: "http://localhost:3000"
+
+jobs:
+  deploy-check:
+    name: Pre-Production Verification
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Generate Prisma Client
+        run: npx prisma generate
+      
+      - name: Run Full Deploy Check
+        run: npm run deploy:check
+      
+      - name: Success Comment
+        if: success()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '✅ **All quality checks passed!**\n\nThis PR is ready for production deployment.\n\n- ✓ Linting\n- ✓ Type checking\n- ✓ Build successful'
+            })

@@ -1,0 +1,14 @@
+# Default owner for everything in the repo
+* @gopalshivapuja
+
+# Database schema changes require extra attention
+/prisma/ @gopalshivapuja
+
+# Admin functionality
+/src/app/admin/ @gopalshivapuja
+
+# API routes
+/src/app/api/ @gopalshivapuja
+
+# Authentication
+/src/lib/auth.ts @gopalshivapuja
