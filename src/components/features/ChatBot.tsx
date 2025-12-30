@@ -125,8 +125,8 @@ export function ChatBot() {
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0, opacity: 0 }}
             onClick={() => setIsOpen(true)}
-            className="fixed bottom-6 right-6 z-50 bg-kia-red text-white rounded-full p-4 shadow-lg hover:bg-kia-red-dark transition-colors"
-            aria-label="Open chat"
+            className="fixed bottom-6 right-6 z-50 bg-kia-red text-white rounded-full p-4 shadow-lg hover:bg-kia-red-dark transition-colors focus:outline-none focus:ring-2 focus:ring-kia-red focus:ring-offset-2"
+            aria-label="Open chat assistant"
           >
             <MessageCircle className="h-6 w-6" />
           </motion.button>
@@ -137,6 +137,9 @@ export function ChatBot() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="chat-title"
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
@@ -156,7 +159,7 @@ export function ChatBot() {
                 </div>
                 {!isMinimized && (
                   <div>
-                    <h3 className="font-semibold text-sm">Epitome Kia Assistant</h3>
+                    <h3 id="chat-title" className="font-semibold text-sm">Epitome Kia Assistant</h3>
                     <p className="text-xs text-white/80">Online</p>
                   </div>
                 )}
@@ -164,14 +167,14 @@ export function ChatBot() {
               <div className="flex items-center gap-1">
                 <button
                   onClick={() => setIsMinimized(!isMinimized)}
-                  className="p-1.5 hover:bg-white/10 rounded transition-colors"
+                  className="p-1.5 hover:bg-white/10 rounded transition-colors focus:outline-none focus:ring-2 focus:ring-white/50"
                   aria-label={isMinimized ? 'Expand chat' : 'Minimize chat'}
                 >
                   <Minimize2 className="h-4 w-4" />
                 </button>
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="p-1.5 hover:bg-white/10 rounded transition-colors"
+                  className="p-1.5 hover:bg-white/10 rounded transition-colors focus:outline-none focus:ring-2 focus:ring-white/50"
                   aria-label="Close chat"
                 >
                   <X className="h-4 w-4" />
@@ -243,7 +246,8 @@ export function ChatBot() {
                       onChange={(e) => setInput(e.target.value)}
                       placeholder="Type your message..."
                       disabled={isLoading}
-                      className="flex-1 px-4 py-2.5 bg-gray-100 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-kia-red/30"
+                      aria-label="Chat message input"
+                      className="flex-1 px-4 py-2.5 bg-gray-100 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-kia-red focus:ring-offset-1"
                     />
                     <Button
                       type="submit"

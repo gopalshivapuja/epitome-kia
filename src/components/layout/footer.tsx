@@ -85,19 +85,19 @@ export function Footer() {
             </p>
             {/* Social Icons */}
             <div className="flex gap-4">
-              <a href={SOCIAL_LINKS.facebook} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-white transition-colors">
+              <a href={SOCIAL_LINKS.facebook} target="_blank" rel="noopener noreferrer" aria-label="Follow us on Facebook" className="text-gray-500 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/50 rounded">
                 <Facebook className="h-5 w-5" />
               </a>
-              <a href={SOCIAL_LINKS.instagram} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-white transition-colors">
+              <a href={SOCIAL_LINKS.instagram} target="_blank" rel="noopener noreferrer" aria-label="Follow us on Instagram" className="text-gray-500 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/50 rounded">
                 <Instagram className="h-5 w-5" />
               </a>
-              <a href={SOCIAL_LINKS.youtube} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-white transition-colors">
+              <a href={SOCIAL_LINKS.youtube} target="_blank" rel="noopener noreferrer" aria-label="Subscribe to our YouTube channel" className="text-gray-500 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/50 rounded">
                 <Youtube className="h-5 w-5" />
               </a>
-              <a href={SOCIAL_LINKS.linkedin} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-white transition-colors">
+              <a href={SOCIAL_LINKS.linkedin} target="_blank" rel="noopener noreferrer" aria-label="Connect with us on LinkedIn" className="text-gray-500 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/50 rounded">
                 <Linkedin className="h-5 w-5" />
               </a>
-              <a href={SOCIAL_LINKS.twitter} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-white transition-colors">
+              <a href={SOCIAL_LINKS.twitter} target="_blank" rel="noopener noreferrer" aria-label="Follow us on X (Twitter)" className="text-gray-500 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/50 rounded">
                 <Twitter className="h-5 w-5" />
               </a>
             </div>
@@ -107,7 +107,7 @@ export function Footer() {
           <div>
             <h3 className="text-xs font-semibold uppercase tracking-widest text-gray-500 mb-5">Models</h3>
             <ul className="space-y-3">
-              {CAR_MODELS.slice(0, 6).map((model) => (
+              {CAR_MODELS.map((model) => (
                 <li key={model.slug}>
                   <Link href={`/models/${model.slug}`} className="text-gray-400 hover:text-white transition-colors text-sm">
                     {model.name}

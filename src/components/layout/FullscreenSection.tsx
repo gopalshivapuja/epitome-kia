@@ -35,9 +35,12 @@ export function FullscreenSection({
     const [isTestDriveOpen, setIsTestDriveOpen] = useState(false)
 
     return (
-        <section className="relative min-h-screen w-full overflow-hidden bg-white flex flex-col justify-center items-center py-20">
+        <section className="relative min-h-screen w-full overflow-hidden flex flex-col justify-center items-center py-20 bg-gradient-to-b from-gray-50 via-white to-white">
+            {/* Subtle background pattern for visual interest */}
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(120,120,120,0.05),transparent_70%)]" />
+
             {/* Content - Tesla style centered */}
-            <div className="container mx-auto px-6 text-center">
+            <div className="relative container mx-auto px-6 text-center">
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -57,13 +60,13 @@ export function FullscreenSection({
                     </p>
 
                     {/* Buttons - Tesla style */}
-                    <div className="mt-8 flex flex-col sm:flex-row justify-center gap-3">
+                    <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4 button-group">
                         {buttons?.map((btn, idx) => (
                             <Button
                                 key={idx}
                                 size="lg"
-                                variant={btn.variant === 'primary' ? 'default' : 'outline'}
-                                className="min-w-[180px]"
+                                variant={btn.variant === 'primary' ? 'kia' : 'outline'}
+                                className="min-w-[180px] text-base font-medium"
                                 onClick={() => {
                                     if (btn.action === 'emi') setIsEmiOpen(true)
                                     if (btn.action === 'test-drive') setIsTestDriveOpen(true)

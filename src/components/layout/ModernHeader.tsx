@@ -46,12 +46,12 @@ export function ModernHeader() {
                 </Link>
 
                 {/* Desktop Center Nav (Tesla Style) */}
-                <nav className="hidden lg:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
+                <nav className="hidden lg:flex items-center gap-6 absolute left-1/2 -translate-x-1/2 bg-black/5 backdrop-blur-sm rounded-full px-2 py-1">
                     {HEADER_LINKS.map((link) => (
                         <Link
                             key={link.name}
                             href={link.href}
-                            className="text-sm font-medium tracking-wide hover:bg-black/5 dark:hover:bg-white/10 px-3 py-2 rounded transition-colors"
+                            className="text-sm font-medium tracking-wide hover:bg-black/10 px-4 py-2 rounded-full transition-colors"
                         >
                             {link.name}
                         </Link>
@@ -68,7 +68,10 @@ export function ModernHeader() {
 
                     <button
                         onClick={() => setIsMenuOpen(!isMenuOpen)}
-                        className="text-sm font-medium bg-black/5 dark:bg-white/10 px-4 py-2 rounded backdrop-blur-sm transition-colors hover:bg-black/10"
+                        aria-expanded={isMenuOpen}
+                        aria-controls="mobile-menu"
+                        aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+                        className="text-sm font-medium bg-black/10 px-5 py-2.5 rounded-lg backdrop-blur-sm transition-colors hover:bg-black/20 focus:outline-none focus:ring-2 focus:ring-kia-red focus:ring-offset-2"
                     >
                         {isMenuOpen ? 'Close' : 'Menu'}
                     </button>
@@ -79,6 +82,10 @@ export function ModernHeader() {
             <AnimatePresence>
                 {isMenuOpen && (
                     <motion.div
+                        id="mobile-menu"
+                        role="dialog"
+                        aria-modal="true"
+                        aria-label="Navigation menu"
                         initial={{ opacity: 0, x: '100%' }}
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: '100%' }}

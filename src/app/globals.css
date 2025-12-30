@@ -53,6 +53,16 @@
     @apply border-border;
   }
 
+  /* Accessibility: Focus visible styles */
+  *:focus-visible {
+    @apply outline-2 outline-offset-2 outline-kia-red;
+  }
+
+  /* Remove default focus ring, use focus-visible instead */
+  *:focus:not(:focus-visible) {
+    outline: none;
+  }
+
   body {
     @apply bg-background text-foreground font-sans antialiased;
     background-color: #FFFFFF;
@@ -117,5 +127,49 @@
   /* Subtle hover effect for interactive elements */
   .hover-lift {
     @apply transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg;
+  }
+
+  /* Hero section gradient backgrounds */
+  .hero-gradient {
+    @apply bg-gradient-to-b from-gray-50 via-white to-white;
+  }
+
+  .hero-gradient-alt {
+    @apply bg-gradient-to-b from-slate-50 via-white to-white;
+  }
+}
+
+/* Tablet-specific responsive adjustments (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  /* Adjust hero titles for tablet */
+  .hero-title,
+  section h2 {
+    font-size: 2.5rem !important;
+    line-height: 1.2;
+  }
+
+  /* Model grid should show 2 columns on tablet */
+  .model-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 1.5rem;
+  }
+
+  /* Card adjustments for tablet */
+  .card-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  /* Button group wrapping */
+  .button-group {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+  }
+
+  /* Container padding adjustment */
+  .container {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
   }
 }
