@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -218,10 +219,13 @@ export function ArticleCurationForm() {
               </a>
             </div>
             {scrapedData.thumbnailUrl && (
-              <img
+              <Image
                 src={scrapedData.thumbnailUrl}
                 alt="Thumbnail"
+                width={96}
+                height={64}
                 className="w-24 h-16 object-cover rounded"
+                unoptimized
               />
             )}
           </div>

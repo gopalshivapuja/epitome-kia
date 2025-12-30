@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { ExternalLink, Calendar, Tag } from 'lucide-react'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -55,10 +56,12 @@ export function ArticleCard({ article, className }: ArticleCardProps) {
         {/* Thumbnail */}
         <div className="relative h-48 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
           {article.thumbnailUrl ? (
-            <img
+            <Image
               src={article.thumbnailUrl}
               alt={article.title}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              fill
+              className="object-cover group-hover:scale-105 transition-transform duration-300"
+              unoptimized
               onError={(e) => {
                 // Hide broken images
                 (e.target as HTMLImageElement).style.display = 'none'

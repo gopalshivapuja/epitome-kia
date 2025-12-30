@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 import { Star, Quote, ChevronLeft, ChevronRight, MapPin } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { cn } from '@/lib/utils'
@@ -41,10 +42,13 @@ function ReviewCard({ review }: { review: ReviewData }) {
             {/* Header */}
             <div className="flex items-start gap-4 mb-4">
                 {review.authorPhoto ? (
-                    <img
+                    <Image
                         src={review.authorPhoto}
                         alt={review.author}
+                        width={48}
+                        height={48}
                         className="w-12 h-12 rounded-full object-cover"
+                        unoptimized
                     />
                 ) : (
                     <div className="w-12 h-12 rounded-full bg-kia-red/10 flex items-center justify-center">
