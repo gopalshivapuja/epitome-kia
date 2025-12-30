@@ -2,6 +2,7 @@
 
 import { FullscreenSection } from '@/components/layout/FullscreenSection'
 import { Footer } from '@/components/layout/footer'
+import { GoogleReviews } from '@/components/features/GoogleReviews'
 
 // Homepage sections featuring all Kia models - Tesla-style layout
 const SECTIONS = [
@@ -106,6 +107,10 @@ export default function Home() {
           isFirst={idx === 0}
         />
       ))}
+
+      {/* Customer Reviews Section */}
+      <GoogleReviews featurableWidgetId={process.env.NEXT_PUBLIC_FEATURABLE_WIDGET_ID} />
+
       <Footer />
     </main>
   )
