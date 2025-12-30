@@ -4,7 +4,7 @@ import './globals.css'
 import { cn } from '@/lib/utils'
 import { ModernHeader } from '@/components/layout/ModernHeader'
 import { WhatsAppButton } from '@/components/features/WhatsAppButton'
-import { Footer } from '@/components/layout/footer'
+import { ChatBot } from '@/components/features/ChatBot'
 import { GoogleAnalytics } from '@/components/analytics/google-analytics'
 import { CookieConsent } from '@/components/features/CookieConsent'
 
@@ -33,6 +33,7 @@ export default function RootLayout({
         <div className="flex min-h-screen flex-col">
           <ModernHeader />
           <WhatsAppButton />
+          <ChatBot />
           <main className="flex-1">{children}</main>
         </div>
         <CookieConsent />

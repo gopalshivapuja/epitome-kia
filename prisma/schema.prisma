@@ -355,6 +355,26 @@ model AdminUser {
   @@map("admin_users")
 }
 
+// Document chunks for RAG (vector embeddings for AI chatbot)
+model Document {
+  id         String    @id @default(uuid()) @db.Uuid
+  title      String    // Document/chunk title
+  source     String    // "manual", "faq", "guide", "website"
+  sourceUrl  String?   @map("source_url")
+  modelSlug  String?   @map("model_slug") // e.g., "seltos", "sonet"
+  content    String    // The actual text content
+  embedding  Unsupported("vector(1536)")? // OpenAI text-embedding-3-small
+  metadata   Json?     // Additional metadata (page number, section, etc.)
+  chunkIndex Int       @default(0) @map("chunk_index")
+  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt  DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt  DateTime? @map("deleted_at") @db.Timestamptz
+
+  @@index([source], name: "documents_source_idx")
+  @@index([modelSlug], name: "documents_model_idx")
+  @@map("documents")
+}
+
 // Curated external articles from automotive publications
 model CuratedArticle {
   id            String    @id @default(uuid()) @db.Uuid
