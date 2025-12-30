@@ -13,6 +13,20 @@ export function formatPrice(price: number): string {
   }).format(price)
 }
 
+/**
+ * Format price in Lakh/Crore format for marketing-friendly display
+ * @param price - Price in INR (e.g., 1099000)
+ * @returns Formatted string like "₹10.99 Lakh" or "₹1.30 Crore"
+ */
+export function formatPriceLakh(price: number): string {
+  const lakhValue = price / 100000
+  if (lakhValue >= 100) {
+    const croreValue = lakhValue / 100
+    return `₹${croreValue.toFixed(2)} Crore`
+  }
+  return `₹${lakhValue.toFixed(2)} Lakh`
+}
+
 export function formatDate(date: Date | string): string {
   return new Intl.DateTimeFormat('en-IN', {
     year: 'numeric',

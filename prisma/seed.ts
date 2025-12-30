@@ -207,6 +207,7 @@ async function main() {
 
   await prisma.specification.createMany({
     data: [
+      // Seltos HTE specs
       { variantId: seltosHTE.id, specKey: 'engine', specValue: '1.5L Smartstream Petrol', unit: null },
       { variantId: seltosHTE.id, specKey: 'power', specValue: '115', unit: 'PS' },
       { variantId: seltosHTE.id, specKey: 'torque', specValue: '144', unit: 'Nm' },
@@ -215,6 +216,28 @@ async function main() {
       { variantId: seltosHTE.id, specKey: 'mileage', specValue: '16.8', unit: 'kmpl' },
       { variantId: seltosHTE.id, specKey: 'seating_capacity', specValue: '5', unit: 'persons' },
       { variantId: seltosHTE.id, specKey: 'boot_space', specValue: '433', unit: 'L' },
+      // Seltos HTK specs (from Kia India website)
+      { variantId: seltosHTK.id, specKey: 'engine', specValue: '1.5L Smartstream Petrol', unit: null },
+      { variantId: seltosHTK.id, specKey: 'power', specValue: '115', unit: 'PS' },
+      { variantId: seltosHTK.id, specKey: 'torque', specValue: '144', unit: 'Nm' },
+      { variantId: seltosHTK.id, specKey: 'transmission', specValue: '6-Speed Manual / IVT', unit: null },
+      { variantId: seltosHTK.id, specKey: 'fuel_type', specValue: 'Petrol / Diesel', unit: null },
+      { variantId: seltosHTK.id, specKey: 'mileage', specValue: '16.8', unit: 'kmpl' },
+      { variantId: seltosHTK.id, specKey: 'seating_capacity', specValue: '5', unit: 'persons' },
+      { variantId: seltosHTK.id, specKey: 'boot_space', specValue: '433', unit: 'L' },
+      { variantId: seltosHTK.id, specKey: 'display', specValue: '10.25 inch Touchscreen', unit: null },
+      // Seltos HTX specs (from Kia India website)
+      { variantId: seltosHTX.id, specKey: 'engine', specValue: '1.5L Smartstream Petrol / 1.5L T-GDi Turbo', unit: null },
+      { variantId: seltosHTX.id, specKey: 'power', specValue: '115-160', unit: 'PS' },
+      { variantId: seltosHTX.id, specKey: 'torque', specValue: '144-253', unit: 'Nm' },
+      { variantId: seltosHTX.id, specKey: 'transmission', specValue: '6-Speed Manual / IVT / 7-Speed DCT', unit: null },
+      { variantId: seltosHTX.id, specKey: 'fuel_type', specValue: 'Petrol / Diesel', unit: null },
+      { variantId: seltosHTX.id, specKey: 'mileage', specValue: '16.5-18.0', unit: 'kmpl' },
+      { variantId: seltosHTX.id, specKey: 'seating_capacity', specValue: '5', unit: 'persons' },
+      { variantId: seltosHTX.id, specKey: 'boot_space', specValue: '433', unit: 'L' },
+      { variantId: seltosHTX.id, specKey: 'display', specValue: '10.25 inch Touchscreen', unit: null },
+      { variantId: seltosHTX.id, specKey: 'sunroof', specValue: 'Single Pane', unit: null },
+      // Seltos GTX+ specs
       { variantId: seltosGTX.id, specKey: 'engine', specValue: '1.5L Turbo Petrol', unit: null },
       { variantId: seltosGTX.id, specKey: 'power', specValue: '160', unit: 'PS' },
       { variantId: seltosGTX.id, specKey: 'torque', specValue: '253', unit: 'Nm' },
@@ -285,18 +308,47 @@ async function main() {
 
   await prisma.specification.createMany({
     data: [
+      // Sonet HTE specs
       { variantId: sonetHTE.id, specKey: 'engine', specValue: '1.2L Smartstream Petrol', unit: null },
       { variantId: sonetHTE.id, specKey: 'power', specValue: '83', unit: 'PS' },
       { variantId: sonetHTE.id, specKey: 'torque', specValue: '115', unit: 'Nm' },
       { variantId: sonetHTE.id, specKey: 'transmission', specValue: '5-Speed Manual', unit: null },
       { variantId: sonetHTE.id, specKey: 'fuel_type', specValue: 'Petrol', unit: null },
       { variantId: sonetHTE.id, specKey: 'mileage', specValue: '18.4', unit: 'kmpl' },
+      { variantId: sonetHTE.id, specKey: 'seating_capacity', specValue: '5', unit: 'persons' },
+      { variantId: sonetHTE.id, specKey: 'boot_space', specValue: '392', unit: 'L' },
+      // Sonet HTK+ specs (from Kia India website)
+      { variantId: sonetHTK.id, specKey: 'engine', specValue: '1.2L Smartstream Petrol / 1.5L Diesel', unit: null },
+      { variantId: sonetHTK.id, specKey: 'power', specValue: '83-116', unit: 'PS' },
+      { variantId: sonetHTK.id, specKey: 'torque', specValue: '115-250', unit: 'Nm' },
+      { variantId: sonetHTK.id, specKey: 'transmission', specValue: '5-Speed MT / 6-Speed MT / 6-Speed AT', unit: null },
+      { variantId: sonetHTK.id, specKey: 'fuel_type', specValue: 'Petrol / Diesel', unit: null },
+      { variantId: sonetHTK.id, specKey: 'mileage', specValue: '18.0-24.1', unit: 'kmpl' },
+      { variantId: sonetHTK.id, specKey: 'seating_capacity', specValue: '5', unit: 'persons' },
+      { variantId: sonetHTK.id, specKey: 'boot_space', specValue: '392', unit: 'L' },
+      { variantId: sonetHTK.id, specKey: 'display', specValue: '8 inch Touchscreen', unit: null },
+      // Sonet HTX specs (from Kia India website)
+      { variantId: sonetHTX.id, specKey: 'engine', specValue: '1.0L Turbo GDi / 1.5L Diesel', unit: null },
+      { variantId: sonetHTX.id, specKey: 'power', specValue: '100-116', unit: 'PS' },
+      { variantId: sonetHTX.id, specKey: 'torque', specValue: '172-250', unit: 'Nm' },
+      { variantId: sonetHTX.id, specKey: 'transmission', specValue: '6-Speed iMT / 6-Speed MT / 6-Speed AT', unit: null },
+      { variantId: sonetHTX.id, specKey: 'fuel_type', specValue: 'Petrol / Diesel', unit: null },
+      { variantId: sonetHTX.id, specKey: 'mileage', specValue: '18.2-24.1', unit: 'kmpl' },
+      { variantId: sonetHTX.id, specKey: 'seating_capacity', specValue: '5', unit: 'persons' },
+      { variantId: sonetHTX.id, specKey: 'boot_space', specValue: '392', unit: 'L' },
+      { variantId: sonetHTX.id, specKey: 'display', specValue: '10.25 inch Touchscreen', unit: null },
+      { variantId: sonetHTX.id, specKey: 'sunroof', specValue: 'Single Pane', unit: null },
+      // Sonet GTX+ specs
       { variantId: sonetGTX.id, specKey: 'engine', specValue: '1.0L Turbo GDi Petrol', unit: null },
       { variantId: sonetGTX.id, specKey: 'power', specValue: '120', unit: 'PS' },
       { variantId: sonetGTX.id, specKey: 'torque', specValue: '172', unit: 'Nm' },
       { variantId: sonetGTX.id, specKey: 'transmission', specValue: '7-Speed DCT', unit: null },
       { variantId: sonetGTX.id, specKey: 'fuel_type', specValue: 'Petrol', unit: null },
       { variantId: sonetGTX.id, specKey: 'mileage', specValue: '18.2', unit: 'kmpl' },
+      { variantId: sonetGTX.id, specKey: 'seating_capacity', specValue: '5', unit: 'persons' },
+      { variantId: sonetGTX.id, specKey: 'boot_space', specValue: '392', unit: 'L' },
+      { variantId: sonetGTX.id, specKey: 'display', specValue: '10.25 inch Touchscreen', unit: null },
+      { variantId: sonetGTX.id, specKey: 'sunroof', specValue: 'Single Pane', unit: null },
     ],
   })
 
@@ -358,16 +410,42 @@ async function main() {
 
   await prisma.specification.createMany({
     data: [
+      // Carens Premium specs
       { variantId: carensPremium.id, specKey: 'engine', specValue: '1.5L Smartstream Petrol', unit: null },
       { variantId: carensPremium.id, specKey: 'power', specValue: '115', unit: 'PS' },
       { variantId: carensPremium.id, specKey: 'torque', specValue: '144', unit: 'Nm' },
       { variantId: carensPremium.id, specKey: 'transmission', specValue: '6-Speed Manual', unit: null },
+      { variantId: carensPremium.id, specKey: 'fuel_type', specValue: 'Petrol', unit: null },
       { variantId: carensPremium.id, specKey: 'seating_capacity', specValue: '6', unit: 'persons' },
+      { variantId: carensPremium.id, specKey: 'boot_space', specValue: '216', unit: 'L' },
+      // Carens Prestige specs (from Kia India website)
+      { variantId: carensPrestige.id, specKey: 'engine', specValue: '1.5L Smartstream Petrol / 1.5L Diesel', unit: null },
+      { variantId: carensPrestige.id, specKey: 'power', specValue: '115-116', unit: 'PS' },
+      { variantId: carensPrestige.id, specKey: 'torque', specValue: '144-250', unit: 'Nm' },
+      { variantId: carensPrestige.id, specKey: 'transmission', specValue: '6-Speed Manual / IVT / 6-Speed AT', unit: null },
+      { variantId: carensPrestige.id, specKey: 'fuel_type', specValue: 'Petrol / Diesel', unit: null },
+      { variantId: carensPrestige.id, specKey: 'seating_capacity', specValue: '6/7', unit: 'persons' },
+      { variantId: carensPrestige.id, specKey: 'boot_space', specValue: '216', unit: 'L' },
+      { variantId: carensPrestige.id, specKey: 'display', specValue: '10.25 inch Touchscreen', unit: null },
+      // Carens Luxury specs (from Kia India website)
+      { variantId: carensLuxury.id, specKey: 'engine', specValue: '1.5L Smartstream Petrol / 1.5L Turbo / 1.5L Diesel', unit: null },
+      { variantId: carensLuxury.id, specKey: 'power', specValue: '115-160', unit: 'PS' },
+      { variantId: carensLuxury.id, specKey: 'torque', specValue: '144-253', unit: 'Nm' },
+      { variantId: carensLuxury.id, specKey: 'transmission', specValue: '6-Speed Manual / IVT / 7-Speed DCT / 6-Speed AT', unit: null },
+      { variantId: carensLuxury.id, specKey: 'fuel_type', specValue: 'Petrol / Diesel', unit: null },
+      { variantId: carensLuxury.id, specKey: 'seating_capacity', specValue: '6/7', unit: 'persons' },
+      { variantId: carensLuxury.id, specKey: 'boot_space', specValue: '216', unit: 'L' },
+      { variantId: carensLuxury.id, specKey: 'display', specValue: '10.25 inch Touchscreen', unit: null },
+      { variantId: carensLuxury.id, specKey: 'sunroof', specValue: 'Single Pane', unit: null },
+      // Carens Luxury Plus specs
       { variantId: carensLuxuryPlus.id, specKey: 'engine', specValue: '1.5L Turbo Petrol', unit: null },
       { variantId: carensLuxuryPlus.id, specKey: 'power', specValue: '160', unit: 'PS' },
       { variantId: carensLuxuryPlus.id, specKey: 'torque', specValue: '253', unit: 'Nm' },
       { variantId: carensLuxuryPlus.id, specKey: 'transmission', specValue: '7-Speed DCT', unit: null },
+      { variantId: carensLuxuryPlus.id, specKey: 'fuel_type', specValue: 'Petrol', unit: null },
       { variantId: carensLuxuryPlus.id, specKey: 'seating_capacity', specValue: '7', unit: 'persons' },
+      { variantId: carensLuxuryPlus.id, specKey: 'boot_space', specValue: '216', unit: 'L' },
+      { variantId: carensLuxuryPlus.id, specKey: 'display', specValue: '10.25 inch Touchscreen', unit: null },
       { variantId: carensLuxuryPlus.id, specKey: 'sunroof', specValue: 'Single Pane', unit: null },
     ],
   })
@@ -527,9 +605,34 @@ async function main() {
 
   await prisma.specification.createMany({
     data: [
+      // Syros HTK specs
       { variantId: syrosHTK.id, specKey: 'engine', specValue: '1.0L Turbo GDi Petrol', unit: null },
+      { variantId: syrosHTK.id, specKey: 'power', specValue: '120', unit: 'PS' },
+      { variantId: syrosHTK.id, specKey: 'torque', specValue: '172', unit: 'Nm' },
       { variantId: syrosHTK.id, specKey: 'transmission', specValue: '6-Speed Manual / 7-Speed DCT', unit: null },
+      { variantId: syrosHTK.id, specKey: 'fuel_type', specValue: 'Petrol', unit: null },
       { variantId: syrosHTK.id, specKey: 'seating_capacity', specValue: '5', unit: 'persons' },
+      { variantId: syrosHTK.id, specKey: 'boot_space', specValue: '465', unit: 'L' },
+      // Syros HTX specs (from Kia India website)
+      { variantId: syrosHTX.id, specKey: 'engine', specValue: '1.0L Turbo GDi Petrol / 1.5L Diesel', unit: null },
+      { variantId: syrosHTX.id, specKey: 'power', specValue: '120-116', unit: 'PS' },
+      { variantId: syrosHTX.id, specKey: 'torque', specValue: '172-250', unit: 'Nm' },
+      { variantId: syrosHTX.id, specKey: 'transmission', specValue: '6-Speed Manual / 7-Speed DCT / 6-Speed AT', unit: null },
+      { variantId: syrosHTX.id, specKey: 'fuel_type', specValue: 'Petrol / Diesel', unit: null },
+      { variantId: syrosHTX.id, specKey: 'seating_capacity', specValue: '5', unit: 'persons' },
+      { variantId: syrosHTX.id, specKey: 'boot_space', specValue: '465', unit: 'L' },
+      { variantId: syrosHTX.id, specKey: 'display', specValue: '12.3 inch Touchscreen', unit: null },
+      // Syros HTX+ specs (from Kia India website)
+      { variantId: syrosHTXPlus.id, specKey: 'engine', specValue: '1.0L Turbo GDi Petrol / 1.5L Diesel', unit: null },
+      { variantId: syrosHTXPlus.id, specKey: 'power', specValue: '120-116', unit: 'PS' },
+      { variantId: syrosHTXPlus.id, specKey: 'torque', specValue: '172-250', unit: 'Nm' },
+      { variantId: syrosHTXPlus.id, specKey: 'transmission', specValue: '6-Speed Manual / 7-Speed DCT / 6-Speed AT', unit: null },
+      { variantId: syrosHTXPlus.id, specKey: 'fuel_type', specValue: 'Petrol / Diesel', unit: null },
+      { variantId: syrosHTXPlus.id, specKey: 'seating_capacity', specValue: '5', unit: 'persons' },
+      { variantId: syrosHTXPlus.id, specKey: 'boot_space', specValue: '465', unit: 'L' },
+      { variantId: syrosHTXPlus.id, specKey: 'display', specValue: '12.3 inch Touchscreen', unit: null },
+      { variantId: syrosHTXPlus.id, specKey: 'sunroof', specValue: 'Panoramic', unit: null },
+      { variantId: syrosHTXPlus.id, specKey: 'adas', specValue: 'Level 2 ADAS', unit: null },
     ],
   })
 

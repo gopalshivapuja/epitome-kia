@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
-import { formatPrice } from '@/lib/utils'
+import { formatPriceLakh } from '@/lib/utils'
 
 interface ModelCardProps {
   model: {
@@ -40,7 +40,7 @@ export function ModelCard({ model }: ModelCardProps) {
         <div className="mt-2">
           {model.startingPrice ? (
             <p className="text-gray-500">
-              From {formatPrice(model.startingPrice)}
+              From {formatPriceLakh(model.startingPrice)}
             </p>
           ) : (
             <p className="text-gray-500">Price on request</p>
