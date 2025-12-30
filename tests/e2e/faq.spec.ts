@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test'
 test.describe('FAQ Page', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/faq')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
   })
 
   test('should display FAQ page with heading', async ({ page }) => {
@@ -40,16 +40,26 @@ test.describe('FAQ Page', () => {
   test('should have contact section with call and email buttons', async ({ page }) => {
     // Scroll to contact section
     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight))
+    await page.waitForTimeout(300)
 
     await expect(page.getByText('Still have questions?')).toBeVisible()
-    await expect(page.getByRole('link', { name: /Call Us/i })).toBeVisible()
-    await expect(page.getByRole('link', { name: /Email Us/i })).toBeVisible()
+
+    // These are links styled as buttons
+    const callLink = page.locator('a').filter({ hasText: /Call Us/i })
+    const emailLink = page.locator('a').filter({ hasText: /Email Us/i })
+    await expect(callLink).toBeVisible()
+    await expect(emailLink).toBeVisible()
   })
 
   test('should have quick links section', async ({ page }) => {
-    await expect(page.getByRole('link', { name: 'Book Test Drive' })).toBeVisible()
-    await expect(page.getByRole('link', { name: 'EMI Calculator' })).toBeVisible()
-    await expect(page.getByRole('link', { name: 'Service Booking' })).toBeVisible()
+    // Scroll to quick links
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight))
+    await page.waitForTimeout(300)
+
+    // Quick links are in h3 elements within Link components
+    await expect(page.getByRole('heading', { name: 'Book Test Drive' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'EMI Calculator' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Service Booking' })).toBeVisible()
   })
 
   test('should have breadcrumb navigation', async ({ page }) => {

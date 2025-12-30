@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test'
 test.describe('Compare Page', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/compare')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
   })
 
   test('should display compare page with heading', async ({ page }) => {
@@ -39,8 +39,18 @@ test.describe('Compare Page', () => {
   })
 
   test('should have CTA section with test drive button', async ({ page }) => {
-    await expect(page.getByText('Ready to Experience?')).toBeVisible()
-    await expect(page.getByRole('link', { name: /Book Test Drive/i })).toBeVisible()
+    // Scroll to bottom to ensure CTA is visible
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight))
+    await page.waitForTimeout(500)
+
+    // Check for "Ready to Experience?" heading
+    await expect(page.getByRole('heading', { name: /Ready to Experience/i })).toBeVisible({ timeout: 5000 })
+
+    // Check that there's a link with Calendar icon and Test Drive text
+    // The link text includes the icon, so use a more flexible selector
+    const ctaSection = page.locator('.bg-gradient-to-r, [class*="gradient"]').filter({ hasText: /Ready to Experience/i })
+    const testDriveButton = ctaSection.locator('a, button').filter({ hasText: /Test Drive/i })
+    await expect(testDriveButton).toBeVisible({ timeout: 5000 })
   })
 
   test('should have breadcrumb navigation', async ({ page }) => {

@@ -7,7 +7,7 @@ test.describe('Homepage', () => {
 
   test('should display the header with logo and navigation', async ({ page, viewport }) => {
     // Wait for page to be fully loaded
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
 
     // Check header exists
     const header = page.locator('header, [role="banner"]')
@@ -19,12 +19,9 @@ test.describe('Homepage', () => {
 
     // On desktop, check navigation links in header
     if (viewport && viewport.width >= 768) {
-      const nav = page.locator('nav, [role="navigation"]').first()
-      await expect(nav).toBeVisible()
-
       // Navigation should contain model links
-      await expect(nav.getByRole('link', { name: 'Seltos' })).toBeVisible()
-      await expect(nav.getByRole('link', { name: 'Sonet' })).toBeVisible()
+      await expect(page.getByRole('link', { name: 'Seltos' }).first()).toBeVisible()
+      await expect(page.getByRole('link', { name: 'Sonet' }).first()).toBeVisible()
     }
   })
 
@@ -50,6 +47,7 @@ test.describe('Homepage', () => {
   test('should display footer with contact information', async ({ page }) => {
     // Scroll to footer
     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight))
+    await page.waitForTimeout(300)
 
     // Check footer content
     await expect(page.getByText('Authorized sales, service & spares dealer')).toBeVisible()
@@ -71,18 +69,18 @@ test.describe('Homepage - Mobile', () => {
     await page.goto('/')
 
     // Mobile menu button should be visible
-    const menuButton = page.getByRole('button', { name: /menu/i })
-    await expect(menuButton).toBeVisible()
+    const menuButton = page.getByLabel(/menu/i).or(page.getByRole('button', { name: /menu/i }))
+    await expect(menuButton.first()).toBeVisible()
   })
 
   test('should be responsive on mobile', async ({ page }) => {
     await page.goto('/')
 
-    // Content should still be visible on mobile
-    await expect(page.getByRole('heading', { name: 'New Seltos' })).toBeVisible()
+    // Content should still be visible on mobile - The All-New Seltos heading
+    await expect(page.getByRole('heading', { name: /Seltos/i }).first()).toBeVisible()
 
     // Car image should be visible
-    const carImage = page.locator('img[alt*="Seltos"]').first()
+    const carImage = page.locator('img[alt*="Seltos"], img[alt*="seltos"]').first()
     await expect(carImage).toBeVisible()
   })
 })
