@@ -29,7 +29,7 @@ export function AdminHeader({ user }: AdminHeaderProps) {
     <>
       <AdminSidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} userRole={user.role} />
 
-      <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b bg-white px-4 lg:px-6">
+      <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b bg-white px-4 lg:ml-64 lg:px-6">
         {/* Mobile menu button */}
         <Button
           variant="ghost"
