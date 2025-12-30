@@ -13,14 +13,19 @@ export function DealerLocator() {
 
   // Convert Google Maps place URL to embed URL
   const getEmbedUrl = (mapUrl: string) => {
+    const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
+    if (!apiKey) {
+      // Fallback to static map link if no API key configured
+      return ''
+    }
     // Extract the place name from the URL for embedding
     const placeMatch = mapUrl.match(/place\/([^/@]+)/)
     if (placeMatch) {
       const placeName = decodeURIComponent(placeMatch[1].replace(/\+/g, ' '))
-      return `https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=${encodeURIComponent(placeName)}`
+      return `https://www.google.com/maps/embed/v1/place?key=${apiKey}&q=${encodeURIComponent(placeName)}`
     }
     // Fallback to search by address
-    return `https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=${encodeURIComponent(selectedLocation.address)}`
+    return `https://www.google.com/maps/embed/v1/place?key=${apiKey}&q=${encodeURIComponent(selectedLocation.address)}`
   }
 
   return (

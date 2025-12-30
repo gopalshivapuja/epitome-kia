@@ -30,6 +30,9 @@ NEXTAUTH_URL=https://your-app.railway.app
 # Email (get from resend.com)
 RESEND_API_KEY=re_xxxxxxxxxxxx
 
+# Google Maps (get from Google Cloud Console)
+NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your-api-key
+
 # Analytics (get from Google Analytics)
 NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX
 ```
@@ -85,6 +88,7 @@ railway run npx prisma db seed
 | `NEXTAUTH_URL` | ✅ | Full URL of your app |
 | `RESEND_API_KEY` | ✅ | Email notifications |
 | `NEXT_PUBLIC_GA_ID` | Optional | Google Analytics 4 ID |
+| `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` | ✅ | Google Maps Embed API key |
 
 ---
 
@@ -209,6 +213,34 @@ railway rollback
 curl https://your-app.railway.app/api/health
 # Returns: { "status": "ok", "timestamp": "..." }
 ```
+
+### Viewing Logs
+
+**Via Railway CLI:**
+```bash
+railway logs                  # Live logs
+railway logs --tail 100       # Last 100 lines
+```
+
+**Via Dashboard:**
+1. Railway → Your service → **Logs** tab
+2. Filter by time range, search for errors
+
+### Key Metrics to Monitor
+
+| Metric | Target | Action if Exceeded |
+|--------|--------|-------------------|
+| Response time | < 500ms | Check database queries |
+| Error rate | < 1% | Check logs for exceptions |
+| Memory usage | < 512MB | Optimize or upgrade plan |
+| CPU usage | < 80% | Check for infinite loops |
+
+### Recommended Alerts
+
+Set up alerts in Railway dashboard for:
+- Deployment failures
+- High memory usage (> 80%)
+- Health check failures
 
 ---
 
