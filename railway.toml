@@ -1,5 +1,6 @@
 # Railway deployment configuration
 # Docs: https://docs.railway.app/reference/config-as-code
+# Build cache bust: 2025-12-30
 
 [build]
 builder = "nixpacks"
