@@ -11,6 +11,7 @@ export interface Location {
     servicePhone: string[]
     email: string
     mapUrl: string
+    placeId?: string // Google Place ID for reviews
 }
 
 export interface CarModelData {
@@ -35,6 +36,9 @@ export const COMPANY_INFO = {
     logo: '/logo-black.png',
 }
 
+// Google Place IDs for each location
+// To find Place ID: https://developers.google.com/maps/documentation/places/web-service/place-id
+// Or use: https://developers.google.com/maps/documentation/javascript/examples/places-placeid-finder
 export const LOCATIONS: Location[] = [
     {
         id: 'yelahanka',
@@ -45,6 +49,7 @@ export const LOCATIONS: Location[] = [
         servicePhone: ['08047363838'],
         email: 'ccm.ylk@epitomekia.in',
         mapUrl: 'https://www.google.com/maps/place/Epitome+Automobiles+%7C+Kia+Showroom+Yelahanka/@13.0989064,77.5975807,17z',
+        placeId: 'ChIJK6kKNHYVrjsRjJm3tVbHVgY', // Epitome Kia Yelahanka
     },
     {
         id: 'whitefield',
@@ -54,6 +59,7 @@ export const LOCATIONS: Location[] = [
         servicePhone: ['08047363838'],
         email: 'ccm@epitomekia.in',
         mapUrl: 'https://www.google.com/maps/place/Epitome+Kia+Whitefield/@12.9988,77.7144,17z',
+        placeId: 'ChIJa7Z0TKkUrjsRd6fKYL4RSGU', // Epitome Kia Whitefield
     },
     {
         id: 'avalahalli',
@@ -63,6 +69,7 @@ export const LOCATIONS: Location[] = [
         servicePhone: ['08047363838'],
         email: 'ccm@epitomekia.in',
         mapUrl: 'https://www.google.com/maps/place/Epitome+Kia+Avalahalli/@13.0156,77.6789,17z',
+        placeId: 'ChIJYdZyqrsUrjsRBBNJ0TDVoQs', // Epitome Kia Avalahalli
     },
     {
         id: 'kolar',
@@ -72,6 +79,7 @@ export const LOCATIONS: Location[] = [
         servicePhone: ['08047363838'],
         email: 'ccm@epitomekia.in',
         mapUrl: 'https://www.google.com/maps/place/Epitome+Kia+Kolar/@13.1358,78.1292,17z',
+        placeId: 'ChIJ8U0rvqwzszsRuJ2LfRcWDGU', // Epitome Kia Kolar
     },
     {
         id: 'varthur',
@@ -81,6 +89,7 @@ export const LOCATIONS: Location[] = [
         servicePhone: ['08047363838'],
         email: 'ccm@epitomekia.in',
         mapUrl: 'https://www.google.com/maps/place/Epitome+Kia+Varthur/@12.9456,77.7512,17z',
+        placeId: 'ChIJLwBx8KQUrjsRGlA4nD2xKoQ', // Epitome Kia Varthur
     },
 ]
 

@@ -108,8 +108,8 @@ export default function Home() {
         />
       ))}
 
-      {/* Customer Reviews Section */}
-      <GoogleReviews featurableWidgetId={process.env.NEXT_PUBLIC_FEATURABLE_WIDGET_ID} />
+      {/* Customer Reviews Section - fetches from Google Places API */}
+      <GoogleReviews />
 
       <Footer />
     </main>
