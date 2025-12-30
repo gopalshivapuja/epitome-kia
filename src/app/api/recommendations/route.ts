@@ -1,11 +1,7 @@
 import { NextRequest } from 'next/server'
 import { z } from 'zod'
-import OpenAI from 'openai'
 import { successResponse, errorResponse, handleApiError } from '@/lib/api-utils'
-
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-})
+import { openai } from '@/lib/ai/client'
 
 // Input schema for recommendation request
 const recommendationInputSchema = z.object({
