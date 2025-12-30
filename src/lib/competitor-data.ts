@@ -41,7 +41,7 @@ export const COMPETITOR_MODELS: CompetitorModelData[] = [
     brand: 'Hyundai',
     segment: 'compact_suv',
     priceRange: '₹11.0 - 20.2 Lakh',
-    imageUrl: '/images/competitors/hyundai-creta.jpg',
+    imageUrl: 'https://placehold.co/400x300/1a1a2e/ffffff?text=Hyundai+Creta',
     sourceUrl: 'https://www.cardekho.com/hyundai/creta',
     competesWith: ['seltos'],
     specs: {
@@ -69,7 +69,7 @@ export const COMPETITOR_MODELS: CompetitorModelData[] = [
     brand: 'Tata',
     segment: 'compact_suv',
     priceRange: '₹8.1 - 15.5 Lakh',
-    imageUrl: '/images/competitors/tata-nexon.jpg',
+    imageUrl: 'https://placehold.co/400x300/1a1a2e/ffffff?text=Tata+Nexon',
     sourceUrl: 'https://www.cardekho.com/tata/nexon',
     competesWith: ['seltos', 'sonet'],
     specs: {
@@ -97,7 +97,7 @@ export const COMPETITOR_MODELS: CompetitorModelData[] = [
     brand: 'Honda',
     segment: 'compact_suv',
     priceRange: '₹11.7 - 16.0 Lakh',
-    imageUrl: '/images/competitors/honda-elevate.jpg',
+    imageUrl: 'https://placehold.co/400x300/1a1a2e/ffffff?text=Honda+Elevate',
     sourceUrl: 'https://www.cardekho.com/honda/elevate',
     competesWith: ['seltos'],
     specs: {
@@ -125,7 +125,7 @@ export const COMPETITOR_MODELS: CompetitorModelData[] = [
     brand: 'MG',
     segment: 'compact_suv',
     priceRange: '₹10.0 - 17.3 Lakh',
-    imageUrl: '/images/competitors/mg-astor.jpg',
+    imageUrl: 'https://placehold.co/400x300/1a1a2e/ffffff?text=MG+Astor',
     sourceUrl: 'https://www.cardekho.com/mg/astor',
     competesWith: ['seltos'],
     specs: {
@@ -155,7 +155,7 @@ export const COMPETITOR_MODELS: CompetitorModelData[] = [
     brand: 'Hyundai',
     segment: 'subcompact_suv',
     priceRange: '₹7.9 - 13.5 Lakh',
-    imageUrl: '/images/competitors/hyundai-venue.jpg',
+    imageUrl: 'https://placehold.co/400x300/1a1a2e/ffffff?text=Hyundai+Venue',
     sourceUrl: 'https://www.cardekho.com/hyundai/venue',
     competesWith: ['sonet'],
     specs: {
@@ -183,7 +183,7 @@ export const COMPETITOR_MODELS: CompetitorModelData[] = [
     brand: 'Tata',
     segment: 'subcompact_suv',
     priceRange: '₹6.1 - 10.2 Lakh',
-    imageUrl: '/images/competitors/tata-punch.jpg',
+    imageUrl: 'https://placehold.co/400x300/1a1a2e/ffffff?text=Tata+Punch',
     sourceUrl: 'https://www.cardekho.com/tata/punch',
     competesWith: ['sonet'],
     specs: {
@@ -211,7 +211,7 @@ export const COMPETITOR_MODELS: CompetitorModelData[] = [
     brand: 'Mahindra',
     segment: 'subcompact_suv',
     priceRange: '₹7.5 - 15.5 Lakh',
-    imageUrl: '/images/competitors/mahindra-xuv3xo.jpg',
+    imageUrl: 'https://placehold.co/400x300/1a1a2e/ffffff?text=Mahindra+XUV+3XO',
     sourceUrl: 'https://www.cardekho.com/mahindra/xuv-3xo',
     competesWith: ['sonet'],
     specs: {
@@ -239,7 +239,7 @@ export const COMPETITOR_MODELS: CompetitorModelData[] = [
     brand: 'Maruti Suzuki',
     segment: 'subcompact_suv',
     priceRange: '₹8.3 - 14.1 Lakh',
-    imageUrl: '/images/competitors/maruti-brezza.jpg',
+    imageUrl: 'https://placehold.co/400x300/1a1a2e/ffffff?text=Maruti+Brezza',
     sourceUrl: 'https://www.cardekho.com/maruti-suzuki/brezza',
     competesWith: ['sonet'],
     specs: {
@@ -269,7 +269,7 @@ export const COMPETITOR_MODELS: CompetitorModelData[] = [
     brand: 'Hyundai',
     segment: 'mpv',
     priceRange: '₹17.0 - 21.6 Lakh',
-    imageUrl: '/images/competitors/hyundai-alcazar.jpg',
+    imageUrl: 'https://placehold.co/400x300/1a1a2e/ffffff?text=Hyundai+Alcazar',
     sourceUrl: 'https://www.cardekho.com/hyundai/alcazar',
     competesWith: ['carens'],
     specs: {
@@ -297,7 +297,7 @@ export const COMPETITOR_MODELS: CompetitorModelData[] = [
     brand: 'Mahindra',
     segment: 'mpv',
     priceRange: '₹14.0 - 26.0 Lakh',
-    imageUrl: '/images/competitors/mahindra-xuv700.jpg',
+    imageUrl: 'https://placehold.co/400x300/1a1a2e/ffffff?text=Mahindra+XUV700',
     sourceUrl: 'https://www.cardekho.com/mahindra/xuv700',
     competesWith: ['carens'],
     specs: {
@@ -325,7 +325,7 @@ export const COMPETITOR_MODELS: CompetitorModelData[] = [
     brand: 'Toyota',
     segment: 'mpv',
     priceRange: '₹19.8 - 30.5 Lakh',
-    imageUrl: '/images/competitors/toyota-innova-hycross.jpg',
+    imageUrl: 'https://placehold.co/400x300/1a1a2e/ffffff?text=Toyota+Innova+Hycross',
     sourceUrl: 'https://www.cardekho.com/toyota/innova-hycross',
     competesWith: ['carens', 'carnival'],
     specs: {
@@ -355,7 +355,7 @@ export const COMPETITOR_MODELS: CompetitorModelData[] = [
     brand: 'Hyundai',
     segment: 'ev',
     priceRange: '₹46.0 - 47.0 Lakh',
-    imageUrl: '/images/competitors/hyundai-ioniq5.jpg',
+    imageUrl: 'https://placehold.co/400x300/1a1a2e/ffffff?text=Hyundai+Ioniq+5',
     sourceUrl: 'https://www.cardekho.com/hyundai/ioniq-5',
     competesWith: ['ev6'],
     specs: {
@@ -383,7 +383,7 @@ export const COMPETITOR_MODELS: CompetitorModelData[] = [
     brand: 'Tata',
     segment: 'ev',
     priceRange: '₹14.5 - 19.8 Lakh',
-    imageUrl: '/images/competitors/tata-nexon-ev.jpg',
+    imageUrl: 'https://placehold.co/400x300/1a1a2e/ffffff?text=Tata+Nexon+EV',
     sourceUrl: 'https://www.cardekho.com/tata/nexon-ev',
     competesWith: ['ev6'],
     specs: {
@@ -411,7 +411,7 @@ export const COMPETITOR_MODELS: CompetitorModelData[] = [
     brand: 'MG',
     segment: 'ev',
     priceRange: '₹18.9 - 25.2 Lakh',
-    imageUrl: '/images/competitors/mg-zs-ev.jpg',
+    imageUrl: 'https://placehold.co/400x300/1a1a2e/ffffff?text=MG+ZS+EV',
     sourceUrl: 'https://www.cardekho.com/mg/zs-ev',
     competesWith: ['ev6'],
     specs: {
